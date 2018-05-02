@@ -67,28 +67,28 @@ void uKitSensor::uKit_NixieTube(char id,float number){
   numbers=number;
   if(numbers-number==0)
   {
-    if(number<10 &number>0)
+    if(number<10 &number>=0)
       method=0x08;
-    else if(number>10 & number<100)
+    else if(number>=10 & number<100)
       method=0x0c;
-    else if(number>100 & number<1000)
+    else if(number>=100 & number<1000)
       method=0x0e;
-    else if(number>1000 & number<9999)
+    else if(number>=1000 & number<10000)
       method=0x0f; 
    
   }
   else{
-     if(numbers<10 &numbers>0)
+     if(numbers<10 &numbers>=0)
      {
         method=0x4c;
         number=number*10;
      }
-    else if(numbers>10 & numbers<100)
+    else if(numbers>=10 & numbers<100)
     {
       method=0x4e;
       number=number*10;
     }
-    else if(numbers>100 & numbers<1000)
+    else if(numbers>=100 & numbers<1000)
     {
       method=0x4f;
       number=number*10;
