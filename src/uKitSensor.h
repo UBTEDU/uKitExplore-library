@@ -14,8 +14,8 @@ public:
     //method :低四位表示数码管的控制个数，高四位表示下标点的控制方式，第8位：冒号显示位，9位：符号位
     //frequency: 100ms
     //times:闪烁次数：0：不闪烁，>0：表示实际次数。
-    void uKitSensor::uKit_NixieTube_full(char id,uint8_t tpye,uint8_t method,uint8_t frequency,uint8_t times,uint8_t start,uint8_t ends);
-    void uKitSensor::uKit_NixieTube(char id,float number);
+    void uKit_NixieTube_full(char id,uint8_t tpye,uint8_t method,uint8_t frequency,uint8_t times,uint8_t start,uint8_t ends);
+    void uKit_NixieTube(char id,float number);
 };
 
 #endif

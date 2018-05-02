@@ -32,7 +32,7 @@ int uKitSensor::uKit_Ultrasonic(char id){
   delay(5);
   return TXD(0xF5,1,1,4,tData); 
 }
-void uKitSensor::NixieTube_full(char id,uint8_t tpye,uint8_t method,uint8_t frequency,uint8_t times,uint8_t start,uint8_t ends){
+void uKitSensor::uKit_NixieTube_full(char id,uint8_t tpye,uint8_t method,uint8_t frequency,uint8_t times,uint8_t start,uint8_t ends){
   unsigned char tData[1];
   
   tData[0]=id;
