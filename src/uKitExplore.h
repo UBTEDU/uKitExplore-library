@@ -33,12 +33,12 @@ uKitSensor uKitSensor;
 #define ServoRead_NPD_M(read_id,num) uKitServo.ServoRead_NPD_M(read_id,num)//单个舵机回读，返回舵机角度值(掉电回读）
 
 //uKitSensor_API
-#define uKit_Infrared(id) uKitSensor.ukit_infrared(id)//ukit红外传感器控制函数，返回cm,(0-20)cm
-#define Set_Infrared_Id(id) uKitSensor.Set_infrared_id(id)//设置红外ID
-#define uKit_Led(id,face,times,red,green,blue) uKitSensor.uKit_led(id,face,times,red,green,blue)//ukit led传感器。id为led的id号，face为表情种类（0）
-#define uKit_Button(id) uKitSensor.uKit_button(id)//返回768无操作，返回769是单击，返回770是双击
+#define uKit_Infrared(id) uKitSensor.uKit_Infrared(id)//ukit红外传感器控制函数，返回cm,(0-20)cm
+#define Set_Infrared_Id(id) uKitSensor.Set_Infrared_Id(id)//设置红外ID
+#define uKit_Led(id,face,times,red,green,blue) uKitSensor.uKit_Led(id,face,times,red,green,blue)//ukit led传感器。id为led的id号，face为表情种类（0）
+#define uKit_Button(id) uKitSensor.uKit_Button(id)//返回256无操作，返回257是单击，返回258是双击
 #define uKit_Ultrasonic(id) uKitSensor.uKit_Ultrasonic(id)
-#define uKit_NixieTube_full(id,tpye,method,frequency,times,start,ends) uKitSensor.uKit_NixieTube_full(id,tpye,method,frequency,times,start,ends)
+#define uKit_NixieTube_Full(id,tpye,method,frequency,times,start,ends) uKitSensor.uKit_NixieTube_Full(id,tpye,method,frequency,times,start,ends)
 #define uKit_NixieTube(id,number) uKitSensor.uKit_NixieTube(id,number)
 
 //uKitMotor_API
@@ -89,7 +89,7 @@ uKitSensor uKitSensor;
 #define setcolor(color) Sensor.setcolor(color)
 #define Battery_check() Sensor.Battery_check()
 #define HcSr04Dis(jp) Sensor.HcSr04Dis(jp) //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
-#define HcSr04Dis(EchoPin,TrigPin) Sensor.HcSr04Dis(EchoPin,TrigPin) //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
+
 
 //ClickButton_API
 ClickButton button1(Button_pin, HIGH, CLICKBTN_PULLUP);//设置按键

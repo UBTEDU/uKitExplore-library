@@ -61,8 +61,7 @@ void TransforRobot::turn_L(int speed){//90
       read_data();
     }while (num3 == 0||num4 == 0);
      stops();
-
-    
+   
 }
 
 void TransforRobot::turn_R(int speed){

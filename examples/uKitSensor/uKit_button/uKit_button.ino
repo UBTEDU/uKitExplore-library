@@ -1,6 +1,6 @@
 /*
- * CN:uKit按键程序。按一下ID-1的uKit按键蜂鸣器以300Hz响300ms，按两下蜂鸣器以800Hz响600ms
- * EN:Click on the uKit button of ID-1, the buzzer rings 300Hz at 300ms, press two buzzer to 800Hz 600ms.
+ * CN:uKit按键程序。按一下ID-1的uKit按键蜂鸣器以300Hz响300ms，按两下蜂鸣器以800Hz响600ms,长按蜂鸣器以1200Hz响1000ms. 
+ * EN:Click on the uKit button of ID-1, the buzzer rings 300Hz at 300ms, press two buzzer to 800Hz 600ms. Long press the buzzer to 1200Hz 1000ms.
  * 
  */
 
@@ -11,25 +11,22 @@ void setup() {
  
 } 
 
-//Return 768 no operation, return 769 is clicking, return 770 is double click.
-//返回768无操作，返回769是单击，返回770是双击
+//Return 256 no operation, return 258 is clicking, return 259 is double click.
+//返回256无操作，返回257是单击，返回258是双击
 void loop(){
   int ButtonState=0;
-  ButtonState=uKit_Button(3);
-  if(ButtonState==769)//return 769 is clicking
+  ButtonState=uKit_Button(1);
+  if(ButtonState==257)//return 257 is clicking
   {
-    for(int i=0;i<10;i++)
-    {
-    MotorRotate(1,500);
-    delay(10);
-    MotorRotate(1,-500);
-    delay(10);
-    }
+    tone(300,300);
   }
-  if(ButtonState==770)//return 770 is double click.
+  else if(ButtonState==258){//return 258 is double click.
     tone(800,600);
-  MotorStop(1);
+  }
+  else if(ButtonState==259){//return 259 is long click.
+    tone(1200,1000);
   }
   
-
+  
+}
 

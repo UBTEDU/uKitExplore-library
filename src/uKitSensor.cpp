@@ -1,27 +1,28 @@
 #include"uKitSensor.h" 
 
-int uKitSensor::ukit_infrared(char ID){//uKit红外传感器
+long uKitSensor::uKit_Infrared(char ID){//uKit红外传感器
   unsigned char hData[1];
   hData[0]=ID;
   TXD(0xF8,1,1,0x02,hData);
   delay(5);
-  int distance = TXD(0xF8,1,1,4,hData);
+  long distance = TXD(0xF8,1,1,4,hData);
   return distance*20/2790;
 }
 
-void uKitSensor::Set_infrared_id(char id){
+void uKitSensor::Set_Infrared_Id(char id){
   unsigned char tData[2];
   tData[0]=1;
   tData[1]=id;
   TXD(0xF8,1,2,0x06,tData);
 }
 
-int uKitSensor::uKit_button(char id){
+int uKitSensor::uKit_Button(char id){
   unsigned  char tData[1];
+  
   tData[0]=id;
   TXD(0xF7,1,1,2,tData);  //开触碰
   delay(5);
-  int ButtonState = TXD(0xF7,1,1,4,tData);
+  int ButtonState = TXD(0xF7,1,1,4,tData)-(id-1)*256;     
   return ButtonState;
 }
 
@@ -32,7 +33,7 @@ int uKitSensor::uKit_Ultrasonic(char id){
   delay(5);
   return TXD(0xF5,1,1,4,tData); 
 }
-void uKitSensor::uKit_NixieTube_full(char id,uint8_t tpye,uint8_t method,uint8_t frequency,uint8_t times,uint8_t start,uint8_t ends){
+void uKitSensor::uKit_NixieTube_Full(char id,uint8_t tpye,uint8_t method,uint8_t frequency,uint8_t times,uint8_t start,uint8_t ends){
   unsigned char tData[1];
   
   tData[0]=id;

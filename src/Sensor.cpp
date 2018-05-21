@@ -80,6 +80,7 @@ void Sensor::setcolor(int color){
       analogWrite(redPin,255);
       analogWrite(greenPin,255);
       analogWrite(bluePin,0);
+      break;
     case 4://黄
       analogWrite(redPin,0);
       analogWrite(greenPin,0);
