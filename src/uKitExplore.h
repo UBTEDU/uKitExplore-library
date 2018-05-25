@@ -85,6 +85,7 @@ uKitSensor uKitSensor;
 #define tone(frequency,duration) Sensor.tone(frequency,duration)
 #define noTone(pin) Sensor.noTone(pin)
 #define read_data() Sensor.read_data()
+#define read_gray(num,grayval) Sensor.read_gray(num,grayval)
 #define colorRGB(red,green,blue) Sensor.colorRGB(red,green,blue)//板载RGB灯函数
 #define setcolor(color) Sensor.setcolor(color)
 #define Battery_check() Sensor.Battery_check()

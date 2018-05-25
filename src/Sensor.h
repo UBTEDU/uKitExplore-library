@@ -16,13 +16,14 @@ public:
   
   int num1,num2,num3,num4,num5=0;
   void read_data();
-
+  int read_gray(char num,char grayval);
   void colorRGB(int red, int green, int blue);//板载RGB灯函数
   void setcolor(int color);
 
   float Battery_check();
   float HcSr04Dis(char jp); //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
   float HcSr04Dis(char EchoPin,char TrigPin); //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
+  
   
   
 };

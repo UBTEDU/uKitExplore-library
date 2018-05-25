@@ -176,10 +176,12 @@ Retry_Servo:
       }
       else if(CMD == 0x04 )
       {
-  if(Usart3_Rx_Buf[length + 3] == 7)
-        tRet = ((Usart3_Rx_Buf[length + 5] - 0xAA) << 8) + Usart3_Rx_Buf[length + 6];
-else   if(Usart3_Rx_Buf[length + 3] == 8)
-  tRet = (Usart3_Rx_Buf[length + 6] << 8) + Usart3_Rx_Buf[length + 7];
+        if(Usart3_Rx_Buf[length + 3] == 7)
+          tRet = ((Usart3_Rx_Buf[length + 5] - 0xAA) << 8) + Usart3_Rx_Buf[length + 6];
+        else   if(Usart3_Rx_Buf[length + 3] == 8)
+          tRet = (Usart3_Rx_Buf[length + 6] << 8) + Usart3_Rx_Buf[length + 7];
+        else   if(Usart3_Rx_Buf[length + 3] == 9)
+          tRet = (Usart3_Rx_Buf[length + 7] << 8) + Usart3_Rx_Buf[length + 8];
       }
       else if(CMD==0x06|CMD==0x07)
       {

@@ -5,7 +5,8 @@
 class uKitSensor : public SemiduplexSerial
 {
 public:
-    long uKit_Infrared(char ID);//ukit红外传感器控制函数，返回cm,(0-20)cm
+    
+    float uKit_Infrared(char ID);//ukit红外传感器控制函数，返回cm,(0-20)cm
     void Set_Infrared_Id(char id);//设置红外ID
     void uKit_Led(char id,char face,int times,int red,int green,int blue);//ukit led传感器。id为led的id号，face为表情种类（0）
     int uKit_Button(char id);//返回256无操作，返回257是单击，返回258是双击

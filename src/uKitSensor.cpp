@@ -1,12 +1,16 @@
 #include"uKitSensor.h" 
 
-long uKitSensor::uKit_Infrared(char ID){//uKit红外传感器
+float uKitSensor::uKit_Infrared(char ID){//uKit红外传感器
   unsigned char hData[1];
+  static int State=0;
   hData[0]=ID;
-  TXD(0xF8,1,1,0x02,hData);
+  if(State==0){
+    State=TXD(0xF8,1,1,0x02,hData);
+    delay(5);
+  }  
+ 
+  return TXD(0xF8,1,1,4,hData)/205.00;
   delay(5);
-  long distance = TXD(0xF8,1,1,4,hData);
-  return distance*20/2790;
 }
 
 void uKitSensor::Set_Infrared_Id(char id){
@@ -14,31 +18,40 @@ void uKitSensor::Set_Infrared_Id(char id){
   tData[0]=1;
   tData[1]=id;
   TXD(0xF8,1,2,0x06,tData);
+  delay(5);
 }
 
 int uKitSensor::uKit_Button(char id){
   unsigned  char tData[1];
-  
+  static int State=0;
   tData[0]=id;
-  TXD(0xF7,1,1,2,tData);  //开触碰
+  if(State==0){
+    State=TXD(0xF7,1,1,2,tData);  //开触碰
+    delay(5);
+  }   
+  return TXD(0xF7,1,1,4,tData)-(id-1)*256;  
   delay(5);
-  int ButtonState = TXD(0xF7,1,1,4,tData)-(id-1)*256;     
-  return ButtonState;
 }
 
 int uKitSensor::uKit_Ultrasonic(char id){
   unsigned char tData[1];
-  tData[0]=1;
-  TXD(0xF5,1,1,0x02,tData);
-  delay(5);
+  static int State=0;
+  tData[0]=id;
+  if(State==0){
+    State=TXD(0xF5,1,1,0x02,tData);
+    delay(5);
+  }
   return TXD(0xF5,1,1,4,tData); 
+  delay(5);
 }
 void uKitSensor::uKit_NixieTube_Full(char id,uint8_t tpye,uint8_t method,uint8_t frequency,uint8_t times,uint8_t start,uint8_t ends){
-  unsigned char tData[1];
-  
+  unsigned char tData[1]; 
+  static int State=0;
   tData[0]=id;
-  TXD(0xF6,1,1,0x02,tData);  
-  delay(5);
+  if(State==0){
+    State=TXD(0xF6,1,1,0x02,tData);  
+    delay(5);
+  }
   unsigned char xData[17];
   xData[0]=id;
   xData[1]=tpye;
@@ -57,14 +70,15 @@ void uKitSensor::uKit_NixieTube_Full(char id,uint8_t tpye,uint8_t method,uint8_t
   xData[14]=(uint8_t)ends>>16;
   xData[15]=(uint8_t)ends>>8;
   xData[16]=ends; 
- 
   TXD(0xF6,1,17,0x04,xData); 
+  delay(5);
 }
 void uKitSensor::uKit_NixieTube(char id,float number){
   
   unsigned char tData[1];
   uint16_t method;
   uint32_t numbers;
+  static int State=0;
   numbers=number;
   if(numbers-number==0)
   {
@@ -98,8 +112,11 @@ void uKitSensor::uKit_NixieTube(char id,float number){
   }
   
   tData[0]=id;
-  TXD(0xF6,1,1,0x02,tData);  
-  delay(5);
+  if(State==0){
+    State=TXD(0xF6,1,1,0x02,tData);  
+    delay(5);
+  }
+
   unsigned char xData[17];
   xData[0]=id;
   xData[1]=0;
@@ -118,6 +135,6 @@ void uKitSensor::uKit_NixieTube(char id,float number){
   xData[14]=0>>16;
   xData[15]=0>>8;
   xData[16]=0; 
- 
   TXD(0xF6,1,17,0x04,xData); 
+  delay(5);
 }

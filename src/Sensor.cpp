@@ -47,6 +47,26 @@ void Sensor::read_data(){
   num4 = digitalRead(GrayscaleNum4);
   num5 = digitalRead(GrayscaleNum5);
 }
+int Sensor::read_gray(char num,char grayval){//0深，1浅
+  int GrayscaleVal=0;
+  if(num==1)
+    GrayscaleVal=digitalRead(GrayscaleNum1);
+  else if(num==2)
+    GrayscaleVal=digitalRead(GrayscaleNum2);
+  else if(num==3)
+    GrayscaleVal=digitalRead(GrayscaleNum3);
+  else if(num==4)
+    GrayscaleVal=digitalRead(GrayscaleNum4);
+  else if(num==5)
+    GrayscaleVal=digitalRead(GrayscaleNum5);//黑0，白1
+ if(grayval==0 & GrayscaleVal==0)
+    return 1;
+ else if(grayval==1 & GrayscaleVal==1)
+    return 1;
+ else
+    return 0;
+
+}
 /**@brief EN:Color setting of board RGB LED/CN:板载RGB灯颜色设置.
  *
  * @param[in] red EN:Red value/CN:红色值.
