@@ -5,7 +5,7 @@ void setup()
   Initialization();
 }
 void loop(){
-Serial.println(uKit_Infrared(1));
+uKit_RGB_Read(1,'R');
 delay(300);
 
   }

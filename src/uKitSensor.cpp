@@ -20,6 +20,40 @@ void uKitSensor::Set_Infrared_Id(char id){
   TXD(0xF8,1,2,0x06,tData);
   delay(5);
 }
+void uKitSensor::uKit_Led(char id,char face,int times,int red,int green,int blue){
+
+  signed char tData2[1] ;
+  signed char tData[7];
+  tData2[0]=id;
+  static int State=0;
+  if(State==0){
+    State=TXD(0xF4,1,1,0x2,tData2 );
+    delay(5);  
+  }
+  tData[0]=id;  //ID
+  tData[1]=face;//表情
+  tData[2]=0x00;//
+  tData[3]=times;//
+  tData[4]=red;
+  tData[5]=green;
+  tData[6]=blue;
+  TXD(0xF4,1,0x0c,0x0a,tData );
+  delay(5);
+ }
+ 
+unsigned char uKitSensor::uKit_RGB_Read(char id,unsigned char RGB){
+  unsigned  char tData[1];
+  static int State=0;
+  tData[0]=id;
+  if(State==0){
+    State=TXD(0xE8,1,1,2,tData);  //开触碰
+    delay(5);
+  }   
+  return TXD(0xE8,1,1,4,RGB,tData);  
+  delay(5);
+ }
+  
+
 
 int uKitSensor::uKit_Button(char id){
   unsigned  char tData[1];
