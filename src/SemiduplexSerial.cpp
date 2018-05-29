@@ -184,7 +184,7 @@ Retry_Servo:
           tRet = (Usart3_Rx_Buf[length + 6] << 8) + Usart3_Rx_Buf[length + 7];
         else   if(Usart3_Rx_Buf[length + 3] == 9)
           tRet = (Usart3_Rx_Buf[length + 7] << 8) + Usart3_Rx_Buf[length + 8];
-        else   if(Usart3_Rx_Buf[length + 3] == 16)
+        else   if(Usart3_Rx_Buf[length + 3] == 17)
         {
           if(RGB == 'R')
              tRet = Usart3_Rx_Buf[length + 6];

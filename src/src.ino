@@ -5,8 +5,11 @@ void setup()
   Initialization();
 }
 void loop(){
-uKit_RGB_Read(1,'R');
+  
+  uKit_Leds(2,255,255,0);
+
 delay(300);
+while(1);
 
   }
  

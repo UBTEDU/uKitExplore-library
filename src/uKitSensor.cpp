@@ -37,7 +37,30 @@ void uKitSensor::uKit_Led(char id,char face,int times,int red,int green,int blue
   tData[4]=red;
   tData[5]=green;
   tData[6]=blue;
+  
   TXD(0xF4,1,0x0c,0x0a,tData );
+  delay(5);
+ }
+
+void uKitSensor::uKit_Leds(char id,int red,int green,int blue){
+
+  signed char tData2[1] ;
+  signed char tData[8];
+  tData2[0]=id;
+  static int State=0;
+  if(State==0){
+    State=TXD(0xF4,1,1,0x2,tData2 );
+    delay(5);  
+  }
+  tData[0]=id;  //ID
+  tData[1]=0xff;
+  tData[2]=1;//
+  tData[3]=0xff;//
+  tData[4]=red;
+  tData[5]=green;
+  tData[6]=blue;
+  tData[7]=8;
+  TXD(0xF4,1,8,0x0b,tData );
   delay(5);
  }
  

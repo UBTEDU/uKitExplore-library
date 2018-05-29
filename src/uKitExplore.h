@@ -37,6 +37,7 @@ uKitSensor uKitSensor;
 #define Set_Infrared_Id(id) uKitSensor.Set_Infrared_Id(id)//设置红外ID
 #define uKit_RGB_Read(id,rgb) uKitSensor.uKit_RGB_Read(id,rgb)
 #define uKit_Led(id,face,times,red,green,blue) uKitSensor.uKit_Led(id,face,times,red,green,blue)//ukit led传感器。id为led的id号，face为表情种类（0）
+#define uKit_Leds(id,red,green,blue) uKitSensor.uKit_Leds(id,red,green,blue)//ukit led传感器。id为led的id号，face为表情种类（0）
 #define uKit_Button(id) uKitSensor.uKit_Button(id)//返回256无操作，返回257是单击，返回258是双击
 #define uKit_Ultrasonic(id) uKitSensor.uKit_Ultrasonic(id)
 #define uKit_NixieTube_Full(id,tpye,method,frequency,times,start,ends) uKitSensor.uKit_NixieTube_Full(id,tpye,method,frequency,times,start,ends)
