@@ -20,7 +20,7 @@ void uKitSensor::Set_Infrared_Id(char id){
   TXD(0xF8,1,2,0x06,tData);
   delay(5);
 }
-void uKitSensor::uKit_Led(char id,char face,int times,int red,int green,int blue){
+void uKitSensor::uKit_Led_Face(char id,char face,int times,int red,int green,int blue){
 
   signed char tData2[1] ;
   signed char tData[7];
@@ -38,10 +38,30 @@ void uKitSensor::uKit_Led(char id,char face,int times,int red,int green,int blue
   tData[5]=green;
   tData[6]=blue;
   
-  TXD(0xF4,1,0x0c,0x0a,tData );
+  State=TXD(0xF4,1,7,0x0a,tData );
+  delay(5);
+
+ }
+void uKitSensor::uKit_Led_Scene(char id,char scene,int times){
+
+  signed char tData2[1] ;
+  signed char tData[7];
+  tData2[0]=id;
+  static int State=0;
+  if(State==0){
+    State=TXD(0xF4,1,1,0x2,tData2 );
+    delay(5);  
+  }
+  tData[0]=id;  //ID
+  tData[1]=scene+12;//表情
+  tData[2]=0x00;//
+  tData[3]=times;// 
+  tData[4]=0;
+  tData[5]=0;
+  tData[6]=0;
+  State=TXD(0xF4,1,7,0x0a,tData );
   delay(5);
  }
-
 void uKitSensor::uKit_Leds(char id,int red,int green,int blue){
 
   signed char tData2[1] ;
@@ -60,10 +80,18 @@ void uKitSensor::uKit_Leds(char id,int red,int green,int blue){
   tData[5]=green;
   tData[6]=blue;
   tData[7]=8;
-  TXD(0xF4,1,8,0x0b,tData );
+  State=TXD(0xF4,1,8,0x0b,tData );
   delay(5);
  }
- 
+void uKitSensor::uKit_Led_off(char id){
+  signed char tData[1];
+  static int State=0;
+  tData[0]=id;
+  if(State==0){
+    State=TXD(0xF4,1,1,0x3,tData);
+    delay(5);
+  }
+ } 
 unsigned char uKitSensor::uKit_RGB_Read(char id,unsigned char RGB){
   unsigned  char tData[1];
   static int State=0;
@@ -75,6 +103,8 @@ unsigned char uKitSensor::uKit_RGB_Read(char id,unsigned char RGB){
   return TXD(0xE8,1,1,4,RGB,tData);  
   delay(5);
  }
+
+ 
   
 
 
@@ -127,7 +157,7 @@ void uKitSensor::uKit_NixieTube_Full(char id,uint8_t tpye,uint8_t method,uint8_t
   xData[14]=(uint8_t)ends>>16;
   xData[15]=(uint8_t)ends>>8;
   xData[16]=ends; 
-  TXD(0xF6,1,17,0x04,xData); 
+  State=TXD(0xF6,1,17,0x04,xData); 
   delay(5);
 }
 void uKitSensor::uKit_NixieTube(char id,float number){
