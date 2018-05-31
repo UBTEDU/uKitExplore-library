@@ -40,6 +40,62 @@ void Sensor::noTone()
   pinMode(buzzer_pin, OUTPUT);
   digitalWrite(buzzer_pin, LOW);
 }
+void Sensor::IR_Send38KHZ(char pin,int x,int y){
+  for(int i=0;i<x;i++){ //15=386US
+    if(y==1){
+      digitalWrite(pin,1);
+      delayMicroseconds(9);
+      digitalWrite(pin,0);
+      delayMicroseconds(9);
+      }
+    else{
+      digitalWrite(pin,0);
+      delayMicroseconds(20);
+      }            
+    } 
+}
+void Sensor::IR_Sendcode(char pin,uint8_t x){
+  for(int i=0;i<8;i++){
+    if((x&0x01)==0x01){
+      IR_Send38KHZ(pin,23,1);
+      IR_Send38KHZ(pin,64,0);             
+    }
+    else{
+      IR_Send38KHZ(pin,23,1);
+      IR_Send38KHZ(pin,21,0);  
+    }
+      x=x>>1;
+  }  
+}
+void Sensor::IR_Sendcode16(char pin,uint16_t x){
+  for(int i=0;i<16;i++)
+  {
+    if((x&0x000001)==0x000001)
+    {
+      IR_Send38KHZ(pin,23,1);
+      IR_Send38KHZ(pin,64,0);             
+    }
+    else
+    {
+      IR_Send38KHZ(pin,23,1);
+      IR_Send38KHZ(pin,21,0);  
+    }
+    x=x>>1;
+  }    
+}
+void Sensor::IR_Send(char pin,uint8_t code){
+  IR_Send38KHZ(pin,280,1);//发送9ms的起始码
+  IR_Send38KHZ(pin,140,0);//发送4.5ms的结果码
+  
+  IR_Sendcode(pin,code);//用户ID
+ // IR_Sendcode16(like);//用户匹配项目    
+ // IR_Sendcode(0xFF);//用户ID
+  
+  IR_Send38KHZ(pin,21,1);//发送结束码
+  delay(200);
+}
+
+
 void Sensor::read_data(){
   num1 = digitalRead(GrayscaleNum1);
   num2 = digitalRead(GrayscaleNum2);
