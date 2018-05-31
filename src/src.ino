@@ -16,8 +16,6 @@ void loop(){
       uKit_Led_Scene(2,i,2);
   }
 
-  
-
 }
 void loops(){
   if (Serial.available() > 0) {

@@ -8,10 +8,10 @@ public:
     
     float uKit_Infrared(char ID);//ukit红外传感器控制函数，返回cm,(0-20)cm
     void Set_Infrared_Id(char id);//设置红外ID
-    //ukit led传感器。id为led的id号，face为表情种类0眨眼，1伤心，2热泪盈眶，3泪光闪动，4哭泣，5晕，6开心，7惊讶，呼吸，闪烁，风扇，雨刮
+    //ukit led传感器。id为led的id号，face为表情种类（0眨眼，1伤心，2热泪盈眶，3泪光闪动，4哭泣，5晕，6开心，7惊讶，8呼吸，9闪烁，10风扇，11雨刮）,times是次数 ,rgb
     void uKit_Led_Face(char id,char face,int times,int red,int green,int blue);
-    void uKit_Led_Scene(char id,char scene,int times);
-    void uKit_Leds(char id,int red,int green, int blue);
+    void uKit_Led_Scene(char id,char scene,int times);//情景模式 id是id号，scene是情景灯，times是次数
+    void uKit_Leds(char id,int red,int green, int blue);//全亮模式， id是id号， RGB
     void uKit_Led_off(char id);
     unsigned char uKit_RGB_Read(char id,unsigned char RGB);
     int uKit_Button(char id);//返回256无操作，返回257是单击，返回258是双击

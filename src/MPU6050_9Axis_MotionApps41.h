@@ -39,7 +39,7 @@ THE SOFTWARE.
 // MotionApps 4.1 DMP implementation, built using the MPU-9150 "MotionFit" board
 #define MPU6050_INCLUDE_DMP_MOTIONAPPS41
 
-#include "MPU6050.h"
+#include "MPU6050s.h"
 #include <avr/pgmspace.h>
 
 // NOTE! Enabling DEBUG adds about 3.3kB to the flash program size.

@@ -2,9 +2,9 @@
     MPU6050 Triple Axis Gyroscope & Accelerometer. Simple Accelerometer Example.
 */
 #include <Wire.h>
-#include "MPU6050.h"
+#include "MPU6050s.h"
 #include"uKitExplore.h"
-MPU6050 mpu;
+MPU6050s mpu;
 
 void setup() 
 {
