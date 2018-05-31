@@ -4,7 +4,7 @@
 #include <Wire.h>
 #include "MPU6050s.h"
 #include"uKitExplore.h"
-MPU6050s mpu;
+MPU6050 mpu;
 
 void setup() 
 {
