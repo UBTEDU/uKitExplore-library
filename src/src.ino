@@ -3,6 +3,7 @@ String item;
 int i=0;
 void setup(){
   Initialization();
+  
   item = "";
   pinMode(22, OUTPUT);
 }
