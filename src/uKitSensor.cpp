@@ -94,20 +94,24 @@ void uKitSensor::uKit_Led_off(char id){
  } 
 unsigned char uKitSensor::uKit_RGB_Read(char id,unsigned char RGB){
   unsigned  char tData[1];
-  static int State=0;
   tData[0]=id;
-  if(State==0){
-    State=TXD(0xE8,1,1,2,tData);  //开触碰
+    TXD(0xE8,1,1,2,tData);  
+    delay(5); 
+    return TXD(0xE8,1,1,4,RGB,tData);  
     delay(5);
-  }   
-  return TXD(0xE8,1,1,4,RGB,tData);  
-  delay(5);
+ 
+ }
+void uKitSensor::uKit_RGB_off(char id){
+  unsigned  char tData[1];
+  tData[0]=id;
+  TXD(0xE8,1,1,3,tData); 
+    delay(5);   
  }
 bool uKitSensor::uKit_RGB_Readcolor(char id,char color){
   unsigned char Rvalue=uKit_RGB_Read(id,'R');
   unsigned char Gvalue=uKit_RGB_Read(id,'G');
   unsigned char Bvalue=uKit_RGB_Read(id,'B');
-
+  
   if(Rvalue>80 & Rvalue<255 & Gvalue<150 &Bvalue<150 & color=='R')
     return true;
   else if(Gvalue>80 & Gvalue<255 & Rvalue<150 &Bvalue<150 & color=='G')
@@ -122,6 +126,7 @@ bool uKitSensor::uKit_RGB_Readcolor(char id,char color){
     return true;  
   else
     return false;
+   
   
 }
  

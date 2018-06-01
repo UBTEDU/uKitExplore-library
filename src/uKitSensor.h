@@ -15,6 +15,7 @@ public:
     void uKit_Led_off(char id);
     unsigned char uKit_RGB_Read(char id,unsigned char RGB);
     bool uKit_RGB_Readcolor(char id,char color);
+    void uKit_RGB_off(char id);
     int uKit_Button(char id);//返回256无操作，返回257是单击，返回258是双击
     int uKit_Ultrasonic(char id);
     //tpye:   0:静态显示    1：闪烁   2：递增   3：递减   4：显示时间  5：递增计时(类似秒表)  6：递减计时(类似秒表)

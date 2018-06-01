@@ -13,6 +13,7 @@ void loop(){
      Serial.println(uKit_RGB_Readcolor(1,'R'));
      delay(20);
   }
+    //uKit_RGB_off(1);
 
 }
 void loops(){

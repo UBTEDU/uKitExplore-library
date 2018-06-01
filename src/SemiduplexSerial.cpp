@@ -175,6 +175,11 @@ Retry_Servo:
         tRet = Usart3_Rx_Buf[length + 5] - 0xAA;
         
       }
+      else if(CMD == 0x03 )
+      {
+        tRet = Usart3_Rx_Buf[length + 5] - 0xAA;
+        
+      }
       else if(CMD == 0x04 )
       {
         
@@ -357,6 +362,11 @@ Retry_Servo:
     else if( (Head < 0xFA) && (Head > 0x00) && (Usart3_Rx_Buf[length + 4] == CMD) )
     {
       if(CMD == 0x02 )
+      {
+        tRet = Usart3_Rx_Buf[length + 5] - 0xAA;
+        
+      }
+            else if(CMD == 0x03 )
       {
         tRet = Usart3_Rx_Buf[length + 5] - 0xAA;
         
