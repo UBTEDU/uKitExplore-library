@@ -10,10 +10,8 @@ void setup(){
 void loop(){
     button1.Update();
     if(button1.clicks == 1){
-      i++;
-      Serial.println(i);
-      uKit_Led_Scene(1,i,2);
-      uKit_Led_Scene(2,i,2);
+     Serial.println(uKit_RGB_Readcolor(1,'R'));
+     delay(20);
   }
 
 }

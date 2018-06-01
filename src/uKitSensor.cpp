@@ -103,7 +103,27 @@ unsigned char uKitSensor::uKit_RGB_Read(char id,unsigned char RGB){
   return TXD(0xE8,1,1,4,RGB,tData);  
   delay(5);
  }
+bool uKitSensor::uKit_RGB_Readcolor(char id,char color){
+  unsigned char Rvalue=uKit_RGB_Read(id,'R');
+  unsigned char Gvalue=uKit_RGB_Read(id,'G');
+  unsigned char Bvalue=uKit_RGB_Read(id,'B');
 
+  if(Rvalue>80 & Rvalue<255 & Gvalue<150 &Bvalue<150 & color=='R')
+    return true;
+  else if(Gvalue>80 & Gvalue<255 & Rvalue<150 &Bvalue<150 & color=='G')
+    return true;
+  else if(Bvalue>80 & Bvalue<255 & Rvalue<150 &Gvalue<150 & color=='B')
+    return true;
+  else if(Bvalue>200  & Rvalue>200 &Gvalue>200 & color=='W')
+    return true;   
+  else if(Rvalue>50 & Rvalue<240  & Bvalue>40& Bvalue<255 &Gvalue<80 & color=='P')
+    return true;      
+  else if(Rvalue>60 & Rvalue<255  & Bvalue>30& Bvalue<180 &Rvalue>60 & Rvalue<255 & color=='Y')
+    return true;  
+  else
+    return false;
+  
+}
  
   
 

@@ -42,7 +42,7 @@ unsigned long SemiduplexSerial::TXD(unsigned char Head,unsigned char ServoNO,uns
   
   memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
   memset((void *)buf,0,sizeof(buf));
-  Usart3_Rx_Ack_Len = 10; //应答消息长度
+  Usart3_Rx_Ack_Len = 17; //应答消息长度
   
   buf[0] = Head;  //填充协议头
   buf[1] = swab8(Head);

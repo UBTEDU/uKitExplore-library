@@ -38,6 +38,7 @@ uKitSensor uKitSensor;
 #define uKit_Infrared(id) uKitSensor.uKit_Infrared(id)//ukit红外传感器控制函数，返回cm,(0-20)cm
 #define Set_Infrared_Id(id) uKitSensor.Set_Infrared_Id(id)//设置红外ID
 #define uKit_RGB_Read(id,rgb) uKitSensor.uKit_RGB_Read(id,rgb)
+#define uKit_RGB_Readcolor(id,color) uKitSensor.uKit_RGB_Readcolor(id,color)
 #define uKit_Led_Face(id,face,times,red,green,blue) uKitSensor.uKit_Led_Face(id,face,times,red,green,blue)//ukit led传感器。id为led的id号，face为表情种类（0）
 #define uKit_Led_Scene(id,scene,times) uKitSensor.uKit_Led_Scene(id,scene,times)
 #define uKit_Led_off(id) uKitSensor.uKit_Led_off(id)
