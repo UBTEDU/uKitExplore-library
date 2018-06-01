@@ -95,8 +95,11 @@ void uKitSensor::uKit_Led_off(char id){
 unsigned char uKitSensor::uKit_RGB_Read(char id,unsigned char RGB){
   unsigned  char tData[1];
   tData[0]=id;
-    TXD(0xE8,1,1,2,tData);  
+  static int State=0;
+  if(State==0){
+    State=TXD(0xE8,1,1,2,tData);  
     delay(5); 
+  }
     return TXD(0xE8,1,1,4,RGB,tData);  
     delay(5);
  

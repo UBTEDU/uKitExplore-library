@@ -8,12 +8,6 @@ void setup(){
   pinMode(22, OUTPUT);
 }
 void loop(){
-    button1.Update();
-    if(button1.clicks == 1){
-     Serial.println(uKit_RGB_Readcolor(1,'R'));
-     delay(20);
-  }
-    //uKit_RGB_off(1);
 
 }
 void loops(){
