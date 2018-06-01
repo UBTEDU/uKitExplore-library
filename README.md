@@ -1,4 +1,4 @@
-# uKit Explore Library v18.5.21
+# uKit Explore Library v18.6.1
 
 Arduino Library for uKit Explore Modules
 
@@ -28,6 +28,6 @@ Arduino Library for uKit Explore Modules
 |James Kuang |     2018/04/19  |   18.4.18    |    Enabling a new framework.|
 |James Kuang |     2018/04/28  |   18.4.28    |    Add Nixie tube API.|
 |James Kuang |     2018/05/51  |   18.5.21    |    Fix some known problems.|
-
+|James Kuang |     2018/06/01  |   18.6.01    |    Add some new sensors|
 
 ### Learn more from UBTECH official website: www.ubtrobot.com
