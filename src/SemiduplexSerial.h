@@ -20,11 +20,11 @@ public:
     void Set_Servo_list(unsigned char Servo_NO);
     void Clr_Servo_list(unsigned char Servo_NO);
     void check_servo();
-
+    
     static uint32_t crc8(uint32_t crc, const uint8_t *vptr, uint32_t len);
     uint32_t crc8_itu(const uint8_t *pBuf, uint32_t len);
     static uint8_t _crc8(unsigned short data);
-    
+    unsigned char redvalue,greenvalue,bluevalue;
 
 private:
   #define POLY    (0x1070U << 3)

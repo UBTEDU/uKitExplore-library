@@ -13,6 +13,7 @@ public:
     void uKit_Led_Scene(char id,char scene,int times);//情景模式 id是id号，scene是情景灯，times是次数
     void uKit_Leds(char id,int red,int green, int blue);//全亮模式， id是id号， RGB
     void uKit_Led_off(char id);
+    void uKit_RGB_Read(char id);
     unsigned char uKit_RGB_Read(char id,unsigned char RGB);
     bool uKit_RGB_Readcolor(char id,char color);
     void uKit_RGB_off(char id);
@@ -24,6 +25,7 @@ public:
     //times:闪烁次数：0：不闪烁，>0：表示实际次数。
     void uKit_NixieTube_Full(char id,uint8_t tpye,uint8_t method,uint8_t frequency,uint8_t times,uint8_t start,uint8_t ends);
     void uKit_NixieTube(char id,float number);
+    
 };
 
 #endif

@@ -92,7 +92,7 @@ void uKitSensor::uKit_Led_off(char id){
     delay(5);
   }
  } 
-unsigned char uKitSensor::uKit_RGB_Read(char id,unsigned char RGB){
+void uKitSensor::uKit_RGB_Read(char id){
   unsigned  char tData[1];
   tData[0]=id;
   static int State=0;
@@ -100,7 +100,7 @@ unsigned char uKitSensor::uKit_RGB_Read(char id,unsigned char RGB){
     State=TXD(0xE8,1,1,2,tData);  
     delay(5); 
   }
-    return TXD(0xE8,1,1,4,RGB,tData);  
+    TXD(0xE8,1,1,4,tData);  
     delay(5);
  
  }

@@ -8,7 +8,14 @@ void setup(){
   pinMode(22, OUTPUT);
 }
 void loop(){
-
+   uKit_RGB_Read(1);
+   Serial.print("red:");
+   Serial.print(redvalue);
+      Serial.print("green:");
+   Serial.print(greenvalue);
+      Serial.print("blue:");
+   Serial.println(bluevalue);
+   delay(400);
 }
 void loops(){
   if (Serial.available() > 0) {

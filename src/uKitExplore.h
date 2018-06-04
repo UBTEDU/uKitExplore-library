@@ -37,7 +37,7 @@ uKitSensor uKitSensor;
 //uKitSensor_API
 #define uKit_Infrared(id) uKitSensor.uKit_Infrared(id)//ukit红外传感器控制函数，返回cm,(0-20)cm
 #define Set_Infrared_Id(id) uKitSensor.Set_Infrared_Id(id)//设置红外ID
-#define uKit_RGB_Read(id,rgb) uKitSensor.uKit_RGB_Read(id,rgb)
+#define uKit_RGB_Read(id) uKitSensor.uKit_RGB_Read(id)
 #define uKit_RGB_Readcolor(id,color) uKitSensor.uKit_RGB_Readcolor(id,color)
 #define uKit_RGB_off(id) uKitSensor.uKit_RGB_off(id)
 #define uKit_Led_Face(id,face,times,red,green,blue) uKitSensor.uKit_Led_Face(id,face,times,red,green,blue)//ukit led传感器。id为led的id号，face为表情种类（0）
@@ -48,7 +48,9 @@ uKitSensor uKitSensor;
 #define uKit_Ultrasonic(id) uKitSensor.uKit_Ultrasonic(id)
 #define uKit_NixieTube_Full(id,tpye,method,frequency,times,start,ends) uKitSensor.uKit_NixieTube_Full(id,tpye,method,frequency,times,start,ends)
 #define uKit_NixieTube(id,number) uKitSensor.uKit_NixieTube(id,number)
-
+#define redvalue uKitSensor.redvalue
+#define greenvalue uKitSensor.greenvalue
+#define bluevalue uKitSensor.bluevalue
 //uKitMotor_API
 #define MotorRotate(id,pwmDuty) uKitMotor.MotorRotate(id,pwmDuty)
 #define MotorRotateAdj(id,speed,time) uKitMotor.MotorRotateAdj(id,speed,time)
