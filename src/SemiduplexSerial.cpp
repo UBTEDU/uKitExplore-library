@@ -192,7 +192,8 @@ Retry_Servo:
         else   if(Usart3_Rx_Buf[length + 3] == 9)
           tRet = (Usart3_Rx_Buf[length + 7] << 8) + Usart3_Rx_Buf[length + 8];
         else   if(Usart3_Rx_Buf[length + 3] == 17)
-        {          
+        {       
+             tRet = ((Usart3_Rx_Buf[length + 5] - 0xAA) << 8) + Usart3_Rx_Buf[length + 6];   
              redvalue = Usart3_Rx_Buf[length + 6];
              greenvalue = Usart3_Rx_Buf[length + 7];
              bluevalue = Usart3_Rx_Buf[length + 8];

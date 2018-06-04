@@ -14,7 +14,6 @@ public:
     void uKit_Leds(char id,int red,int green, int blue);//全亮模式， id是id号， RGB
     void uKit_Led_off(char id);
     void uKit_RGB_Read(char id);
-    unsigned char uKit_RGB_Read(char id,unsigned char RGB);
     bool uKit_RGB_Readcolor(char id,char color);
     void uKit_RGB_off(char id);
     int uKit_Button(char id);//返回256无操作，返回257是单击，返回258是双击
