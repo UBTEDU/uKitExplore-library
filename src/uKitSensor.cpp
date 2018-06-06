@@ -113,18 +113,20 @@ void uKitSensor::uKit_RGB_off(char id){
  }
 bool uKitSensor::uKit_RGB_Readcolor(char id,char color){
   uKit_RGB_Read(id);
-  
-  if(redvalue>80 & redvalue<255 & greenvalue<150 &bluevalue<150 & color=='R')
+  unsigned char Rvalue=redvalue;
+  unsigned char Gvalue=greenvalue;
+  unsigned char Bvalue=bluevalue;
+  if(Rvalue>80 & Rvalue<255 & Gvalue<150 &Bvalue<150 & color=='R')
     return true;
-  else if(greenvalue>80 & greenvalue<255 & redvalue<150 &bluevalue<150 & color=='G')
+  else if(Gvalue>80 & Gvalue<255 & Rvalue<150 &Bvalue<150 & color=='G')
     return true;
-  else if(bluevalue>80 & bluevalue<255 & redvalue<150 &greenvalue<150 & color=='B')
+  else if(Bvalue>80 & Bvalue<255 & Rvalue<150 &Gvalue<150 & color=='B')
     return true;
-  else if(bluevalue>200  & redvalue>200 &greenvalue>200 & color=='W')
+  else if(Bvalue>200  & Rvalue>200 &Gvalue>200 & color=='W')
     return true;   
-  else if(redvalue>50 & redvalue<240  & bluevalue>40& bluevalue<255 &greenvalue<80 & color=='P')
+  else if(Rvalue>50 & Rvalue<240  & Bvalue>40& Bvalue<255 &Gvalue<80 & color=='P')
     return true;      
-  else if(redvalue>60 & redvalue<255  & bluevalue>30& bluevalue<180 &redvalue>60 & redvalue<255 & color=='Y')
+  else if(Rvalue>60 & Rvalue<255  & Bvalue>30& Bvalue<180 &Rvalue>60 & Rvalue<255 & color=='Y')
     return true;  
   else
     return false;
