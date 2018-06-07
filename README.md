@@ -1,6 +1,6 @@
 # uKit Explore Library v18.6.1
 ```
-git clone git@10.10.134:uKit/explorer-library.git
+git clone git@10.10.1.34:uKit/explorer-library.git
 
 ```
 Arduino Library for uKit Explore Modules
