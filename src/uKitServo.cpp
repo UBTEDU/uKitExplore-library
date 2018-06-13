@@ -8,7 +8,7 @@ void uKitServo::ServoRotate(char id,int dir, int speed){
   volatile int t=0;
   int speeds;
   speeds=constrain((speed*3.92),0,1000);
-  Serial.println(speeds);
+ 
   if(t!=speeds)
   {
     ServoStop(id);
