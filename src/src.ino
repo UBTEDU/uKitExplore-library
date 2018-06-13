@@ -9,15 +9,8 @@ void setup(){
 Initialization();
 }
 void loop(){
-ServoRotate(1,0,50);
-ServoRotate(7,0,50);
-delay(500);
-ServoRotate(1,0,255);
-ServoRotate(7,0,255);
-delay(500);
-
- 
-  
+Serial.println(ServoRead_PD(1));
+ delay(500);
   
   
 }
