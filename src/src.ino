@@ -6,27 +6,16 @@ int b=56;
 
 void setup(){
 
-  pinMode(22, OUTPUT);
-  pinMode(24, OUTPUT);
-  pinMode(26, OUTPUT);
-  digitalWrite(22, HIGH);
+Initialization();
 }
 void loop(){
-  for(int t=0;t<20;t++)
-  {
-  digitalWrite(24, LOW);  
-  delayMicroseconds(r);  
-  digitalWrite(24, HIGH);  
-  delayMicroseconds(255 - r); 
-    digitalWrite(26, LOW);  
-  delayMicroseconds(g);  
-  digitalWrite(26, HIGH);  
-  delayMicroseconds(255 - g); 
-      digitalWrite(22, LOW);  
-  delayMicroseconds(b);  
-  digitalWrite(22, HIGH);  
-  delayMicroseconds(255 - b); 
-  }
+ServoRotate(1,0,50);
+ServoRotate(7,0,50);
+delay(500);
+ServoRotate(1,0,255);
+ServoRotate(7,0,255);
+delay(500);
+
  
   
   

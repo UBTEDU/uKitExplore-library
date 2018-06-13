@@ -4,28 +4,38 @@
 
 
 void uKitServo::ServoRotate(char id,int dir, int speed){
-  int isNewSpeed = 0;
-  static char t=10;
-  char a=10;
-  
-  if(t!=speed)
+  unsigned char buf[4];
+  volatile int t=0;
+  int speeds;
+  speeds=constrain((speed*3.92),0,1000);
+  Serial.println(speeds);
+  if(t!=speeds)
   {
     ServoStop(id);
-    t=speed;
-    isNewSpeed = 1;
+    t=speeds;
+   
   }
+ 
+    
+    if(dir==0){
+        buf[0]=0xFE;
+        buf[1]=0x00;
+        buf[2]=(speeds &0xFF00) >> 8;
+        buf[3] = speeds & 0x00FF;
+      
+        TXD(0xFA,id,4,0x01,buf); 
+    }     
+    else if(dir==1){
+        buf[0]=0xFD;
+        buf[1]=0x00;
+        buf[2]=(speeds &0xFF00) >> 8;
+        buf[3] = speeds & 0x00FF;
+        TXD(0xFA,id,4,0x01,buf);
+         
+    }
+        
+  // t=speed;
   
-  if ((10 == a) ||(10 == t) || (isNewSpeed == 1))
-  {
-    //ServoRotates(id,dir,speed);
-    unsigned char aa[4]={0xFE,0,speed,0};//fan
-    unsigned char bb[4]={0xFD,0,speed,0};//zheng
-    if(dir==0)  
-      TXD(0xFA,id,4,0x01,aa);  
-    else if(dir==1)   
-      TXD(0xFA,id,4,0x01,bb);  
-    t=speed;
-  }
 }
 
 

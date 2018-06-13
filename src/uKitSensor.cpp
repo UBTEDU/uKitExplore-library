@@ -2,7 +2,7 @@
 
 float uKitSensor::uKit_Infrared(char ID){//uKit红外传感器
   unsigned char hData[1];
-  static int State=0;
+  volatile int State=0;
   hData[0]=ID;
   if(State==0){
     State=TXD(0xF8,1,1,0x02,hData);
@@ -25,7 +25,7 @@ void uKitSensor::uKit_Led_Face(char id,char face,int times,int red,int green,int
   signed char tData2[1] ;
   signed char tData[7];
   tData2[0]=id;
-  static int State=0;
+  volatile int State=0;
   if(State==0){
     State=TXD(0xF4,1,1,0x2,tData2 );
     delay(5);  
@@ -47,7 +47,7 @@ void uKitSensor::uKit_Led_Scene(char id,char scene,int times){
   signed char tData2[1] ;
   signed char tData[7];
   tData2[0]=id;
-  static int State=0;
+  volatile int State=0;
   if(State==0){
     State=TXD(0xF4,1,1,0x2,tData2 );
     delay(5);  
@@ -67,7 +67,7 @@ void uKitSensor::uKit_Leds(char id,int red,int green,int blue){
   signed char tData2[1] ;
   signed char tData[8];
   tData2[0]=id;
-  static int State=0;
+  volatile int State=0;
   if(State==0){
     State=TXD(0xF4,1,1,0x2,tData2 );
     delay(5);  
@@ -85,7 +85,7 @@ void uKitSensor::uKit_Leds(char id,int red,int green,int blue){
  }
 void uKitSensor::uKit_Led_off(char id){
   signed char tData[1];
-  static int State=0;
+  volatile int State=0;
   tData[0]=id;
   if(State==0){
     State=TXD(0xF4,1,1,0x3,tData);
@@ -95,7 +95,7 @@ void uKitSensor::uKit_Led_off(char id){
 void uKitSensor::uKit_RGB_Read(char id){
   unsigned  char tData[1];
   tData[0]=id;
-  static int State=0;
+  volatile int State=0;
   if(State==0){
     State=TXD(0xE8,1,1,2,tData);  
     delay(5); 
@@ -139,7 +139,7 @@ bool uKitSensor::uKit_RGB_Readcolor(char id,char color){
 
 int uKitSensor::uKit_Button(char id){
   unsigned  char tData[1];
-  static int State=0;
+  volatile int State=0;
   tData[0]=id;
   if(State==0){
     State=TXD(0xF7,1,1,2,tData);  //开触碰
@@ -151,7 +151,7 @@ int uKitSensor::uKit_Button(char id){
 
 int uKitSensor::uKit_Ultrasonic(char id){
   unsigned char tData[1];
-  static int State=0;
+  volatile int State=0;
   tData[0]=id;
   if(State==0){
     State=TXD(0xF5,1,1,0x02,tData);
@@ -162,7 +162,7 @@ int uKitSensor::uKit_Ultrasonic(char id){
 }
 void uKitSensor::uKit_NixieTube_Full(char id,uint8_t tpye,uint8_t method,uint8_t frequency,uint8_t times,uint8_t start,uint8_t ends){
   unsigned char tData[1]; 
-  static int State=0;
+  volatile int State=0;
   tData[0]=id;
   if(State==0){
     State=TXD(0xF6,1,1,0x02,tData);  
@@ -194,7 +194,7 @@ void uKitSensor::uKit_NixieTube(char id,float number){
   unsigned char tData[1];
   uint16_t method;
   uint32_t numbers;
-  static int State=0;
+  volatile int State=0;
   numbers=number;
   if(numbers-number==0)
   {
