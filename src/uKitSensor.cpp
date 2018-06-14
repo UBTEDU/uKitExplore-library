@@ -1,15 +1,31 @@
 #include"uKitSensor.h" 
 
-float uKitSensor::uKit_Infrared(char ID){//uKit红外传感器
+unsigned char  uKitSensor::uKit_Infrared(char ID){//uKit红外传感器
   unsigned char hData[1];
   volatile int State=0;
+  unsigned int  inval;
   hData[0]=ID;
   if(State==0){
     State=TXD(0xF8,1,1,0x02,hData);
     delay(5);
   }  
- 
-  return TXD(0xF8,1,1,4,hData)/205.00;
+  inval=TXD(0xF8,1,1,4,hData);
+  if(inval<=879)
+    inval=0;
+  else if(inval>879 &inval<=892)
+    inval=1;
+  else if(inval>892 &inval<=905)
+    inval=2;
+   else if(inval>905 &inval<=918)
+    inval=3;
+   else if(inval>918 &inval<=931)
+    inval=4;
+   else if(inval>918 &inval<=944)
+    inval=5;
+  else
+     inval=inval*20/2700;
+ return inval;  
+
   delay(5);
 }
 
