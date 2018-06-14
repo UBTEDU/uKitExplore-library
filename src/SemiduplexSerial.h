@@ -15,6 +15,7 @@ public:
     unsigned long TXD(unsigned char Head,unsigned char ServoNO,unsigned char len,unsigned char CMD,unsigned char RGB,unsigned char * Data);
     unsigned long TXD(unsigned char Head,unsigned char ServoNO,unsigned char len,unsigned char CMD,unsigned char * Data);
     unsigned long TXD(unsigned char len,unsigned char * Data);
+    signed long TXD(unsigned char len,unsigned char choice,unsigned char * Data);
     
     unsigned char Get_Servo_list(unsigned char Servo_NO);  //检查舵机存在不 ? 正不正常
     void Set_Servo_list(unsigned char Servo_NO);

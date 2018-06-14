@@ -9,7 +9,7 @@ void setup(){
 Initialization();
 }
 void loop(){
-Serial.println(ServoRead_PD(1));
+ Serial.println(uKit_Humiture(1,'T'));
  delay(500);
   
   

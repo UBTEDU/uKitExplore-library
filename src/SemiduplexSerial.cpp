@@ -237,7 +237,7 @@ unsigned long SemiduplexSerial::TXD(unsigned char len,unsigned char * Data){
   }
   else if(Rx_Buf[6]==7  & Rx_Buf[8]==1){//readspeed
     if(Rx_Buf[len+3]==0x05 & Rx_Buf[len+5]==0){
-       tRet=(Rx_Buf[len+6]<<8)+Rx_Buf[len+7];//停止成功返回0
+       tRet=(Rx_Buf[len+6]<<8)+Rx_Buf[len+7];
     }
     else{
       tRet=1;//停止成功返回0 
@@ -254,6 +254,35 @@ unsigned long SemiduplexSerial::TXD(unsigned char len,unsigned char * Data){
       
     }
   }
+  memset((void *)Data,0,sizeof(Data));
+  return tRet;
+}
+signed long SemiduplexSerial::TXD(unsigned char len,unsigned char choice,unsigned char * Data){
+  unsigned char Rx_Buf[23];
+  unsigned long tRet = 0;
+  memset((void *)Rx_Buf,0,sizeof(Rx_Buf));
+  
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(len+5*87*110/100/400);  //设置超时ms
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(Data,len);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  Serial3.readBytes(Rx_Buf,23); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+  if(Rx_Buf[6]==0  &Rx_Buf[8]==2){//温湿度
+    if(Rx_Buf[len+3]==0x05 & Rx_Buf[len+5]==0){
+      
+      if(choice=='T')
+        tRet=(Rx_Buf[len+6]<<8)+Rx_Buf[len+7];
+      else if(choice=='H')
+        tRet=(Rx_Buf[len+8]<<8)+Rx_Buf[len+9];
+    }
+    else{
+      tRet=1;//停止成功返回0 
+      
+    }
+  }
+ 
   memset((void *)Data,0,sizeof(Data));
   return tRet;
 }

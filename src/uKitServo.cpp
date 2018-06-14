@@ -102,8 +102,11 @@ void uKitServo::ServoRead_PD_M(char read_id[],char num)//舵机回读
 int uKitServo::ServoRead_NPD(char id){//单个舵机回读(不掉电回读）
   int tCmd=0;
   unsigned char aa[4]={0,0,0,0};
+
+
   tCmd=TXD(0xFA,id,4,0x03,aa)-120;
   delay(5);
+  
   if(tCmd>=-118 & tCmd<=118)
     return tCmd;
   return 0;

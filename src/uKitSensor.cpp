@@ -92,6 +92,22 @@ void uKitSensor::uKit_Led_off(char id){
     delay(5);
   }
  } 
+signed char uKitSensor::uKit_Humiture(char id, char choice){
+  unsigned long tRet = 0;
+  unsigned char buf[10];
+  buf[0] = 0xFB;//帧头
+  buf[1] = 0x05;//设备类型
+  buf[2] = 0x06;//长度
+  buf[3] = 0x05;//命令号
+  buf[4] = id;//id
+  buf[5] = 0x10;//参数
+  buf[6] = 0x00;
+  buf[7] = 0x00;
+  buf[8] = 0x02;
+  buf[9] = crc8_itu(&buf[1], buf[2]+2);
+  tRet=TXD(10,choice,buf);
+  return tRet;
+}
 void uKitSensor::uKit_RGB_Read(char id){
   unsigned  char tData[1];
   tData[0]=id;
