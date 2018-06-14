@@ -26,7 +26,8 @@ public:
     uint32_t crc8_itu(const uint8_t *pBuf, uint32_t len);
     static uint8_t _crc8(unsigned short data);
     unsigned char redvalue,greenvalue,bluevalue;
-
+    
+ 
 private:
   #define POLY    (0x1070U << 3)
   #define SERVO_NUMER_MAX    16  //支持的最多舵机

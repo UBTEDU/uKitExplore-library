@@ -259,7 +259,8 @@ unsigned long SemiduplexSerial::TXD(unsigned char len,unsigned char * Data){
 }
 signed long SemiduplexSerial::TXD(unsigned char len,unsigned char choice,unsigned char * Data){
   unsigned char Rx_Buf[23];
-  unsigned long tRet = 0;
+  signed long tRet = 0;
+  float fRet=0;
   memset((void *)Rx_Buf,0,sizeof(Rx_Buf));
   
   Serial3.begin(115200);  //uart3
@@ -272,8 +273,16 @@ signed long SemiduplexSerial::TXD(unsigned char len,unsigned char choice,unsigne
   if(Rx_Buf[6]==0  &Rx_Buf[8]==2){//温湿度
     if(Rx_Buf[len+3]==0x05 & Rx_Buf[len+5]==0){
       
-      if(choice=='T')
+      if(choice=='C')
         tRet=(Rx_Buf[len+6]<<8)+Rx_Buf[len+7];
+      else if(choice=='F'){
+        tRet+=(Rx_Buf[len+6]<<8)+Rx_Buf[len+7]*1.8;
+        tRet+=32;
+       
+
+        
+      }
+        
       else if(choice=='H')
         tRet=(Rx_Buf[len+8]<<8)+Rx_Buf[len+9];
     }

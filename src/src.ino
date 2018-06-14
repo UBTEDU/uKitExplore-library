@@ -9,7 +9,7 @@ void setup(){
 Initialization();
 }
 void loop(){
- Serial.println(uKit_Humiture(1,'T'));
+ Serial.println(uKit_Humiture(1,'C'));
  delay(500);
   
   
