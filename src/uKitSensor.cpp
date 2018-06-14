@@ -36,6 +36,22 @@ void uKitSensor::Set_Infrared_Id(char id){
   TXD(0xF8,1,2,0x06,tData);
   delay(5);
 }
+unsigned char uKitSensor::uKit_Sound_Read(char id){
+  unsigned long tRet = 0;
+  unsigned char buf[10];
+  buf[0] = 0xFB;//帧头
+  buf[1] = 0x10;//设备类型
+  buf[2] = 0x06;//长度
+  buf[3] = 0x05;//命令号
+  buf[4] = id;//id
+  buf[5] = 0x10;//参数
+  buf[6] = 0x00;
+  buf[7] = 0x00;
+  buf[8] = 0x01;
+  buf[9] = crc8_itu(&buf[1], buf[2]+2);
+  tRet=TXD(10,buf);
+  return tRet;
+}
 void uKitSensor::uKit_Led_Face(char id,char face,int times,int red,int green,int blue){
 
   signed char tData2[1] ;

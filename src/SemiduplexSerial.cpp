@@ -235,7 +235,7 @@ unsigned long SemiduplexSerial::TXD(unsigned char len,unsigned char * Data){
       tRet=1;//停止成功返回0 
     }
   }
-  else if(Rx_Buf[6]==7  & Rx_Buf[8]==1){//readspeed
+  else if((Rx_Buf[6]==7 | Rx_Buf[6]==0)  & (Rx_Buf[8]==1)){//readspeed
     if(Rx_Buf[len+3]==0x05 & Rx_Buf[len+5]==0){
        tRet=(Rx_Buf[len+6]<<8)+Rx_Buf[len+7];
     }
