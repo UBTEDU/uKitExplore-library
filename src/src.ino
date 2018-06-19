@@ -5,6 +5,6 @@ void setup() {
 }
 
 void loop() {
-Serial.println(uKit_Sound_Read(1));
+MotorRotate(1,120);
 delay(400);
 }

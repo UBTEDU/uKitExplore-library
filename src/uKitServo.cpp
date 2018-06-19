@@ -18,7 +18,7 @@ void uKitServo::ServoRotate(char id,int dir, int speed){
  
     
     if(dir==0){
-        buf[0]=0xFE;
+        buf[0]=0xFD;
         buf[1]=0x00;
         buf[2]=(speeds &0xFF00) >> 8;
         buf[3] = speeds & 0x00FF;
@@ -26,7 +26,7 @@ void uKitServo::ServoRotate(char id,int dir, int speed){
         TXD(0xFA,id,4,0x01,buf); 
     }     
     else if(dir==1){
-        buf[0]=0xFD;
+        buf[0]=0xFE;
         buf[1]=0x00;
         buf[2]=(speeds &0xFF00) >> 8;
         buf[3] = speeds & 0x00FF;
