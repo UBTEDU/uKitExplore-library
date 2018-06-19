@@ -56,7 +56,7 @@ unsigned char uKitSensor::uKit_Light_Read(char id){
   unsigned long tRet = 0;
   unsigned char buf[10];
   buf[0] = 0xFB;//帧头
-  buf[1] = 0x10;//设备类型
+  buf[1] = 0x06;//设备类型
   buf[2] = 0x06;//长度
   buf[3] = 0x05;//命令号
   buf[4] = id;//id
