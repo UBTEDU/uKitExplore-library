@@ -8,6 +8,7 @@ public:
     
     unsigned char  uKit_Infrared(char ID);//ukit红外传感器控制函数，返回cm,(0-20)cm
     unsigned char uKit_Sound_Read(char id);
+    unsigned char uKit_Light_Read(char id);
     void Set_Infrared_Id(char id);//设置红外ID
     //ukit led传感器。id为led的id号，face为表情种类（0眨眼，1伤心，2热泪盈眶，3泪光闪动，4哭泣，5晕，6开心，7惊讶，8呼吸，9闪烁，10风扇，11雨刮）,times是次数 ,rgb
     void uKit_Led_Face(char id,char face,int times,int red,int green,int blue);

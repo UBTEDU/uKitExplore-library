@@ -35,6 +35,7 @@ uKitSensor uKitSensor;
 #define ServoRead_NPD_M(read_id,num) uKitServo.ServoRead_NPD_M(read_id,num)//单个舵机回读，返回舵机角度值(掉电回读）
 
 //uKitSensor_API
+#define uKit_Light_Read(id) uKitSensor.uKit_Light_Read(id)
 #define uKit_Sound_Read(id) uKitSensor.uKit_Sound_Read(id)
 #define uKit_Infrared(id) uKitSensor.uKit_Infrared(id)//ukit红外传感器控制函数，返回cm,(0-20)cm
 #define Set_Infrared_Id(id) uKitSensor.Set_Infrared_Id(id)//设置红外ID
