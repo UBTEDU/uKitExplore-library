@@ -141,7 +141,7 @@ void uKitSensor::uKit_Led_off(char id){
   }
  } 
 signed char uKitSensor::uKit_Humiture(char id, char choice){
-  unsigned long tRet = 0;
+  signed char tRet = 0;
   unsigned char buf[10];
   buf[0] = 0xFB;//帧头
   buf[1] = 0x05;//设备类型
