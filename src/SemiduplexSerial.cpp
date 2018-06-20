@@ -259,7 +259,7 @@ unsigned long SemiduplexSerial::TXD(unsigned char len,unsigned char * Data){
 }
 signed long SemiduplexSerial::TXD(unsigned char len,unsigned char choice,unsigned char * Data){
   unsigned char Rx_Buf[26];
-  signed char tRet = 0;
+  signed long tRet = 0;
   float fRet=0;
   memset((void *)Rx_Buf,0,sizeof(Rx_Buf));
   
@@ -275,7 +275,8 @@ signed long SemiduplexSerial::TXD(unsigned char len,unsigned char choice,unsigne
       
       if(choice=='C')
       {
-        tRet=(Rx_Buf[len+6]<<8) | (Rx_Buf[len+7] & 0xff);
+        tRet=((Rx_Buf[len+6]<<8) | (Rx_Buf[len+7] & 0xff))/10;
+     
        
         
       }
