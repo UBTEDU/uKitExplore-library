@@ -235,9 +235,18 @@ unsigned long SemiduplexSerial::TXD(unsigned char len,unsigned char * Data){
       tRet=1;//停止成功返回0 
     }
   }
-  else if((Rx_Buf[6]==7 | Rx_Buf[6]==0)  & (Rx_Buf[8]==1)){//readspeed
+  else if((Rx_Buf[6]==7)  & (Rx_Buf[8]==1)){//readspeed
     if(Rx_Buf[len+3]==0x05 & Rx_Buf[len+5]==0){
        tRet=(Rx_Buf[len+6]<<8)+Rx_Buf[len+7];
+    }
+    else{
+      tRet=1;//停止成功返回0 
+      
+    }
+  }  
+    else if((Rx_Buf[6]==0)  & (Rx_Buf[8]==1)){//sound read
+    if(Rx_Buf[len+3]==0x05 & Rx_Buf[len+5]==0){
+       tRet=(Rx_Buf[len+6]<<8) |(Rx_Buf[len+7] & 0xff);
     }
     else{
       tRet=1;//停止成功返回0 
@@ -281,13 +290,13 @@ signed long SemiduplexSerial::TXD(unsigned char len,unsigned char choice,unsigne
         
       }
       else if(choice=='F'){
-        tRet=(Rx_Buf[len+6]<<8) | (Rx_Buf[len+7] & 0xff);
+       tRet=((Rx_Buf[len+6]<<8) | (Rx_Buf[len+7] & 0xff))/10;
         tRet*=1.8;
         tRet+=32;
             
       }       
       else if(choice=='H')
-        tRet=(Rx_Buf[len+8]<<8) | (Rx_Buf[len+9] & 0xff);
+        tRet=(Rx_Buf[len+8]<<8)+Rx_Buf[len+9];
     }
     else{
       tRet=1;//停止成功返回0 

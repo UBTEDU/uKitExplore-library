@@ -36,8 +36,8 @@ void uKitSensor::Set_Infrared_Id(char id){
   TXD(0xF8,1,2,0x06,tData);
   delay(5);
 }
-unsigned char uKitSensor::uKit_Sound_Read(char id){
-  unsigned long tRet = 0;
+unsigned short int uKitSensor::uKit_Sound_Read(char id){
+  unsigned short int tRet = 0;
   unsigned char buf[10];
   buf[0] = 0xFB;//帧头
   buf[1] = 0x10;//设备类型
@@ -52,8 +52,8 @@ unsigned char uKitSensor::uKit_Sound_Read(char id){
   tRet=TXD(10,buf);
   return tRet;
 }
-unsigned char uKitSensor::uKit_Light_Read(char id){
-  unsigned long tRet = 0;
+unsigned short int uKitSensor::uKit_Light_Read(char id){
+  unsigned short int tRet = 0;
   unsigned char buf[10];
   buf[0] = 0xFB;//帧头
   buf[1] = 0x06;//设备类型

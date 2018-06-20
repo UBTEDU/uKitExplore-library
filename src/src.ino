@@ -17,6 +17,6 @@ void setColor(int a,int green,int blue)
 }
 void loop()
 {
-Serial.println(uKit_Humiture(1,'C'));
+Serial.println(uKit_Light_Read(1));
 delay(400);
 }
