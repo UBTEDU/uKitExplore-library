@@ -184,7 +184,7 @@ Retry_Servo:
       }
       else if(CMD == 0x04 )
       {
-        
+        //Serial.println(Usart3_Rx_Buf[length + 3]);
         if(Usart3_Rx_Buf[length + 3] == 7)
           tRet = ((Usart3_Rx_Buf[length + 5] - 0xAA) << 8) + Usart3_Rx_Buf[length + 6];                
         else   if(Usart3_Rx_Buf[length + 3] == 8)

@@ -5,8 +5,8 @@
 unsigned long uKitMotor::MotorRotate(uint8_t id, uint16_t pwmDuty){
   unsigned long tRet = 0;
   unsigned char buf[12];
-  int speeds;
-  speeds=constrain((pwmDuty*8.4),0,1000);
+  uint16_t speeds;
+  speeds=pwmDuty*8;
   buf[0] = 0xFB;
   buf[1] = 0x03;
   buf[2] = 0x08;

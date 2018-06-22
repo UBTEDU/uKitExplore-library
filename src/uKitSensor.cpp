@@ -216,12 +216,16 @@ int uKitSensor::uKit_Button(char id){
 int uKitSensor::uKit_Ultrasonic(char id){
   unsigned char tData[1];
   volatile int State=0;
+  int distance;
   tData[0]=id;
   if(State==0){
     State=TXD(0xF5,1,1,0x02,tData);
     delay(5);
   }
-  return TXD(0xF5,1,1,4,tData); 
+   distance+=TXD(0xF5,1,1,4,tData);
+   distance/=10;
+   if(distance!=0)
+    return distance; 
   delay(5);
 }
 void uKitSensor::uKit_NixieTube_Full(char id,uint8_t tpye,uint8_t method,uint8_t frequency,uint8_t times,uint8_t start,uint8_t ends){
