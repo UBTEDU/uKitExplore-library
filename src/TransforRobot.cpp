@@ -124,28 +124,28 @@ void TransforRobot::motion_case(int cases,char times){
     motion_head(times);   
   else if(cases==9){
     for(int c=0;c<times;c++){
-      forward(2);
+      forward(110);
       delay(300);
       stops();
     }
   }
   else if(cases==10){
      for(int c=0;c<times;c++){
-      back(2);
+      back(110);
       delay(300);
       stops();
     }
    }
   else if(cases==11){
      for(int c=0;c<times;c++){
-      turnL(2);
+      turnL(110);
       delay(300);
       stops();
     }
    } 
   else if(cases==12){
      for(int c=0;c<times;c++){
-      turnR(2);
+      turnR(110);
       delay(300);
       stops();
     } 

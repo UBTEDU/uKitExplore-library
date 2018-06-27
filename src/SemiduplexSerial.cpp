@@ -224,23 +224,23 @@ unsigned long SemiduplexSerial::TXD(unsigned char len,unsigned char * Data){
   Serial2.end();  //关闭串口2,否则会影响接收消息
   Serial3.readBytes(Rx_Buf,23); //接收应答
   Serial3.end();  //关闭串口3,否则会影响接收消息
-  if((Rx_Buf[6]==4 |Rx_Buf[6]==6 | Rx_Buf[6]==3) &( Rx_Buf[8]==3 | Rx_Buf[8]==1)){//move&stop&setid
-    if(Rx_Buf[len+3]==0x06 & Rx_Buf[len+5]==0){
-       tRet=0;//停止成功返回0
-    }
-    else if(Rx_Buf[len+3]==0x05 & Rx_Buf[len+5]==0){
-      return Rx_Buf[len+7]; 
+
+
+  if((Rx_Buf[6]==4 |Rx_Buf[6]==6 | Rx_Buf[6]==3) &( Rx_Buf[8]==3 | Rx_Buf[8]==1)){//move&stop&setid//getsoundid
+     if(Rx_Buf[len+3]==5 & Rx_Buf[len+5]==0){
+      tRet= Rx_Buf[len+6]<<8 | Rx_Buf[len+7]&0xff; 
     }
     else{
-      tRet=1;//停止成功返回0 
+      tRet=0;
     }
+    
   }
   else if((Rx_Buf[6]==7)  & (Rx_Buf[8]==1)){//readspeed
     if(Rx_Buf[len+3]==0x05 & Rx_Buf[len+5]==0){
-       tRet=(Rx_Buf[len+6]<<8)+Rx_Buf[len+7];
+      tRet=abs((Rx_Buf[len+6]<<8) | (Rx_Buf[len+7] &0xff));
     }
     else{
-      tRet=1;//停止成功返回0 
+      tRet=0;//停止成功返回0 
       
     }
   }  
@@ -249,7 +249,7 @@ unsigned long SemiduplexSerial::TXD(unsigned char len,unsigned char * Data){
        tRet=(Rx_Buf[len+6]<<8) |(Rx_Buf[len+7] & 0xff);
     }
     else{
-      tRet=1;//停止成功返回0 
+      tRet=0;//停止成功返回0 
       
     }
   }  
@@ -259,10 +259,11 @@ unsigned long SemiduplexSerial::TXD(unsigned char len,unsigned char * Data){
 
     }
     else{
-      tRet=1;//停止成功返回0 
+      tRet=0;//停止成功返回0 
       
     }
   }
+
   memset((void *)Data,0,sizeof(Data));
   return tRet;
 }

@@ -26,6 +26,7 @@ uKitSensor uKitSensor;
 #define Button_pin Port.Button_pin
 #define Initialization() Port.Initialization()
 //uKitServo_API
+
 #define ServoRotate(id,dir,speed) uKitServo.ServoRotate(id,dir,speed)//舵机轮模式控制，id是舵机号，dir是方向（1顺时针，0逆时针），speed是速度（0-5）
 #define ServoAngle(id,angle,times) uKitServo.ServoAngle(id,angle,times)//舵机舵机模式，id是舵机号，angle是角度（-118°~118°），times是运行时间（300-5000）
 #define ServoStop(id) uKitServo.ServoStop(id)//单个舵机停止函数
@@ -35,6 +36,8 @@ uKitSensor uKitSensor;
 #define ServoRead_NPD_M(read_id,num) uKitServo.ServoRead_NPD_M(read_id,num)//单个舵机回读，返回舵机角度值(掉电回读）
 
 //uKitSensor_API
+#define getSoundId() uKitSensor.getSoundId()
+#define setSensorId() uKitSensor.setSensorId()
 #define uKit_Light_Read(id) uKitSensor.uKit_Light_Read(id)
 #define uKit_Sound_Read(id) uKitSensor.uKit_Sound_Read(id)
 #define uKit_Infrared(id) uKitSensor.uKit_Infrared(id)//ukit红外传感器控制函数，返回cm,(0-20)cm

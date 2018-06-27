@@ -36,6 +36,74 @@ void uKitSensor::Set_Infrared_Id(char id){
   TXD(0xF8,1,2,0x06,tData);
   delay(5);
 }
+unsigned char uKitSensor::getSoundId(){
+  unsigned short int tRet = 0;
+  unsigned char buf[10];
+  buf[0] = 0xFB;//帧头
+  buf[1] = 0x10;//设备类型
+  buf[2] = 0x06;//长度
+  buf[3] = 0x05;//命令号
+  buf[4] = 0xff;//id
+  buf[5] = 0x00;//参数
+  buf[6] = 0x06;
+  buf[7] = 0x00;
+  buf[8] = 0x01;
+  buf[9] = crc8_itu(&buf[1], buf[2]+2);
+  tRet=TXD(10,buf);
+  return tRet;
+}
+unsigned char uKitSensor::setSoundId(char oldid,char newid){
+  unsigned short int tRet = 0;
+  unsigned char buf[11];
+  buf[0] = 0xFB;//帧头
+  buf[1] = 0x10;//设备类型
+  buf[2] = 0x08;//长度
+  buf[3] = 0x06;//命令号
+  buf[4] = oldid;//id
+  buf[5] = 0x00;//参数
+  buf[6] = 0x06;
+  buf[7] = 0x00;
+  buf[8] = 0x01;
+  buf[9] = (newid & 0xFF00) >> 8;//new id
+  buf[10] = newid & 0x00FF;//new id
+  buf[11] = crc8_itu(&buf[1], buf[2]+2);
+  tRet=TXD(12,buf);
+  return tRet;
+}
+void uKitSensor::setSensorId(){
+  unsigned char SoundId,SoundId_1,id=0;
+  SoundId=getSoundId();
+  String comdata="";
+  delay(10);
+ Serial.println("注意！！！修改ID号，请确保当前只连接了一个设备，并且接上了电池并打开电源");
+ 
+    Serial.print("当前接入的传感器是声响传感器ID-");
+    Serial.println(SoundId);
+    while (Serial.available() > 0)  
+    {
+        comdata += char(Serial.read());
+    
+        delay(2);//为了防止数据丢失,在此设置短暂延时delay(2)
+    }
+    while (comdata.length() != 0)
+    {
+   
+        id=comdata.toInt();//在此把comdata转化成INT型数值,以备后续使用
+        comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加
+    }
+    delay(20);
+    setSoundId(SoundId,id);
+    delay(20);
+    SoundId_1=getSoundId();
+     delay(10);
+    Serial.print("成功将声响传感器ID-");
+    Serial.print(SoundId);
+    Serial.print("改为ID-");
+    Serial.print(SoundId_1); 
+  
+ 
+  
+}
 unsigned short int uKitSensor::uKit_Sound_Read(char id){
   unsigned short int tRet = 0;
   unsigned char buf[10];

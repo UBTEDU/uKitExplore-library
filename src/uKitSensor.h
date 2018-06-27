@@ -10,6 +10,9 @@ public:
     unsigned short int uKit_Sound_Read(char id);
     unsigned short int uKit_Light_Read(char id);
     void Set_Infrared_Id(char id);//设置红外ID
+    void setSensorId();
+    unsigned char getSoundId();
+    unsigned char  setSoundId(char oldid,char newid);
     //ukit led传感器。id为led的id号，face为表情种类（0眨眼，1伤心，2热泪盈眶，3泪光闪动，4哭泣，5晕，6开心，7惊讶，8呼吸，9闪烁，10风扇，11雨刮）,times是次数 ,rgb
     void uKit_Led_Face(char id,char face,int times,int red,int green,int blue);
     void uKit_Led_Scene(char id,char scene,int times);//情景模式 id是id号，scene是情景灯，times是次数
@@ -27,6 +30,7 @@ public:
     //times:闪烁次数：0：不闪烁，>0：表示实际次数。
     void uKit_NixieTube_Full(char id,uint8_t tpye,uint8_t method,uint8_t frequency,uint8_t times,uint8_t start,uint8_t ends);
     void uKit_NixieTube(char id,float number);
+ 
     
 };
 
