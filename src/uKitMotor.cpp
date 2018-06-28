@@ -109,51 +109,5 @@ int uKitMotor::MotorStop(uint8_t id)
  *
  * @returns tRet EN:0 means motor module acks correct, <0 means no ack or ack error/CN:返回0表示功能正常..
  */
-int uKitMotor::MotorSetID(uint8_t id_old, uint8_t id_new)
-{
-  unsigned long tRet = 0;
-  unsigned char buf[12];
-  
-  buf[0] = 0xFB;
-  buf[1] = 0x03;
-  buf[2] = 0x08;
-  buf[3] = 0x06;
-  buf[4] = id_old;
-  buf[5] = 0x00;
-  buf[6] = 0x03;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = 0x00;
-  buf[10] = id_new;
-  buf[11] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(12,buf);
- 
-  return tRet;
-}
-/**@brief EN:Check if the target motor module exists/CN:检查舵机ID号.
- *
- * @param[in] id EN:Motor module ID/CN:舵机ID号.
- *
- * @returns tRet EN:Return to the ID number to check the correctness,return 0 is error/CN:返回ID号说明ID正确，返回0ID号不正确.
- */
-int uKitMotor::MotorCheckID(uint8_t id)
-{
-  unsigned long tRet = 0;
-  unsigned char buf[10];
-  
-  buf[0] = 0xFB;
-  buf[1] = 0x03;
-  buf[2] = 0x06;
-  buf[3] = 0x05;
-  buf[4] = id;
-  buf[5] = 0x00;
-  buf[6] = 0x03;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(16,buf);
-  
-  return tRet;
-  
-}
+
 

@@ -14,8 +14,10 @@ public:
     unsigned char Cheak_Sum(unsigned char len, unsigned char *buf);
     unsigned long TXD(unsigned char Head,unsigned char ServoNO,unsigned char len,unsigned char CMD,unsigned char RGB,unsigned char * Data);
     unsigned long TXD(unsigned char Head,unsigned char ServoNO,unsigned char len,unsigned char CMD,unsigned char * Data);
+   
     unsigned long TXD(unsigned char len,unsigned char * Data);
     signed long TXD(unsigned char len,unsigned char choice,unsigned char * Data);
+  
     
     unsigned char Get_Servo_list(unsigned char Servo_NO);  //检查舵机存在不 ? 正不正常
     void Set_Servo_list(unsigned char Servo_NO);
@@ -25,7 +27,7 @@ public:
     static uint32_t crc8(uint32_t crc, const uint8_t *vptr, uint32_t len);
     uint32_t crc8_itu(const uint8_t *pBuf, uint32_t len);
     static uint8_t _crc8(unsigned short data);
-    unsigned char redvalue,greenvalue,bluevalue;
+    unsigned char redvalue,greenvalue,bluevalue=0;
     
  
 private:

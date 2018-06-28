@@ -11,6 +11,7 @@
 #include"uKitSensor.h"
 #include"uKitServo.h"
 #include "ClickButton.h"
+#include"uKitId.h"
 
 
 Port Port;
@@ -19,8 +20,9 @@ TransforRobot TransforRobot;
 uKitMotor uKitMotor;
 uKitServo uKitServo;
 uKitSensor uKitSensor;
+uKitId uKitId;
 
-//
+
 
 //Port_API
 #define Button_pin Port.Button_pin
@@ -36,13 +38,13 @@ uKitSensor uKitSensor;
 #define ServoRead_NPD_M(read_id,num) uKitServo.ServoRead_NPD_M(read_id,num)//单个舵机回读，返回舵机角度值(掉电回读）
 
 //uKitSensor_API
-#define getSoundId() uKitSensor.getSoundId()
-#define setSensorId() uKitSensor.setSensorId()
+
+
 #define uKit_Light_Read(id) uKitSensor.uKit_Light_Read(id)
 #define uKit_Sound_Read(id) uKitSensor.uKit_Sound_Read(id)
 #define uKit_Infrared(id) uKitSensor.uKit_Infrared(id)//ukit红外传感器控制函数，返回cm,(0-20)cm
 #define Set_Infrared_Id(id) uKitSensor.Set_Infrared_Id(id)//设置红外ID
-#define uKit_RGB_Read(id) uKitSensor.uKit_RGB_Read(id)
+#define uKit_RGB_Read(id,rgb) uKitSensor.uKit_RGB_Read(id,rgb)
 #define uKit_RGB_Readcolor(id,color) uKitSensor.uKit_RGB_Readcolor(id,color)
 #define uKit_RGB_off(id) uKitSensor.uKit_RGB_off(id)
 #define uKit_Led_Face(id,face,times,red,green,blue) uKitSensor.uKit_Led_Face(id,face,times,red,green,blue)//ukit led传感器。id为led的id号，face为表情种类（0）
@@ -65,6 +67,8 @@ uKitSensor uKitSensor;
 #define MotorSetID(id_old,id_new) uKitMotor.MotorSetID(id_old,id_new)
 #define MotorCheckID(id) uKitMotor.MotorCheckID(id)
 
+//uKitId
+#define setSensorId() uKitId.setSensorId()
 //TransforRobot_API
 #define forward(a) TransforRobot.forward(a)//小车前进函数，速度0-5
 #define turnL(speed) TransforRobot.turnL(speed)//小车左转，速度0-5

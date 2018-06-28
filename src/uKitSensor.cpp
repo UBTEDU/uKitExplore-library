@@ -29,81 +29,8 @@ unsigned char  uKitSensor::uKit_Infrared(char ID){//uKit红外传感器
   delay(5);
 }
 
-void uKitSensor::Set_Infrared_Id(char id){
-  unsigned char tData[2];
-  tData[0]=1;
-  tData[1]=id;
-  TXD(0xF8,1,2,0x06,tData);
-  delay(5);
-}
-unsigned char uKitSensor::getSoundId(){
-  unsigned short int tRet = 0;
-  unsigned char buf[10];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x10;//设备类型
-  buf[2] = 0x06;//长度
-  buf[3] = 0x05;//命令号
-  buf[4] = 0xff;//id
-  buf[5] = 0x00;//参数
-  buf[6] = 0x06;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(10,buf);
-  return tRet;
-}
-unsigned char uKitSensor::setSoundId(char oldid,char newid){
-  unsigned short int tRet = 0;
-  unsigned char buf[11];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x10;//设备类型
-  buf[2] = 0x08;//长度
-  buf[3] = 0x06;//命令号
-  buf[4] = oldid;//id
-  buf[5] = 0x00;//参数
-  buf[6] = 0x06;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = (newid & 0xFF00) >> 8;//new id
-  buf[10] = newid & 0x00FF;//new id
-  buf[11] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(12,buf);
-  return tRet;
-}
-void uKitSensor::setSensorId(){
-  unsigned char SoundId,SoundId_1,id=0;
-  SoundId=getSoundId();
-  String comdata="";
-  delay(10);
- Serial.println("注意！！！修改ID号，请确保当前只连接了一个设备，并且接上了电池并打开电源");
- 
-    Serial.print("当前接入的传感器是声响传感器ID-");
-    Serial.println(SoundId);
-    while (Serial.available() > 0)  
-    {
-        comdata += char(Serial.read());
-    
-        delay(2);//为了防止数据丢失,在此设置短暂延时delay(2)
-    }
-    while (comdata.length() != 0)
-    {
-   
-        id=comdata.toInt();//在此把comdata转化成INT型数值,以备后续使用
-        comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加
-    }
-    delay(20);
-    setSoundId(SoundId,id);
-    delay(20);
-    SoundId_1=getSoundId();
-     delay(10);
-    Serial.print("成功将声响传感器ID-");
-    Serial.print(SoundId);
-    Serial.print("改为ID-");
-    Serial.print(SoundId_1); 
-  
- 
-  
-}
+
+
 unsigned short int uKitSensor::uKit_Sound_Read(char id){
   unsigned short int tRet = 0;
   unsigned char buf[10];
@@ -224,19 +151,24 @@ signed char uKitSensor::uKit_Humiture(char id, char choice){
   tRet=TXD(10,choice,buf);
   return tRet;
 }
-void uKitSensor::uKit_RGB_Read(char id){
+
+unsigned char uKitSensor::uKit_RGB_Read(char id,unsigned char RGB){
   unsigned  char tData[1];
+  unsigned char Value;
   tData[0]=id;
   volatile int State=0;
   if(State==0){
     State=TXD(0xE8,1,1,2,tData);  
     delay(5); 
+    State=1;
   }
-    State=TXD(0xE8,1,1,4,tData);  
-    delay(8);
-
+    Value=TXD(0xE8,1,1,4,tData);  
+    delay(10);
+    return Value;
  
  }
+
+ 
 void uKitSensor::uKit_RGB_off(char id){
   unsigned  char tData[1];
   tData[0]=id;
@@ -244,10 +176,10 @@ void uKitSensor::uKit_RGB_off(char id){
     delay(5);   
  }
 bool uKitSensor::uKit_RGB_Readcolor(char id,char color){
-  uKit_RGB_Read(id);
-  unsigned char Rvalue=redvalue;
-  unsigned char Gvalue=greenvalue;
-  unsigned char Bvalue=bluevalue;
+  
+  unsigned char Rvalue=uKit_RGB_Read(id,'R');
+  unsigned char Gvalue=uKit_RGB_Read(id,'G');
+  unsigned char Bvalue=uKit_RGB_Read(id,'B');
   if(Rvalue>80 & Rvalue<255 & Gvalue<150 &Bvalue<150 & color=='R')
     return true;
   else if(Gvalue>80 & Gvalue<255 & Rvalue<150 &Bvalue<150 & color=='G')
