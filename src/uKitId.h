@@ -21,6 +21,25 @@ public:
     
     unsigned char setInfraredId(char oldid,char newid);
     unsigned char getInfraredId();
+
+    unsigned char setLedId(char oldid,char newid);
+    unsigned char getLedId();
+
+    unsigned char setButtonId(char oldid,char newid);
+    unsigned char getButtonId();
+
+    unsigned char setUltrasonicId(char oldid,char newid);
+    unsigned char getUltrasonicId();
+
+    unsigned char setColorId(char oldid,char newid);
+    unsigned char getColorId();   
+
+    unsigned char setServoId(char oldid,char newid);
+    unsigned char getServoId(); 
+
+    
+
+ 
     void setSensorId();
  };
  #endif

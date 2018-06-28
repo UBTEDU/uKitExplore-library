@@ -8,8 +8,9 @@ void setup() {
 
 void loop() {
 setSensorId();
-Serial.println(uKitId.getInfraredId());
-delay(400);
+
+
+
 
 
 }

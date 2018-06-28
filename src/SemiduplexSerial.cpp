@@ -165,10 +165,10 @@ Retry_Servo:
     {
       if(CMD == 1 )
       {
-        if((Usart3_Rx_Buf[RXD_OFFSET + 3] == 0xAA) && (Usart3_Rx_Buf[RXD_OFFSET + 2] == ServoNO) )
+        if((Usart3_Rx_Buf[RXD_OFFSET + 3] == 0xAA)  )//版本号改为读ID
         {
-          tRet = Usart3_Rx_Buf[RXD_OFFSET + 6] << 8;
-          tRet |= Usart3_Rx_Buf[RXD_OFFSET + 7] << 0;
+          tRet=Usart3_Rx_Buf[RXD_OFFSET + 2];
+         
         }
       }
     }
