@@ -364,7 +364,7 @@ void uKitId::setSensorId(){
           ServoId=getServoId();
           delay(10);
           
-          if(SoundId!=0){
+          if(SoundId!=0 &LightId==0 & HumitureId==0 & InfraredId==0 & LedId==0 & ButtonId==0 & UltrasonicId==0 & ColorId==0 & MotorId==0 & ServoId==0){
             delay(20);
             if(id!=0)
               setSoundId(SoundId,id);
@@ -379,7 +379,7 @@ void uKitId::setSensorId(){
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
             
           }
-          else if(LightId!=0){
+          else if(SoundId==0 &LightId!=0 & HumitureId==0 & InfraredId==0 & LedId==0 & ButtonId==0 & UltrasonicId==0 & ColorId==0 & MotorId==0 & ServoId==0){
             delay(20);
             if(id!=0)
               setLightId(LightId,id);
@@ -393,7 +393,7 @@ void uKitId::setSensorId(){
             Serial.println(LightId_1); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }
-          else if(HumitureId!=0){
+          else if(SoundId==0 &LightId==0 & HumitureId!=0 & InfraredId==0 & LedId==0 & ButtonId==0 & UltrasonicId==0 & ColorId==0 & MotorId==0 & ServoId==0){
             delay(20);
             if(id!=0)
               setHumitureId(HumitureId,id);
@@ -407,7 +407,7 @@ void uKitId::setSensorId(){
             Serial.println(HumitureId_1); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }
-          else if(InfraredId!=0){
+          else if(SoundId==0 &LightId==0 & HumitureId==0 & InfraredId!=0 & LedId==0 & ButtonId==0 & UltrasonicId==0 & ColorId==0 & MotorId==0 & ServoId==0){
             delay(20);
             if(id!=0)
               setInfraredId(InfraredId,id);
@@ -421,7 +421,7 @@ void uKitId::setSensorId(){
             Serial.println(InfraredId_1); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }
-           else if(LedId!=0){
+           else if(SoundId==0 &LightId==0 & HumitureId==0 & InfraredId==0 & LedId!=0 & ButtonId==0 & UltrasonicId==0 & ColorId==0 & MotorId==0 & ServoId==0){
             delay(20);
             if(id!=0)
               setLedId(LedId,id);
@@ -435,7 +435,7 @@ void uKitId::setSensorId(){
             Serial.println(LedId_1); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }         
-           else if(ButtonId!=0){
+           else if(SoundId==0 &LightId==0 & HumitureId==0 & InfraredId==0 & LedId==0 & ButtonId!=0 & UltrasonicId==0 & ColorId==0 & MotorId==0 & ServoId==0){
             delay(20);
             if(id!=0)
               setButtonId(ButtonId,id);
@@ -449,7 +449,7 @@ void uKitId::setSensorId(){
             Serial.println(ButtonId_1); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           } 
-          else if(UltrasonicId!=0){
+          else if(SoundId==0 &LightId==0 & HumitureId==0 & InfraredId==0 & LedId==0 & ButtonId==0 & UltrasonicId!=0 & ColorId==0 & MotorId==0 & ServoId==0){
             delay(20);
             if(id!=0)
               setUltrasonicId(UltrasonicId,id);
@@ -463,7 +463,7 @@ void uKitId::setSensorId(){
             Serial.println(UltrasonicId_1); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }    
-          else if(ColorId!=0){
+          else if(SoundId==0 &LightId==0 & HumitureId==0 & InfraredId==0 & LedId==0 & ButtonId==0 & UltrasonicId==0 & ColorId!=0 & MotorId==0 & ServoId==0){
             delay(20);
             if(id!=0)
               setColorId(ColorId,id);
@@ -477,7 +477,7 @@ void uKitId::setSensorId(){
             Serial.println(ColorId_1); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }    
-          else if(MotorId!=0){
+          else if(SoundId==0 &LightId==0 & HumitureId==0 & InfraredId==0 & LedId==0 & ButtonId==0 & UltrasonicId==0 & ColorId==0 & MotorId!=0 & ServoId==0){
             delay(20);
             if(id!=0)
               setMotorId(MotorId,id);
@@ -491,7 +491,7 @@ void uKitId::setSensorId(){
             Serial.println(MotorId_1); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }                   
-          else if(ServoId!=0){
+          else if(SoundId==0 &LightId==0 & HumitureId==0 & InfraredId==0 & LedId==0 & ButtonId==0 & UltrasonicId==0 & ColorId==0 & MotorId==0 & ServoId!=0){
             delay(20);
             if(id!=0)
               setServoId(ServoId,id);
