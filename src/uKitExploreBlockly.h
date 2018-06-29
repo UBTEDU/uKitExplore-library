@@ -68,7 +68,7 @@ uKitId uKitId;
 #define MotorCheckID(id) uKitMotor.MotorCheckID(id)
 
 //uKitId
-#define setSensorId() uKitId.setSensorId()
+#define setDeciveId() uKitId.setDeciveId()
 //TransforRobot_API
 #define forward(a) TransforRobot.forward(a)//小车前进函数，速度0-5
 #define turnL(speed) TransforRobot.turnL(speed)//小车左转，速度0-5

@@ -309,10 +309,11 @@ unsigned char uKitId::getServoId(){
  return 0;
 }
 
-void uKitId::setSensorId(){
-  unsigned char SoundId,SoundId_1,LightId,LightId_1,HumitureId,HumitureId_1,\
-  InfraredId,InfraredId_1,LedId,LedId_1,ButtonId,ButtonId_1,UltrasonicId,UltrasonicId_1,\
-  ColorId,ColorId_1,MotorId,MotorId_1,ServoId,ServoId_1=0;
+
+
+void uKitId::setDeciveId(){
+  unsigned char buf[20]={0};
+  unsigned char zeronum,num,decive=0;
   String single,ten;
   int id_1,id_2,id;
   static int i=0;
@@ -343,172 +344,192 @@ void uKitId::setSensorId(){
         }
         else if(id!=0 & id<=20){
           delay(20);
-          SoundId=getSoundId();
+          buf[0]=getSoundId();
           delay(10);
-          LightId=getLightId();
+          buf[1]=getLightId();
           delay(10);
-          HumitureId=getHumitureId();
+          buf[2]=getHumitureId();
           delay(10);
-          InfraredId=getInfraredId();
+          buf[3]=getInfraredId();
           delay(10);
-          LedId=getLedId();
+          buf[4]=getLedId();
           delay(10);
-          ButtonId=getButtonId();
+          buf[5]=getButtonId();
           delay(10);
-          UltrasonicId=getUltrasonicId();
+          buf[6]=getUltrasonicId();
           delay(10);
-          ColorId=getColorId();
+          buf[7]=getColorId();
           delay(10);
-          MotorId=getMotorId();
+          buf[8]=getMotorId();
           delay(10);
-          ServoId=getServoId();
+          buf[9]=getServoId();
           delay(10);
+          for(int i=0;i<=9;i++){
+            if(buf[i]==0){
+              zeronum+=1;
+            }
+            else if(buf[i]!=0){
+              num+=1;
+              if(num==1){
+                decive=i; 
+              }
+
+            }
+          }
           
-          if(SoundId!=0 &LightId==0 & HumitureId==0 & InfraredId==0 & LedId==0 & ButtonId==0 & UltrasonicId==0 & ColorId==0 & MotorId==0 & ServoId==0){
+          if(decive==0 & zeronum==9){
             delay(20);
             if(id!=0)
-              setSoundId(SoundId,id);
+              setSoundId(buf[0],id);
             delay(100);
-            SoundId_1=getSoundId();
+            buf[10]=getSoundId();
             delay(30);
             Serial.print("  修改成功！");
             Serial.print("已将【声响传感器】ID-");
-            Serial.print(SoundId);
+            Serial.print(buf[0]);
             Serial.print("改为ID-");
-            Serial.println(SoundId_1); 
+            Serial.println(buf[10]); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
             
           }
-          else if(SoundId==0 &LightId!=0 & HumitureId==0 & InfraredId==0 & LedId==0 & ButtonId==0 & UltrasonicId==0 & ColorId==0 & MotorId==0 & ServoId==0){
+          else if(decive==1 & zeronum==9){
             delay(20);
             if(id!=0)
-              setLightId(LightId,id);
+              setLightId(buf[1],id);
             delay(100);
-            LightId_1=getLightId();
+            buf[11]=getLightId();
             delay(30);
             Serial.print("  修改成功！");
             Serial.print("已将【光感传感器】ID-");
-            Serial.print(LightId);
+            Serial.print(buf[1]);
             Serial.print("改为ID-");
-            Serial.println(LightId_1); 
+            Serial.println(buf[11]); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }
-          else if(SoundId==0 &LightId==0 & HumitureId!=0 & InfraredId==0 & LedId==0 & ButtonId==0 & UltrasonicId==0 & ColorId==0 & MotorId==0 & ServoId==0){
+          else if(decive==2 & zeronum==9){
             delay(20);
             if(id!=0)
-              setHumitureId(HumitureId,id);
+              setHumitureId(buf[2],id);
             delay(100);
-            HumitureId_1=getHumitureId();
+            buf[12]=getHumitureId();
             delay(30);
             Serial.print("  修改成功！");
             Serial.print("已将【温湿度传感器】ID-");
-            Serial.print(HumitureId);
+            Serial.print(buf[2]);
             Serial.print("改为ID-");
-            Serial.println(HumitureId_1); 
+            Serial.println(buf[12]); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }
-          else if(SoundId==0 &LightId==0 & HumitureId==0 & InfraredId!=0 & LedId==0 & ButtonId==0 & UltrasonicId==0 & ColorId==0 & MotorId==0 & ServoId==0){
+          else if(decive==3 & zeronum==9){
             delay(20);
             if(id!=0)
-              setInfraredId(InfraredId,id);
+              setInfraredId(buf[3],id);
             delay(100);
-            InfraredId_1=getInfraredId();
+            buf[13]=getInfraredId();
             delay(30);
             Serial.print("  修改成功！");
             Serial.print("已将【红外传感器】ID-");
-            Serial.print(InfraredId);
+            Serial.print(buf[3]);
             Serial.print("改为ID-");
-            Serial.println(InfraredId_1); 
+            Serial.println(buf[13]); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }
-           else if(SoundId==0 &LightId==0 & HumitureId==0 & InfraredId==0 & LedId!=0 & ButtonId==0 & UltrasonicId==0 & ColorId==0 & MotorId==0 & ServoId==0){
+           else if(decive==4 & zeronum==9){
             delay(20);
             if(id!=0)
-              setLedId(LedId,id);
+              setLedId(buf[4],id);
             delay(100);
-            LedId_1=getLedId();
+            buf[14]=getLedId();
             delay(30);
             Serial.print("  修改成功！");
             Serial.print("已将【眼灯】ID-");
-            Serial.print(LedId);
+            Serial.print(buf[4]);
             Serial.print("改为ID-");
-            Serial.println(LedId_1); 
+            Serial.println(buf[14]); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }         
-           else if(SoundId==0 &LightId==0 & HumitureId==0 & InfraredId==0 & LedId==0 & ButtonId!=0 & UltrasonicId==0 & ColorId==0 & MotorId==0 & ServoId==0){
+           else if(decive==5 & zeronum==9){
             delay(20);
             if(id!=0)
-              setButtonId(ButtonId,id);
+              setButtonId(buf[5],id);
             delay(100);
-            ButtonId_1=getButtonId();
+            buf[15]=getButtonId();
             delay(30);
             Serial.print("  修改成功！");
             Serial.print("已将【触碰传感器】ID-");
-            Serial.print(ButtonId);
+            Serial.print(buf[5]);
             Serial.print("改为ID-");
-            Serial.println(ButtonId_1); 
+            Serial.println(buf[15]); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           } 
-          else if(SoundId==0 &LightId==0 & HumitureId==0 & InfraredId==0 & LedId==0 & ButtonId==0 & UltrasonicId!=0 & ColorId==0 & MotorId==0 & ServoId==0){
+          else if(decive==6 & zeronum==9){
             delay(20);
             if(id!=0)
-              setUltrasonicId(UltrasonicId,id);
+              setUltrasonicId(buf[6],id);
             delay(100);
-            UltrasonicId_1=getUltrasonicId();
+            buf[16]=getUltrasonicId();
             delay(30);
             Serial.print("  修改成功！");
             Serial.print("已将【超声波传感器】ID-");
-            Serial.print(UltrasonicId);
+            Serial.print(buf[6]);
             Serial.print("改为ID-");
-            Serial.println(UltrasonicId_1); 
+            Serial.println(buf[16]); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }    
-          else if(SoundId==0 &LightId==0 & HumitureId==0 & InfraredId==0 & LedId==0 & ButtonId==0 & UltrasonicId==0 & ColorId!=0 & MotorId==0 & ServoId==0){
+          else if(decive==7 & zeronum==9){
             delay(20);
             if(id!=0)
-              setColorId(ColorId,id);
+              setColorId(buf[7],id);
             delay(100);
-            ColorId_1=getColorId();
+            buf[17]=getColorId();
             delay(30);
             Serial.print("  修改成功！");
             Serial.print("已将【颜色传感器】ID-");
-            Serial.print(ColorId);
+            Serial.print(buf[7]);
             Serial.print("改为ID-");
-            Serial.println(ColorId_1); 
+            Serial.println(buf[17]); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }    
-          else if(SoundId==0 &LightId==0 & HumitureId==0 & InfraredId==0 & LedId==0 & ButtonId==0 & UltrasonicId==0 & ColorId==0 & MotorId!=0 & ServoId==0){
+          else if(decive==8 & zeronum==9){
             delay(20);
             if(id!=0)
-              setMotorId(MotorId,id);
+              setMotorId(buf[8],id);
             delay(100);
-            MotorId_1=getMotorId();
+            buf[18]=getMotorId();
             delay(30);
             Serial.print("  修改成功！");
             Serial.print("已将【电机】ID-");
-            Serial.print(MotorId);
+            Serial.print(buf[8]);
             Serial.print("改为ID-");
-            Serial.println(MotorId_1); 
+            Serial.println(buf[18]); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }                   
-          else if(SoundId==0 &LightId==0 & HumitureId==0 & InfraredId==0 & LedId==0 & ButtonId==0 & UltrasonicId==0 & ColorId==0 & MotorId==0 & ServoId!=0){
+          else if(decive==9 & zeronum==9){
             delay(20);
             if(id!=0)
-              setServoId(ServoId,id);
+              setServoId(buf[9],id);
             delay(100);
-            ServoId_1=getServoId();
+            buf[19]=getServoId();
             delay(30);
             Serial.print("  修改成功！");
             Serial.print("已将【舵机】ID-");
-            Serial.print(ServoId);
+            Serial.print(buf[9]);
             Serial.print("改为ID-");
-            Serial.println(ServoId_1); 
+            Serial.println(buf[19]); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
-          }                
+          }        
+        else if(zeronum==10){
+            Serial.println("  *请打开电源,或接入传感器！");
+          }    
+        else{
+            Serial.println("  *请不要接入多个传感器！");   
+        }
   
         }
     }
    comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加
+   zeronum=0;
+   decive=0;
  
   
 }

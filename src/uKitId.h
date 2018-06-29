@@ -35,11 +35,9 @@ public:
     unsigned char getColorId();   
 
     unsigned char setServoId(char oldid,char newid);
-    unsigned char getServoId(); 
-
+    unsigned char getServoId();   
     
+    void setDeciveId();
 
- 
-    void setSensorId();
  };
  #endif
