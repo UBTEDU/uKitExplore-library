@@ -8,6 +8,10 @@ void setup(){
 }
 
 void loop() {
-  setDeciveId();
+uKitId.getDeciveIds();
+//setDeciveId();
+delay(300);
+
+while(1);
 }
 

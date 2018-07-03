@@ -35,7 +35,22 @@ unsigned char uKitId::getLightId(){
   tRet=TXD(10,buf);
   return tRet;
 }
-
+unsigned char uKitId::getLightId(char id){
+  unsigned short int tRet = 0;
+  unsigned char buf[10];
+  buf[0] = 0xFB;//帧头
+  buf[1] = 0x06;//设备类型
+  buf[2] = 0x06;//长度
+  buf[3] = 0x05;//命令号
+  buf[4] = id;//id
+  buf[5] = 0x00;//参数
+  buf[6] = 0x06;
+  buf[7] = 0x00;
+  buf[8] = 0x01;
+  buf[9] = crc8_itu(&buf[1], buf[2]+2);
+  tRet=TXD(10,buf);
+  return tRet;
+}
 unsigned char uKitId::setSoundId(char oldid,char newid){
   unsigned short int tRet = 0;
   unsigned char buf[11];
@@ -63,6 +78,22 @@ unsigned char uKitId::getSoundId(){
   buf[2] = 0x06;//长度
   buf[3] = 0x05;//命令号
   buf[4] = 0xff;//id
+  buf[5] = 0x00;//参数
+  buf[6] = 0x06;
+  buf[7] = 0x00;
+  buf[8] = 0x01;
+  buf[9] = crc8_itu(&buf[1], buf[2]+2);
+  tRet=TXD(10,buf);
+  return tRet;
+}
+unsigned char uKitId::getSoundId(char id){
+  unsigned short int tRet = 0;
+  unsigned char buf[10];
+  buf[0] = 0xFB;//帧头
+  buf[1] = 0x10;//设备类型
+  buf[2] = 0x06;//长度
+  buf[3] = 0x05;//命令号
+  buf[4] = id;//id
   buf[5] = 0x00;//参数
   buf[6] = 0x06;
   buf[7] = 0x00;
@@ -107,7 +138,22 @@ unsigned char uKitId::getHumitureId(){
   tRet=TXD(10,buf);
   return tRet;
 }
-
+unsigned char uKitId::getHumitureId(char id){
+  unsigned short int tRet = 0;
+  unsigned char buf[10];
+  buf[0] = 0xFB;//帧头
+  buf[1] = 0x05;//设备类型
+  buf[2] = 0x06;//长度
+  buf[3] = 0x05;//命令号
+  buf[4] = id;//id
+  buf[5] = 0x00;//参数
+  buf[6] = 0x06;
+  buf[7] = 0x00;
+  buf[8] = 0x01;
+  buf[9] = crc8_itu(&buf[1], buf[2]+2);
+  tRet=TXD(10,buf);
+  return tRet;
+}
 unsigned char uKitId::setMotorId(uint8_t id_old, uint8_t id_new){
   unsigned long tRet = 0;
   unsigned char buf[12];  
@@ -151,7 +197,23 @@ unsigned char uKitId::getMotorId(){
   }
    return 0; 
 }
-
+unsigned char uKitId::getMotorId(char id){
+  unsigned long tRet = 0;
+  unsigned char buf[10];
+    buf[0] = 0xFB;//帧头
+    buf[1] = 0x03;//设备类型
+    buf[2] = 0x06;//长度
+    buf[3] = 0x05;//命令号
+    buf[4] = id;//ID
+    buf[5] = 0x00;//参数
+    buf[6] = 0x03;
+    buf[7] = 0x00;
+    buf[8] = 0x01;
+    buf[9] = crc8_itu(&buf[1], buf[2]+2);
+    tRet=TXD(10,buf); 
+    delay(5);  
+    return tRet; 
+}
 unsigned char uKitId::setInfraredId(char oldid,char newid){
   unsigned char tRet = 0;
   unsigned char buf[2];
@@ -177,7 +239,15 @@ unsigned char uKitId::getInfraredId(){
   return 0;
 
 }
+unsigned char uKitId::getInfraredId(char id){
+  unsigned char tRet = 0;
+  unsigned char buf[1];
+  buf[0]=id;
+  tRet=TXD(0xF8,1,1,0x07,buf);
+  delay(5);
+  return tRet;
 
+}
 unsigned char uKitId::setLedId(char oldid,char newid){
   unsigned char tRet = 0;
   unsigned char buf[2];
@@ -203,7 +273,16 @@ unsigned char uKitId::getLedId(){
   return 0;
 
 }
+unsigned char uKitId::getLedId(char id){
+  unsigned char tRet = 0;
+  unsigned char buf[1];
 
+    buf[0]=id;
+    tRet=TXD(0xF4,1,1,0x07,buf);
+    delay(5);
+    return tRet;
+
+}
 unsigned char uKitId::setButtonId(char oldid,char newid){
   unsigned char tRet = 0;
   unsigned char buf[2];
@@ -227,6 +306,15 @@ unsigned char uKitId::getButtonId(){
     delay(5);
   }
   return 0;
+
+}
+unsigned char uKitId::getButtonId(char id){
+  unsigned char tRet = 0;
+  unsigned char buf[1];
+  buf[0]=id;
+  tRet=TXD(0xF7,1,1,0x07,buf);
+  delay(5);
+  return tRet;
 
 }
 unsigned char uKitId::setUltrasonicId(char oldid,char newid){
@@ -254,7 +342,15 @@ unsigned char uKitId::getUltrasonicId(){
   return 0;
 
 }
+unsigned char uKitId::getUltrasonicId(char id){
+  unsigned char tRet = 0;
+  unsigned char buf[1];
+  buf[0]=id;
+  tRet=TXD(0xF5,1,1,0x07,buf);
+  delay(5);
+  return tRet;
 
+}
 unsigned char uKitId::setColorId(char oldid,char newid){
   unsigned char tRet = 0;
   unsigned char buf[2];
@@ -279,6 +375,14 @@ unsigned char uKitId::getColorId(){
     delay(5);
   }
   return 0;
+}
+unsigned char uKitId::getColorId(char id){
+  unsigned char tRet = 0;
+  unsigned char buf[1];
+  buf[0]=id;
+  tRet=TXD(0xE8,1,1,0x07,buf);
+  delay(5);
+  return tRet;
 }
 
 unsigned char uKitId::setServoId(char oldid,char newid){
@@ -309,6 +413,17 @@ unsigned char uKitId::getServoId(){
  return 0;
 }
 
+unsigned char uKitId::getServoId(char id){
+  unsigned char tRet = 0;
+  unsigned char buf[4];
+    buf[0]=0x00;
+    buf[1]=0x00;
+    buf[2]=0x00;
+    buf[3]=0x00;
+    tRet=TXD(0xFC,id,4,0x01,buf);
+    delay(5);
+    return tRet;
+}
 
 
 void uKitId::setDeciveId(){
@@ -569,47 +684,279 @@ void uKitId::setDeciveId(){
 
 void uKitId::getDeciveId(){
   unsigned char buf[20]={0};
-  unsigned char idbuf[100]={0};
+  unsigned char idbuf[112]={0};
   unsigned char zeronum,num,decive=0;
-  for(int i=0;i<=10;i++){
-    idbuf[i]=getSoundId();
-    delay(10);
-    idbuf[i+10]=getLightId();
-    delay(10);
-    buf[2]=getHumitureId();
-    delay(10);
-    buf[3]=getInfraredId();
-    delay(10);
-    buf[4]=getLedId();
-    delay(10);
-    buf[5]=getButtonId();
-    delay(10);
-    buf[6]=getUltrasonicId();
-    delay(10);
-    buf[7]=getColorId();
-    delay(10);
-    buf[8]=getMotorId();
-    delay(10);
-    buf[9]=getServoId();
-    delay(10);
-  }
-  for(int i=0;i<=9;i++){
-    if(buf[i]==0){
-      zeronum+=1;
-    }
-    else if(buf[i]!=0){
-      num+=1;
-      if(num==1){
-        decive=i; 
+  for(int i=0;i<=16;i++){
+    if(i<=10){
+      idbuf[i]=getSoundId(i);
+      delay(5);
+      idbuf[i+10]=getLightId(i);
+      delay(5);
+      idbuf[i+20]=getHumitureId(i);
+      delay(5);
+      idbuf[i+30]=getInfraredId(i);
+      delay(10);
+      idbuf[i+40]=getLedId(i);
+      delay(5);
+      idbuf[i+50]=getButtonId(i);
+      delay(5);
+      idbuf[i+60]=getUltrasonicId(i);
+      delay(5);
+      idbuf[i+70]=getColorId(i);
+      delay(5);
+      idbuf[i+80]=getMotorId(i);
+      delay(5);
+      idbuf[i+96]=getServoId(i);
+      delay(5); 
+      if(idbuf[i+96]!=0){
+        Serial.print("【舵机】 ");
+        Serial.print("ID-");
+        Serial.println(idbuf[i+96]);
+      }  
+       if(idbuf[i+80]!=0){
+        Serial.print("【电机】 ");
+        Serial.print("ID-");
+        Serial.println(idbuf[i+80]);
+      } 
+      if(idbuf[i+30]!=0){
+        Serial.print("【红外传感器】 ");
+        Serial.print("ID-");
+        Serial.println(idbuf[i+30]);
+      }   
+       if(idbuf[i+60]!=0){
+        Serial.print("【超声波传感器】 ");
+        Serial.print("ID-");
+        Serial.println(idbuf[i+60]);
       }
+       if(idbuf[i+40]!=0){
+        Serial.print("【LED眼灯】 ");
+        Serial.print("ID-");
+        Serial.println(idbuf[i+40]);
+      } 
+      if(idbuf[i+10]!=0){
+        Serial.print("【亮度传感器】 ");
+        Serial.print("ID-");
+        Serial.println(idbuf[i+10]);
+      } 
+       if(idbuf[i]!=0){
+        Serial.print("【声音传感器】 ");
+        Serial.print("ID-");
+        Serial.println(idbuf[i]);
+      }    
+       if(idbuf[i+20]!=0){
+        Serial.print("【温湿度传感器】 ");
+        Serial.print("ID-");
+        Serial.println(idbuf[i+20]);
+      }                 
+       if(idbuf[i+50]!=0){
+        Serial.print("【按键传感器】 ");
+        Serial.print("ID-");
+        Serial.println(idbuf[i+50]);
+      }
+      if(idbuf[i+70]!=0){
+        Serial.print("【颜色传感器】 ");
+        Serial.print("ID-");
+        Serial.println(idbuf[i+70]);
+      }
+  }
+  else{
+      idbuf[i+90]=getMotorId(i);
+      delay(5);
+      idbuf[i+105]=getServoId(i);
+      delay(5); 
+          if(idbuf[i+105]!=0){
+      Serial.print("【舵机】 ");
+      Serial.print("ID-");
+      Serial.println(idbuf[i+105]);
+    }  
+    if(idbuf[i+90]!=0){
+      Serial.print("【电机】 ");
+      Serial.print("ID-");
+      Serial.println(idbuf[i+90]);
+    } 
+  }
+  }
 
+  }
+ void uKitId::getDeciveIds(){
+  unsigned char buf[20]={0};
+  unsigned char idbuf[112]={0};
+  for(int i=0;i<=16;i++){
+    if(i<=10){
+      idbuf[i]=getSoundId(i);
+      delay(5);
+      idbuf[i+10]=getLightId(i);
+      delay(5);
+      idbuf[i+20]=getHumitureId(i);
+      delay(5);
+      idbuf[i+30]=getInfraredId(i);
+      delay(10);
+      idbuf[i+40]=getLedId(i);
+      delay(5);
+      idbuf[i+50]=getButtonId(i);
+      delay(5);
+      idbuf[i+60]=getUltrasonicId(i);
+      delay(5);
+      idbuf[i+70]=getColorId(i);
+      delay(5);
+      idbuf[i+80]=getMotorId(i);
+      delay(5);
+      idbuf[i+96]=getServoId(i);
+      delay(5);     
+  }
+  else{
+      idbuf[i+90]=getMotorId(i);
+      delay(5);
+      idbuf[i+105]=getServoId(i);
+      delay(5); 
+  }
+  }//获取当前ID
+  for(int i=0;i<=16;i++){
+    static int t=0;
+    if(idbuf[i+96]!=0){
+    if(t==0){
+      Serial.print("【舵机】 ");
+      t=1;
+    }
+    
+    Serial.print("ID-");
+    Serial.print(idbuf[i+96]);
+    Serial.print(" ");
     }
   }
+  Serial.println();
   
- 
+  for(int i=0;i<=16;i++){
+    static int t=0;
+    if(idbuf[i+80]!=0){
+    if(t==0){
+      Serial.print("【电机】 ");
+      t=1;
+    } 
+    Serial.print("ID-");
+    Serial.print(idbuf[i+80]);
+    Serial.print(" ");
+    }
+  }
+  Serial.println();
 
+  for(int i=0;i<=10;i++){
+    static int t=0;
+    if(idbuf[i+30]!=0){
+    if(t==0){
+      Serial.print("【红外传感器】 ");
+      t=1;
+    }
+    
+    Serial.print("ID-");
+    Serial.print(idbuf[i+30]);
+    Serial.print(" ");
+    }
+  }
+  Serial.println();  
+  for(int i=0;i<=10;i++){
+    static int t=0;
+    if(idbuf[i+60]!=0){
+    if(t==0){
+      Serial.print("【超声波传感器】 ");
+      t=1;
+    }
+    
+    Serial.print("ID-");
+    Serial.print(idbuf[i+60]);
+    Serial.print(" ");
+    }
+  }
+  Serial.println(); 
 
+  for(int i=0;i<=10;i++){
+    static int t=0;
+    if(idbuf[i+40]!=0){
+    if(t==0){
+      Serial.print("【LED眼灯】 ");
+      t=1;
+    }
+    
+    Serial.print("ID-");
+    Serial.print(idbuf[i+40]);
+    Serial.print(" ");
+    }
+  }
+  Serial.println(); 
 
+  for(int i=0;i<=10;i++){
+    static int t=0;
+    if(idbuf[i+10]!=0){
+    if(t==0){
+      Serial.print("【亮度传感器】 ");
+      t=1;
+    }
+    
+    Serial.print("ID-");
+    Serial.print(idbuf[i+10]);
+    Serial.print(" ");
+    }
+  }
+  Serial.println(); 
+
+  for(int i=0;i<=10;i++){
+    static int t=0;
+    if(idbuf[i]!=0){
+    if(t==0){
+      Serial.print("【声音传感器】 ");
+      t=1;
+    }
+    
+    Serial.print("ID-");
+    Serial.print(idbuf[i]);
+    Serial.print(" ");
+    }
+  }
+  Serial.println(); 
+  for(int i=0;i<=10;i++){
+    static int t=0;
+    if(idbuf[i+20]!=0){
+    if(t==0){
+      Serial.print("【温湿度传感器】 ");
+      t=1;
+    }
+    
+    Serial.print("ID-");
+    Serial.print(idbuf[i+20]);
+    Serial.print(" ");
+    }
+  }
+  Serial.println(); 
+  for(int i=0;i<=10;i++){
+    static int t=0;
+    if(idbuf[i+50]!=0){
+    if(t==0){
+      Serial.print("【按键波传感器】 ");
+      t=1;
+    }
+    
+    Serial.print("ID-");
+    Serial.print(idbuf[i+50]);
+    Serial.print(" ");
+    }
+  }
+  Serial.println(); 
+  for(int i=0;i<=10;i++){
+    static int t=0;
+    if(idbuf[i+70]!=0){
+    if(t==0){
+      Serial.print("【颜色传感器】 ");
+      t=1;
+    }
+    
+    Serial.print("ID-");
+    Serial.print(idbuf[i+70]);
+    Serial.print(" ");
+    }
+  }
+  Serial.println(); 
+
+  }
  
   
-}
+

@@ -25,7 +25,7 @@ void Port::Initialization(){
   pinMode(A0, OUTPUT);   // 定义超声波输出脚 
   pinMode(buzzer_pin,OUTPUT);
   delay(10);  //开机延时
-  check_servo();  //获取舵机个数,列表
+  //check_servo();  //获取舵机个数,列表
   delay(20);
   unsigned char aa[4]={0xFF,0,0,0};
   TXD(0xFA,8,4,0x01,aa);
