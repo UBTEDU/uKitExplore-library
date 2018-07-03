@@ -487,7 +487,7 @@ signed long SemiduplexSerial::TXD(unsigned char len,unsigned char choice,unsigne
         tRet=(Rx_Buf[len+8]<<8)+Rx_Buf[len+9];
     }
     else{
-      tRet=1;//停止成功返回0 
+      tRet=0;//停止成功返回0 
       
     }
   }

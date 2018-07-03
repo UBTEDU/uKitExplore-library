@@ -1,18 +1,13 @@
 #include "uKitExploreblockly.h"
-String comdata="";
-String single,ten;
-int id_1,id_2,id;
-void setup() {
-    Initialization();
+#include "FlexiTimer2.h"
+
+
+void setup(){
+  Initialization();
+
 }
 
 void loop() {
-setDeciveId();
-
-
-
-
-
-
+  setDeciveId();
 }
 

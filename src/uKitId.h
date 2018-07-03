@@ -38,6 +38,7 @@ public:
     unsigned char getServoId();   
     
     void setDeciveId();
+    void getDeciveId();
 
  };
  #endif

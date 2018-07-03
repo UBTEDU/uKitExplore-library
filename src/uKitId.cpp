@@ -335,15 +335,8 @@ void uKitId::setDeciveId(){
         id_1=ten.toInt()*10;
         single=comdata[comdata.length()-1];
         id_2=single.toInt();
-        id=id_1+id_2;
-      
+        id=id_1+id_2;      
         delay(20);
-        if(id==0 | id>16){
-          Serial.println("请不要输入id-0或大于16");
-          comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加
-        }
-        else if(id!=0 & id<=20){
-          delay(20);
           buf[0]=getSoundId();
           delay(10);
           buf[1]=getLightId();
@@ -376,7 +369,13 @@ void uKitId::setDeciveId(){
 
             }
           }
-          
+                  
+        if(id==0 | id>16){
+          Serial.println("请不要输入id-0或大于16");
+          comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加
+        }
+        else if(id!=0 & id<=16){
+        if(id<=10){
           if(decive==0 & zeronum==9){
             delay(20);
             if(id!=0)
@@ -490,7 +489,7 @@ void uKitId::setDeciveId(){
             Serial.println(buf[17]); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }    
-          else if(decive==8 & zeronum==9){
+          if(decive==8 & zeronum==9){
             delay(20);
             if(id!=0)
               setMotorId(buf[8],id);
@@ -517,19 +516,100 @@ void uKitId::setDeciveId(){
             Serial.print("改为ID-");
             Serial.println(buf[19]); 
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
-          }        
-        else if(zeronum==10){
+          }  
+        }
+        else if(id>10 & id<=16 & decive>=8){
+        if(decive==8 & zeronum==9){
+            delay(20);
+            if(id!=0)
+              setMotorId(buf[8],id);
+            delay(100);
+            buf[18]=getMotorId();
+            delay(30);
+            Serial.print("  修改成功！");
+            Serial.print("已将【电机】ID-");
+            Serial.print(buf[8]);
+            Serial.print("改为ID-");
+            Serial.println(buf[18]); 
+            Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
+          }                   
+          else if(decive==9 & zeronum==9){
+            delay(20);
+            if(id!=0)
+              setServoId(buf[9],id);
+            delay(100);
+            buf[19]=getServoId();
+            delay(30);
+            Serial.print("  修改成功！");
+            Serial.print("已将【舵机】ID-");
+            Serial.print(buf[9]);
+            Serial.print("改为ID-");
+            Serial.println(buf[19]); 
+            Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
+          }                         
+        }
+        else if(id>10 && decive<9){
+          Serial.println("  *【传感器ID控制在1-10】");
+        }
+        }
+
+                else if(zeronum==10){
             Serial.println("  *请打开电源,或接入传感器！");
           }    
         else{
             Serial.println("  *请不要接入多个传感器！");   
         }
-  
-        }
     }
    comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加
    zeronum=0;
    decive=0;
+ 
+  
+}
+
+void uKitId::getDeciveId(){
+  unsigned char buf[20]={0};
+  unsigned char idbuf[100]={0};
+  unsigned char zeronum,num,decive=0;
+  for(int i=0;i<=10;i++){
+    idbuf[i]=getSoundId();
+    delay(10);
+    idbuf[i+10]=getLightId();
+    delay(10);
+    buf[2]=getHumitureId();
+    delay(10);
+    buf[3]=getInfraredId();
+    delay(10);
+    buf[4]=getLedId();
+    delay(10);
+    buf[5]=getButtonId();
+    delay(10);
+    buf[6]=getUltrasonicId();
+    delay(10);
+    buf[7]=getColorId();
+    delay(10);
+    buf[8]=getMotorId();
+    delay(10);
+    buf[9]=getServoId();
+    delay(10);
+  }
+  for(int i=0;i<=9;i++){
+    if(buf[i]==0){
+      zeronum+=1;
+    }
+    else if(buf[i]!=0){
+      num+=1;
+      if(num==1){
+        decive=i; 
+      }
+
+    }
+  }
+  
+ 
+
+
+
  
   
 }
