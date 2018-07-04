@@ -4,14 +4,13 @@
 
 void setup(){
   Initialization();
+  uKitId.getDeciveIds();
 
 }
 
 void loop() {
-uKitId.getDeciveIds();
-//setDeciveId();
-delay(300);
 
-while(1);
+setDeciveId();
+
 }
 
