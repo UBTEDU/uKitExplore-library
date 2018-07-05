@@ -685,7 +685,7 @@ void uKitId::setDeciveId(){
 void uKitId::getDeciveId(){
   unsigned char idbuf[112]={0};
   Serial.println("当前接入了以下设备 ");
-  for(int i=0;i<=16;i++){
+  for(int i=1;i<=16;i++){
     if(i<=10){
       idbuf[i]=getSoundId(i);
       delay(5);
@@ -781,7 +781,7 @@ void uKitId::getDeciveId(){
   unsigned char buf[20]={0};
   unsigned char idbuf[112]={0};
   Serial.println("当前接入了以下设备 ");
-  for(int i=0;i<=16;i++){
+  for(int i=1;i<=16;i++){
     if(i<=10){
       idbuf[i]=getSoundId(i);
       delay(5);
@@ -847,7 +847,7 @@ void uKitId::getDeciveId(){
     } 
   }
  }
-  for(int i=0;i<=16;i++){
+  for(int i=0;i<16;i++){
     static int t=0;
     Serial.println(idbuf[i+96]);
   }

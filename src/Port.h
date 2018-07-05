@@ -4,8 +4,10 @@
 #define PORT_h
 
 #include <Arduino.h>
-#include"SemiduplexSerial.h"
-class Port:SemiduplexSerial
+
+#include"uKitId.h"
+
+class Port:uKitId
 {
 public:
   void Initialization();

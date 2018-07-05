@@ -3,44 +3,44 @@
 
 //小车前进speed表示前进速度（速度范围：0-5）
 void TransforRobot::forward(int speeds){
-  ServoRotate(lmotor,0,speeds);//1表示顺时针，0表示逆时针
-  ServoRotate(rmotor,1,speeds);
+  ServoRotate(lmotor,1,speeds);//1表示顺时针，0表示逆时针
+  ServoRotate(rmotor,0,speeds);
 }
 
 //小车前进speed表示前进速度（速度范围：0-5）
 void TransforRobot::forward(int Lspeed,int Rspeed){
-  ServoRotate(lmotor,0,Lspeed);//1表示顺时针，0表示逆时针
-  ServoRotate(rmotor,1,Rspeed);
+  ServoRotate(lmotor,1,Lspeed);//1表示顺时针，0表示逆时针
+  ServoRotate(rmotor,0,Rspeed);
 }
 
 
 //小车左转speed表示前进速度（速度范围：0-5）
 void TransforRobot::turnL(int speed){
-  ServoRotate(lmotor,1,speed);//1表示顺时针，0表示逆时针
-  ServoRotate(rmotor,1,speed);
-}
-
-//小车右转speed表示前进速度（速度范围：0-5）
-void TransforRobot::turnR(int speed){
   ServoRotate(lmotor,0,speed);//1表示顺时针，0表示逆时针
   ServoRotate(rmotor,0,speed);
 }
 
-void TransforRobot::turnL(int Lspeed,int Rspeed){
-  ServoRotate(lmotor,1,Lspeed);//1表示顺时针，0表示逆时针
-  ServoRotate(rmotor,1,Rspeed);
+//小车右转speed表示前进速度（速度范围：0-5）
+void TransforRobot::turnR(int speed){
+  ServoRotate(lmotor,1,speed);//1表示顺时针，0表示逆时针
+  ServoRotate(rmotor,1,speed);
 }
 
-//小车右转speed表示前进速度（速度范围：0-5）
-void TransforRobot::turnR(int Lspeed,int Rspeed){
+void TransforRobot::turnL(int Lspeed,int Rspeed){
   ServoRotate(lmotor,0,Lspeed);//1表示顺时针，0表示逆时针
   ServoRotate(rmotor,0,Rspeed);
 }
 
+//小车右转speed表示前进速度（速度范围：0-5）
+void TransforRobot::turnR(int Lspeed,int Rspeed){
+  ServoRotate(lmotor,1,Lspeed);//1表示顺时针，0表示逆时针
+  ServoRotate(rmotor,1,Rspeed);
+}
+
 //小车后退speed表示前进速度（速度范围：0-5）
 void TransforRobot::back(int speed){
-  ServoRotate(lmotor,1,speed);
-  ServoRotate(rmotor,0,speed);
+  ServoRotate(lmotor,0,speed);
+  ServoRotate(rmotor,1,speed);
 }
 
 //小车停止
@@ -97,8 +97,8 @@ void TransforRobot::turn_U(int speed){
  */
 void TransforRobot::one_step(int speed,int time)
 {
-  ServoRotate(lmotor,0,speed);//1表示顺时针，0表示逆时针
-  ServoRotate(rmotor,1,speed);
+  ServoRotate(lmotor,1,speed);//1表示顺时针，0表示逆时针
+  ServoRotate(rmotor,0,speed);
   delay(time);
   stops();
   
