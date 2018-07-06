@@ -1,16 +1,20 @@
 #include "uKitExploreblockly.h"
 
-
+int number[]={0,1,2,3};
 
 void setup(){
   Initialization();
+  
+
  
 
 }
 
 void loop() {
 
-setDeciveId();
+  uKit_Leds(2,64,64,64);
+  delay(300);
+  
 
 }
 
