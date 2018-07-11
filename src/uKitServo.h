@@ -3,8 +3,9 @@
 #ifndef UKITSERVO_h
 #define UKITSERVO_h
 #include"SemiduplexSerial.h" 
+#include"uKitId.h"
 #include <Arduino.h>
-class uKitServo : public SemiduplexSerial
+class uKitServo : public uKitId
 {
 public:
 
@@ -15,6 +16,8 @@ public:
   void ServoRead_PD_M(char read_id[],char num);//多个舵机回读，返回舵机角度值(掉电回读）
   int  ServoRead_NPD(char id);//单个舵机回读，返回舵机角度值(不掉电回读）
   void  ServoRead_NPD_M(char read_id[],char num);//多个舵机回读，返回舵机角度值(不掉电回读）
+  void ServoRead();
+  void motion(unsigned char id[],signed char action[][sizeof(id)/sizeof(id[0])],signed char time[],int times);
   int read_num=1;
 };
 

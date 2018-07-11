@@ -45,6 +45,7 @@ unsigned short int uKitSensor::uKit_Sound_Read(char id){
   buf[8] = 0x01;
   buf[9] = crc8_itu(&buf[1], buf[2]+2);
   tRet=TXD(10,buf);
+  delay(10);
   return tRet;
 }
 unsigned short int uKitSensor::uKit_Light_Read(char id){
@@ -61,6 +62,7 @@ unsigned short int uKitSensor::uKit_Light_Read(char id){
   buf[8] = 0x01;
   buf[9] = crc8_itu(&buf[1], buf[2]+2);
   tRet=TXD(10,buf);
+  delay(10);
   return tRet;
 }
 void uKitSensor::uKit_Led_Face(char id,char face,int times,int red,int green,int blue){
@@ -82,7 +84,7 @@ void uKitSensor::uKit_Led_Face(char id,char face,int times,int red,int green,int
   tData[6]=blue;
   
   State=TXD(0xF4,1,7,0x0a,tData );
-  delay(5);
+  delay(10);
 
  }
 void uKitSensor::uKit_Led_Scene(char id,char scene,int times){
@@ -103,7 +105,7 @@ void uKitSensor::uKit_Led_Scene(char id,char scene,int times){
   tData[5]=0;
   tData[6]=0;
   State=TXD(0xF4,1,7,0x0a,tData );
-  delay(5);
+  delay(10);
  }
 void uKitSensor::uKit_Leds(char id,int red,int green,int blue){
 
@@ -124,7 +126,7 @@ void uKitSensor::uKit_Leds(char id,int red,int green,int blue){
   tData[6]=blue;
   tData[7]=8;
   State=TXD(0xF4,1,8,0x0b,tData );
-  delay(5);
+  delay(10);
  }
 void uKitSensor::uKit_Led_off(char id){
   signed char tData[1];
@@ -149,12 +151,13 @@ signed char uKitSensor::uKit_Humiture(char id, char choice){
   buf[8] = 0x02;
   buf[9] = crc8_itu(&buf[1], buf[2]+2);
   tRet=TXD(10,choice,buf);
+  delay(10);
   return tRet;
 }
 
 unsigned char uKitSensor::uKit_RGB_Read(char id,unsigned char RGB){
   unsigned  char tData[1];
-  unsigned char Value;
+  unsigned char Value=0;
   tData[0]=id;
   volatile int State=0;
   if(State==0){
@@ -162,8 +165,8 @@ unsigned char uKitSensor::uKit_RGB_Read(char id,unsigned char RGB){
     delay(5); 
     State=1;
   }
-    Value=TXD(0xE8,1,1,4,tData);  
-    delay(10);
+    Value=TXD(0xE8,1,1,4,RGB,tData);  
+    delay(15);
     return Value;
  
  }

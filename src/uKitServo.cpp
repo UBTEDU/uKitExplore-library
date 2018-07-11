@@ -148,4 +148,30 @@ void uKitServo::ServoRead_NPD_M(char read_id[],char num)//舵机回读
  
 
 }
+void uKitServo::ServoRead(){
+  unsigned char ServoId[18],ServoIdRead[18],t=0;
+  static int start=0;
+  if(start==0){
+  for(int i=1;i<=18;i++){
+    ServoId[i]=getServoId(i);
+    if(ServoId[i]!=0){
+     
+      ServoIdRead[t]=ServoId[i];
+      ++t;
+    }
+  }
+  start=1;
+  }
+  ServoRead_PD_M(ServoIdRead,t);
+}
+void uKitServo::motion(unsigned char id[],signed char action[][sizeof(id)/sizeof(id[0])],signed char time[],int times){
+  for(int c=0;c<times;c++){
+    for(int i=0;i<sizeof(action)/sizeof(action[0]);i++){
+      for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
+        ServoAngle(id[t],action[i][t],500);
+      }  
+      delay(time[i]);
+    }
+  }
+}
 
