@@ -39,7 +39,7 @@ unsigned long SemiduplexSerial::TXD(unsigned char Head,unsigned char ServoNO,uns
   unsigned long tRet = 0;
   unsigned char tCnt = 0;
   unsigned long temp = 2; //2ms 发完
-  unsigned char buf[40];
+  unsigned char buf[60];
   unsigned char length = 9; //9+1
 
   unsigned char Usart3_Rx_Ack_Len=0;

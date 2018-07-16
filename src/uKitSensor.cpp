@@ -128,6 +128,61 @@ void uKitSensor::uKit_Leds(char id,int red,int green,int blue){
   State=TXD(0xF4,1,8,0x0b,tData );
   delay(10);
  }
+void uKitSensor::setLedPetals(char id,unsigned char petalsnum,unsigned char petals[]){
+  signed char tData2[1] ;
+  signed char tData[35];
+  tData2[0]=id;
+  volatile int State=0;
+  if(State==0){
+    State=TXD(0xF4,1,1,0x2,tData2 );
+    delay(5);  
+  }
+  tData[0]=id;  //ID
+  tData[1]=0xff;//持续时间
+  tData[2]=petalsnum;//色块数量
+  
+  tData[3]=petals[0];//第1
+  tData[4]=petals[1];
+  tData[5]=petals[2];
+  tData[6]=petals[3];
+  
+  tData[7]=petals[4];//第2
+  tData[8]=petals[5];
+  tData[9]=petals[6];
+  tData[10]=petals[7];
+  
+  tData[11]=petals[8];//第3
+  tData[12]=petals[9];
+  tData[13]=petals[10];
+  tData[14]=petals[11];
+  
+  tData[15]=petals[12];//第4
+  tData[16]=petals[13];
+  tData[17]=petals[14];
+  tData[18]=petals[15];
+  tData[19]=petals[16];//第5
+  tData[20]=petals[17];
+  tData[21]=petals[18];
+  tData[22]=petals[19];
+  
+  tData[23]=petals[20];//第6
+  tData[24]=petals[21];
+  tData[25]=petals[22];
+  tData[26]=petals[23];
+  
+  tData[27]=petals[24];//第7
+  tData[28]=petals[25];
+  tData[29]=petals[26];
+  tData[30]=petals[27];
+  
+  tData[31]=petals[28];//第8
+  tData[32]=petals[29];
+  tData[33]=petals[30];
+  tData[34]=petals[31];  
+
+  State=TXD(0xF4,1,35,0x0b,tData );
+  delay(10);
+}
 void uKitSensor::uKit_Led_off(char id){
   signed char tData[1];
   volatile int State=0;
@@ -166,7 +221,7 @@ unsigned char uKitSensor::uKit_RGB_Read(char id,unsigned char RGB){
     State=1;
   }
     Value=TXD(0xE8,1,1,4,RGB,tData);  
-    delay(15);
+    delay(20);
     return Value;
  
  }
@@ -183,17 +238,17 @@ bool uKitSensor::uKit_RGB_Readcolor(char id,char color){
   unsigned char Rvalue=uKit_RGB_Read(id,'R');
   unsigned char Gvalue=uKit_RGB_Read(id,'G');
   unsigned char Bvalue=uKit_RGB_Read(id,'B');
-  if(Rvalue>80 & Rvalue<255 & Gvalue<150 &Bvalue<150 & color=='R')
+  if(Rvalue>90 & Rvalue<255 & Gvalue<120 &Bvalue<120 & color=='R')
     return true;
-  else if(Gvalue>80 & Gvalue<255 & Rvalue<150 &Bvalue<150 & color=='G')
+  else if(Gvalue>90 & Gvalue<255 & Rvalue<120 &Bvalue<120 & color=='G')
     return true;
-  else if(Bvalue>80 & Bvalue<255 & Rvalue<150 &Gvalue<150 & color=='B')
+  else if(Bvalue>90 & Bvalue<255 & Rvalue<120 &Gvalue<180 & color=='B')
     return true;
   else if(Bvalue>200  & Rvalue>200 &Gvalue>200 & color=='W')
     return true;   
-  else if(Rvalue>50 & Rvalue<240  & Bvalue>40& Bvalue<255 &Gvalue<80 & color=='P')
+  else if(Rvalue>90 & Rvalue<255  & Bvalue>90& Bvalue<255 &Gvalue<120 & color=='P')
     return true;      
-  else if(Rvalue>60 & Rvalue<255  & Bvalue>30& Bvalue<180 &Rvalue>60 & Rvalue<255 & color=='Y')
+  else if(Rvalue>90 & Rvalue<255  & Gvalue>90& Gvalue<255 & Bvalue<120 & color=='Y')
     return true;  
   else
     return false;

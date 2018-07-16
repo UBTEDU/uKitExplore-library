@@ -15,6 +15,7 @@ public:
     void uKit_Led_Face(char id,char face,int times,int red,int green,int blue);
     void uKit_Led_Scene(char id,char scene,int times);//情景模式 id是id号，scene是情景灯，times是次数
     void uKit_Leds(char id,int red,int green, int blue);//全亮模式， id是id号， RGB
+    void setLedPetals(char id,unsigned char petalsnum,unsigned char petals[]);
     void uKit_Led_off(char id);
     unsigned char  uKit_RGB_Read(char id,unsigned char RGB);
    

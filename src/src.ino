@@ -8,31 +8,18 @@ volatile int b;
 volatile int c;
 void setup(){
   Initialization();
+
   
-    a = 0;
-    b = 0;
-    c = 0;
+
  
 
 }
 
 void loop() {
-
-    unsigned char Rvalue1=uKit_RGB_Read(1,'R');
-    unsigned char Gvalue1=uKit_RGB_Read(1,'G');
-    unsigned char Bvalue1=uKit_RGB_Read(1,'B');
-    a = Rvalue1;
-    b = Gvalue1;
-    c = Bvalue1;
-     Serial.print("R:");
-    Serial.print(a);
-    Serial.print(",");
-      Serial.print("G:");
-    Serial.println(b);
-     Serial.print(",");
-     Serial.print("B:");
-    Serial.println(c);
-    delay(500);
+unsigned char petals[32]={0x01,255,0,0,0x02,0,255,0,0x04,0,0,255,0x08,255,0,0,0x10,0,255,0,0x20,255,0,255,0x40,0,0,255,0x80,0,255,255};
+setLedPetals(1,8, petals);
+delay(700);
+    
 
 }
 
