@@ -436,8 +436,8 @@ void uKitId::setDeciveId(){
    if(i==0){
     delay(10);
     Serial.println("/----------------------------------------------/");
-    Serial.println("  请输入数字修改设备ID号"); 
-    Serial.println("  *注意，请确保当前仅连接一个设备，并打开电源。");    
+    Serial.println(" 请输入数字修改设备ID号"); 
+    Serial.println(" *注意,请确保当前仅连接一个设备,并打开电源.");    
     delay(300); 
     i=1;
   }  
@@ -498,12 +498,12 @@ void uKitId::setDeciveId(){
             delay(100);
             buf[10]=getSoundId();
             delay(30);
-            Serial.print("  修改成功！");
-            Serial.print("已将【声响传感器】ID-");
+            Serial.print("  修改成功!");
+            Serial.print("已将 [声响传感器] ID-");
             Serial.print(buf[0]);
             Serial.print("改为ID-");
             Serial.println(buf[10]); 
-            Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
+            Serial.println("  *如需修改其他设备ID,请接入设备,并按下开发板复位键"); 
             
           }
           else if(decive==1 & zeronum==9){
@@ -513,8 +513,8 @@ void uKitId::setDeciveId(){
             delay(100);
             buf[11]=getLightId();
             delay(30);
-            Serial.print("  修改成功！");
-            Serial.print("已将【光感传感器】ID-");
+            Serial.print("  修改成功!");
+            Serial.print("已将 [光感传感器] ID-");
             Serial.print(buf[1]);
             Serial.print("改为ID-");
             Serial.println(buf[11]); 
@@ -527,8 +527,8 @@ void uKitId::setDeciveId(){
             delay(100);
             buf[12]=getHumitureId();
             delay(30);
-            Serial.print("  修改成功！");
-            Serial.print("已将【温湿度传感器】ID-");
+            Serial.print("  修改成功!");
+            Serial.print("已将 [温湿度传感器] ID-");
             Serial.print(buf[2]);
             Serial.print("改为ID-");
             Serial.println(buf[12]); 
@@ -541,8 +541,8 @@ void uKitId::setDeciveId(){
             delay(100);
             buf[13]=getInfraredId();
             delay(30);
-            Serial.print("  修改成功！");
-            Serial.print("已将【红外传感器】ID-");
+            Serial.print("  修改成功!");
+            Serial.print("已将 [红外传感器] ID-");
             Serial.print(buf[3]);
             Serial.print("改为ID-");
             Serial.println(buf[13]); 
@@ -555,8 +555,8 @@ void uKitId::setDeciveId(){
             delay(100);
             buf[14]=getLedId();
             delay(30);
-            Serial.print("  修改成功！");
-            Serial.print("已将【眼灯】ID-");
+            Serial.print("  修改成功!");
+            Serial.print("已将 [眼灯] ID-");
             Serial.print(buf[4]);
             Serial.print("改为ID-");
             Serial.println(buf[14]); 
@@ -569,8 +569,8 @@ void uKitId::setDeciveId(){
             delay(100);
             buf[15]=getButtonId();
             delay(30);
-            Serial.print("  修改成功！");
-            Serial.print("已将【触碰传感器】ID-");
+            Serial.print("  修改成功!");
+            Serial.print("已将 [触碰传感器] ID-");
             Serial.print(buf[5]);
             Serial.print("改为ID-");
             Serial.println(buf[15]); 
@@ -583,8 +583,8 @@ void uKitId::setDeciveId(){
             delay(100);
             buf[16]=getUltrasonicId();
             delay(30);
-            Serial.print("  修改成功！");
-            Serial.print("已将【超声波传感器】ID-");
+            Serial.print("  修改成功!");
+            Serial.print("已将 [超声波传感器] ID-");
             Serial.print(buf[6]);
             Serial.print("改为ID-");
             Serial.println(buf[16]); 
@@ -597,8 +597,8 @@ void uKitId::setDeciveId(){
             delay(100);
             buf[17]=getColorId();
             delay(30);
-            Serial.print("  修改成功！");
-            Serial.print("已将【颜色传感器】ID-");
+            Serial.print("  修改成功!");
+            Serial.print("已将 [颜色传感器] ID-");
             Serial.print(buf[7]);
             Serial.print("改为ID-");
             Serial.println(buf[17]); 
@@ -611,8 +611,8 @@ void uKitId::setDeciveId(){
             delay(100);
             buf[18]=getMotorId();
             delay(30);
-            Serial.print("  修改成功！");
-            Serial.print("已将【电机】ID-");
+            Serial.print("  修改成功!");
+            Serial.print("已将 [电机] ID-");
             Serial.print(buf[8]);
             Serial.print("改为ID-");
             Serial.println(buf[18]); 
@@ -625,8 +625,8 @@ void uKitId::setDeciveId(){
             delay(100);
             buf[19]=getServoId();
             delay(30);
-            Serial.print("  修改成功！");
-            Serial.print("已将【舵机】ID-");
+            Serial.print("  修改成功!");
+            Serial.print("已将 [舵机] ID-");
             Serial.print(buf[9]);
             Serial.print("改为ID-");
             Serial.println(buf[19]); 
@@ -641,8 +641,8 @@ void uKitId::setDeciveId(){
             delay(100);
             buf[18]=getMotorId();
             delay(30);
-            Serial.print("  修改成功！");
-            Serial.print("已将【电机】ID-");
+            Serial.print("  修改成功!");
+            Serial.print("已将 [电机] ID-");
             Serial.print(buf[8]);
             Serial.print("改为ID-");
             Serial.println(buf[18]); 
@@ -655,8 +655,8 @@ void uKitId::setDeciveId(){
             delay(100);
             buf[19]=getServoId();
             delay(30);
-            Serial.print("  修改成功！");
-            Serial.print("已将【舵机】ID-");
+            Serial.print("  修改成功!");
+            Serial.print("已将 [舵机] ID-");
             Serial.print(buf[9]);
             Serial.print("改为ID-");
             Serial.println(buf[19]); 
@@ -664,15 +664,15 @@ void uKitId::setDeciveId(){
           }                         
         }
         else if(id>10 && decive<9){
-          Serial.println("  *【传感器ID控制在1-10】");
+          Serial.println("  * [传感器ID控制在1-10] ");
         }
         }
 
                 else if(zeronum==10){
-            Serial.println("  *请打开电源,或接入传感器！");
+            Serial.println("  *请打开电源,或接入传感器!");
           }    
         else{
-            Serial.println("  *请不要接入多个传感器！");   
+            Serial.println("  *请不要接入多个传感器!");   
         }
     }
    comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加
@@ -708,52 +708,52 @@ void uKitId::getDeciveId(){
       idbuf[i+96]=getServoId(i);
       delay(5); 
       if(idbuf[i+96]!=0){
-        Serial.print("【舵机】 ");
+        Serial.print(" [舵机]  ");
         Serial.print("ID-");
         Serial.println(idbuf[i+96]);
       }  
        if(idbuf[i+80]!=0){
-        Serial.print("【电机】 ");
+        Serial.print(" [电机]  ");
         Serial.print("ID-");
         Serial.println(idbuf[i+80]);
       } 
       if(idbuf[i+30]!=0){
-        Serial.print("【红外传感器】 ");
+        Serial.print(" [红外传感器]  ");
         Serial.print("ID-");
         Serial.println(idbuf[i+30]);
       }   
        if(idbuf[i+60]!=0){
-        Serial.print("【超声波传感器】 ");
+        Serial.print(" [超声波传感器]  ");
         Serial.print("ID-");
         Serial.println(idbuf[i+60]);
       }
        if(idbuf[i+40]!=0){
-        Serial.print("【LED眼灯】 ");
+        Serial.print(" [LED眼灯]  ");
         Serial.print("ID-");
         Serial.println(idbuf[i+40]);
       } 
       if(idbuf[i+10]!=0){
-        Serial.print("【亮度传感器】 ");
+        Serial.print(" [亮度传感器]  ");
         Serial.print("ID-");
         Serial.println(idbuf[i+10]);
       } 
        if(idbuf[i]!=0){
-        Serial.print("【声音传感器】 ");
+        Serial.print(" [声音传感器]  ");
         Serial.print("ID-");
         Serial.println(idbuf[i]);
       }    
        if(idbuf[i+20]!=0){
-        Serial.print("【温湿度传感器】 ");
+        Serial.print(" [温湿度传感器]  ");
         Serial.print("ID-");
         Serial.println(idbuf[i+20]);
       }                 
        if(idbuf[i+50]!=0){
-        Serial.print("【按键传感器】 ");
+        Serial.print(" [按键传感器]  ");
         Serial.print("ID-");
         Serial.println(idbuf[i+50]);
       }
       if(idbuf[i+70]!=0){
-        Serial.print("【颜色传感器】 ");
+        Serial.print(" [颜色传感器]  ");
         Serial.print("ID-");
         Serial.println(idbuf[i+70]);
       }
@@ -764,12 +764,12 @@ void uKitId::getDeciveId(){
       idbuf[i+105]=getServoId(i);
       delay(5); 
           if(idbuf[i+105]!=0){
-      Serial.print("【舵机】 ");
+      Serial.print(" [舵机]  ");
       Serial.print("ID-");
       Serial.println(idbuf[i+105]);
     }  
     if(idbuf[i+90]!=0){
-      Serial.print("【电机】 ");
+      Serial.print(" [电机]  ");
       Serial.print("ID-");
       Serial.println(idbuf[i+90]);
     } 
@@ -857,7 +857,7 @@ void uKitId::getDeciveId(){
     static int t=0;
     if(idbuf[i+80]!=0){
     if(t==0){
-      Serial.print("【电机】 ");
+      Serial.print(" [电机]  ");
       t=1;
     } 
     buf[1]-=1;
@@ -875,7 +875,7 @@ void uKitId::getDeciveId(){
     static int t=0;
     if(idbuf[i+30]!=0){
     if(t==0){
-      Serial.print("【红外传感器】 ");
+      Serial.print(" [红外传感器]  ");
       t=1;
     }
     buf[2]-=1;
@@ -892,7 +892,7 @@ void uKitId::getDeciveId(){
     static int t=0;
     if(idbuf[i+60]!=0){
     if(t==0){
-      Serial.print("【超声波传感器】 ");
+      Serial.print(" [超声波传感器]  ");
       t=1;
     }
     buf[3]-=1;
@@ -910,7 +910,7 @@ void uKitId::getDeciveId(){
     static int t=0;
     if(idbuf[i+40]!=0){
     if(t==0){
-      Serial.print("【LED眼灯】 ");
+      Serial.print(" [LED眼灯]  ");
       t=1;
     }
     buf[4]-=1;
@@ -928,7 +928,7 @@ void uKitId::getDeciveId(){
     static int t=0;
     if(idbuf[i+10]!=0){
     if(t==0){
-      Serial.print("【亮度传感器】 ");
+      Serial.print(" [亮度传感器]  ");
       t=1;
     }
     buf[5]-=1;
@@ -946,7 +946,7 @@ void uKitId::getDeciveId(){
     static int t=0;
     if(idbuf[i]!=0){
     if(t==0){
-      Serial.print("【声音传感器】 ");
+      Serial.print(" [声音传感器]  ");
       t=1;
     }
     buf[6]-=1;
@@ -963,7 +963,7 @@ void uKitId::getDeciveId(){
     static int t=0;
     if(idbuf[i+20]!=0){
     if(t==0){
-      Serial.print("【温湿度传感器】 ");
+      Serial.print(" [温湿度传感器]  ");
       t=1;
     }
     buf[7]-=1;
@@ -980,7 +980,7 @@ void uKitId::getDeciveId(){
     static int t=0;
     if(idbuf[i+50]!=0){
     if(t==0){
-      Serial.print("【按键传感器】 ");
+      Serial.print(" [按键传感器]  ");
       t=1;
     }
     buf[8]-=1;
@@ -997,7 +997,7 @@ void uKitId::getDeciveId(){
     static int t=0;
     if(idbuf[i+70]!=0){
     if(t==0){
-      Serial.print("【颜色传感器】 ");
+      Serial.print(" [颜色传感器]  ");
       t=1;
     }
     buf[9]-=1;
