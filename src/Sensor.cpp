@@ -96,14 +96,14 @@ void Sensor::IR_Send(char pin,uint8_t code){
 }
 
 
-void Sensor::read_data(){
+void Sensor::getGrayAllValue(){
   num1 = digitalRead(GrayscaleNum1);
   num2 = digitalRead(GrayscaleNum2);
   num3 = digitalRead(GrayscaleNum3);
   num4 = digitalRead(GrayscaleNum4);
   num5 = digitalRead(GrayscaleNum5);
 }
-int Sensor::read_gray(char num,char grayval){//0深，1浅
+int Sensor::readGrayValue(char num,char grayval){//0深，1浅
   int GrayscaleVal=0;
   if(num==1)
     GrayscaleVal=digitalRead(GrayscaleNum1);
@@ -130,7 +130,7 @@ int Sensor::read_gray(char num,char grayval){//0深，1浅
  * @param[in] blue EN:blue value/CN:蓝色值.
  *
  */
-void Sensor::colorRGB(int red, int green, int blue){
+void Sensor::setRgbledColor(int red, int green, int blue){
   analogWrite(redPin,constrain((255-red),0,255));
   analogWrite(greenPin,constrain((255-green),0,255));
   analogWrite(bluePin,constrain((255-blue),0,255));
@@ -170,14 +170,14 @@ void Sensor::setcolor(int color){
   }
 }
 
-float Sensor::Battery_check(){
+float Sensor::readBatteryVoltage(){
   float voltage;
   voltage=(analogRead(A4)*5.0/1024.0)*151.0/51.0;
   return voltage;
  }
 
 
- float Sensor::HcSr04Dis(char jp){
+ float Sensor::readHcsr04Distance(char jp){
   if(jp==1){
     Trig=A0;
     Echo=A1;
@@ -197,7 +197,7 @@ float Sensor::Battery_check(){
   // X秒=（ 2*Y米）/344 ==》X秒=0.0058*Y米 ==》厘米=微秒/58
   return distance;
  }
-  float Sensor::HcSr04Dis(char EchoPin,char TrigPin){
+  float Sensor::readHcsr04Distance(char EchoPin,char TrigPin){
   digitalWrite(TrigPin, LOW);   // 给触发脚低电平2μs
   delayMicroseconds(2);
   digitalWrite(TrigPin, HIGH);  // 给触发脚高电平10μs，这里至少是10μs

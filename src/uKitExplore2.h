@@ -29,42 +29,42 @@ uKitId uKitId;
 #define Initialization() Port2.Initialization()
 //uKitServo_API
 
-#define ServoRotate(id,dir,speed) uKitServo.ServoRotate(id,dir,speed)//舵机轮模式控制，id是舵机号，dir是方向（1顺时针，0逆时针），speed是速度（0-5）
-#define ServoAngle(id,angle,times) uKitServo.ServoAngle(id,angle,times)//舵机舵机模式，id是舵机号，angle是角度（-118°~118°），times是运行时间（300-5000）
-#define ServoStop(id) uKitServo.ServoStop(id)//单个舵机停止函数
-#define ServoRead_PD(id) uKitServo.ServoRead_PD(id)//单个舵机回读，返回舵机角度值(掉电回读）
-#define ServoRead_PD_M(read_id,num) uKitServo.ServoRead_PD_M(read_id,num)//单个舵机回读，返回舵机角度值(掉电回读）
-#define ServoRead_NPD(id) uKitServo.ServoRead_NPD(id)//单个舵机回读，返回舵机角度值(不掉电回读）
-#define ServoRead_NPD_M(read_id,num) uKitServo.ServoRead_NPD_M(read_id,num)//单个舵机回读，返回舵机角度值(掉电回读）
+#define setServoTurn(id,dir,speed) uKitServo.setServoTurn(id,dir,speed)//舵机轮模式控制，id是舵机号，dir是方向（1顺时针，0逆时针），speed是速度（0-5）
+#define setServoAngle(id,angle,times) uKitServo.setServoAngle(id,angle,times)//舵机舵机模式，id是舵机号，angle是角度（-118°~118°），times是运行时间（300-5000）
+#define setServoStop(id) uKitServo.setServoStop(id)//单个舵机停止函数
+#define readServoAnglePD(id) uKitServo.readServoAnglePD(id)//单个舵机回读，返回舵机角度值(掉电回读）
+#define readServoAnglePD_M(read_id,num) uKitServo.readServoAnglePD_M(read_id,num)//单个舵机回读，返回舵机角度值(掉电回读）
+#define readServoAngleNPD(id) uKitServo.readServoAngleNPD(id)//单个舵机回读，返回舵机角度值(不掉电回读）
+#define readServoAngleNPD_M(read_id,num) uKitServo.readServoAngleNPD_M(read_id,num)//单个舵机回读，返回舵机角度值(掉电回读）
 
 //uKitSensor_API
 
 
-#define uKit_Light_Read(id) uKitSensor.uKit_Light_Read(id)
-#define uKit_Sound_Read(id) uKitSensor.uKit_Sound_Read(id)
-#define uKit_Infrared(id) uKitSensor.uKit_Infrared(id)//ukit红外传感器控制函数，返回cm,(0-20)cm
+#define readLightValue(id) uKitSensor.readLightValue(id)
+#define readSoundValue(id) uKitSensor.readSoundValue(id)
+#define readInfraredDistance(id) uKitSensor.readInfraredDistance(id)//ukit红外传感器控制函数，返回cm,(0-20)cm
 #define Set_Infrared_Id(id) uKitSensor.Set_Infrared_Id(id)//设置红外ID
-#define uKit_RGB_Read(id,rgb) uKitSensor.uKit_RGB_Read(id,rgb)
-#define uKit_RGB_Readcolor(id,color) uKitSensor.uKit_RGB_Readcolor(id,color)
-#define uKit_RGB_off(id) uKitSensor.uKit_RGB_off(id)
-#define uKit_Led_Face(id,face,times,red,green,blue) uKitSensor.uKit_Led_Face(id,face,times,red,green,blue)//ukit led传感器。id为led的id号，face为表情种类（0）
-#define uKit_Led_Scene(id,scene,times) uKitSensor.uKit_Led_Scene(id,scene,times)
-#define uKit_Led_off(id) uKitSensor.uKit_Led_off(id)
-#define uKit_Leds(id,red,green,blue) uKitSensor.uKit_Leds(id,red,green,blue)//ukit led传感器。id为led的id号，face为表情种类（0）
-#define setLedPetals(id,petalnum,petals) uKitSensor.setLedPetals(id,petalnum,petals)
-#define uKit_Humiture(id,choice) uKitSensor.uKit_Humiture(id,choice)
-#define uKit_Button(id) uKitSensor.uKit_Button(id)//返回256无操作，返回257是单击，返回258是双击
-#define uKit_Ultrasonic(id) uKitSensor.uKit_Ultrasonic(id)
-#define uKit_NixieTube_Full(id,tpye,method,frequency,times,start,ends) uKitSensor.uKit_NixieTube_Full(id,tpye,method,frequency,times,start,ends)
-#define uKit_NixieTube(id,number) uKitSensor.uKit_NixieTube(id,number)
+#define readsetRgbledColor(id,rgb) uKitSensor.readsetRgbledColor(id,rgb)
+#define readColor(id,color) uKitSensor.readColor(id,color)
+#define setColorOff(id) uKitSensor.setColorOff(id)
+#define setEyelightLook(id,face,times,red,green,blue) uKitSensor.setEyelightLook(id,face,times,red,green,blue)//ukit led传感器。id为led的id号，face为表情种类（0）
+#define setEyelightScene(id,scene,times) uKitSensor.setEyelightScene(id,scene,times)
+#define setEyelightOff(id) uKitSensor.setEyelightOff(id)
+#define setEyelightAllPetals(id,red,green,blue) uKitSensor.setEyelightAllPetals(id,red,green,blue)//ukit led传感器。id为led的id号，face为表情种类（0）
+#define setEyelightPetals(id,petalnum,petals) uKitSensor.setEyelightPetals(id,petalnum,petals)
+#define readHumitureValue(id,choice) uKitSensor.readHumitureValue(id,choice)
+#define readButtonValue(id) uKitSensor.readButtonValue(id)//返回256无操作，返回257是单击，返回258是双击
+#define readUltrasonicDistance(id) uKitSensor.readUltrasonicDistance(id)
+#define setNixieTubeFull(id,tpye,method,frequency,times,start,ends) uKitSensor.setNixieTubeFull(id,tpye,method,frequency,times,start,ends)
+#define setNixieTube(id,number) uKitSensor.setNixieTube(id,number)
 #define redvalue uKitSensor.redvalue
 #define greenvalue uKitSensor.greenvalue
 #define bluevalue uKitSensor.bluevalue
 //uKitMotor_API
-#define MotorRotate(id,pwmDuty) uKitMotor.MotorRotate(id,pwmDuty)
-#define MotorRotateAdj(id,speed,time) uKitMotor.MotorRotateAdj(id,speed,time)
-#define MotorReadSpeed(id) uKitMotor.MotorReadSpeed(id)
-#define MotorStop(id) uKitMotor.MotorStop(id)
+#define setMotorTurn(id,pwmDuty) uKitMotor.setMotorTurn(id,pwmDuty)
+#define setMotorTurnAdj(id,speed,time) uKitMotor.setMotorTurnAdj(id,speed,time)
+#define readMotorSpeed(id) uKitMotor.readMotorSpeed(id)
+#define setMotorStop(id) uKitMotor.setMotorStop(id)
 #define MotorSetID(id_old,id_new) uKitMotor.MotorSetID(id_old,id_new)
 #define MotorCheckID(id) uKitMotor.MotorCheckID(id)
 
@@ -105,12 +105,12 @@ uKitId uKitId;
 #define num5 Sensor.num5
 #define tone(frequency,duration) Sensor.tone(frequency,duration)
 #define noTone(pin) Sensor.noTone(pin)
-#define read_data() Sensor.read_data()
-#define read_gray(num,grayval) Sensor.read_gray(num,grayval)
-#define colorRGB(red,green,blue) Sensor.colorRGB(red,green,blue)//板载RGB灯函数
+#define getGrayAllValue() Sensor.getGrayAllValue()
+#define readGrayValue(num,grayval) Sensor.readGrayValue(num,grayval)
+#define setRgbledColor(red,green,blue) Sensor.setRgbledColor(red,green,blue)//板载RGB灯函数
 #define setcolor(color) Sensor.setcolor(color)
-#define Battery_check() Sensor.Battery_check()
-#define HcSr04Dis(jp) Sensor.HcSr04Dis(jp) //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
+#define readBatteryVoltage() Sensor.readBatteryVoltage()
+#define readHcsr04Distance(jp) Sensor.readHcsr04Distance(jp) //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
 
 
 //ClickButton_API

@@ -1,6 +1,6 @@
 #include"uKitSensor.h" 
 
-unsigned char  uKitSensor::uKit_Infrared(char ID){//uKit红外传感器
+unsigned char  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
   unsigned char hData[1];
   volatile int State=0;
   unsigned int  inval;
@@ -31,7 +31,7 @@ unsigned char  uKitSensor::uKit_Infrared(char ID){//uKit红外传感器
 
 
 
-unsigned short int uKitSensor::uKit_Sound_Read(char id){
+unsigned short int uKitSensor::readSoundValue(char id){
   unsigned short int tRet = 0;
   unsigned char buf[10];
   buf[0] = 0xFB;//帧头
@@ -44,11 +44,13 @@ unsigned short int uKitSensor::uKit_Sound_Read(char id){
   buf[7] = 0x00;
   buf[8] = 0x01;
   buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(10,buf);
+  tRet=map(TXD(10,buf),0,4069,0,1023);
   delay(10);
+  if(tRet>1023)
+    tRet=1023;
   return tRet;
 }
-unsigned short int uKitSensor::uKit_Light_Read(char id){
+unsigned short int uKitSensor::readLightValue(char id){
   unsigned short int tRet = 0;
   unsigned char buf[10];
   buf[0] = 0xFB;//帧头
@@ -65,7 +67,7 @@ unsigned short int uKitSensor::uKit_Light_Read(char id){
   delay(10);
   return tRet;
 }
-void uKitSensor::uKit_Led_Face(char id,char face,int times,int red,int green,int blue){
+void uKitSensor::setEyelightLook(char id,char face,int times,int red,int green,int blue){
 
   signed char tData2[1] ;
   signed char tData[7];
@@ -87,7 +89,7 @@ void uKitSensor::uKit_Led_Face(char id,char face,int times,int red,int green,int
   delay(10);
 
  }
-void uKitSensor::uKit_Led_Scene(char id,char scene,int times){
+void uKitSensor::setEyelightScene(char id,char scene,int times){
 
   signed char tData2[1] ;
   signed char tData[7];
@@ -107,7 +109,7 @@ void uKitSensor::uKit_Led_Scene(char id,char scene,int times){
   State=TXD(0xF4,1,7,0x0a,tData );
   delay(10);
  }
-void uKitSensor::uKit_Leds(char id,int red,int green,int blue){
+void uKitSensor::setEyelightAllPetals(char id,int red,int green,int blue){
 
   signed char tData2[1] ;
   signed char tData[8];
@@ -128,7 +130,7 @@ void uKitSensor::uKit_Leds(char id,int red,int green,int blue){
   State=TXD(0xF4,1,8,0x0b,tData );
   delay(10);
  }
-void uKitSensor::setLedPetals(char id,unsigned char petalsnum,unsigned char petals[]){
+void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,unsigned char petals[]){
   signed char tData2[1] ;
   signed char tData[35];
   tData2[0]=id;
@@ -183,7 +185,7 @@ void uKitSensor::setLedPetals(char id,unsigned char petalsnum,unsigned char peta
   State=TXD(0xF4,1,35,0x0b,tData );
   delay(10);
 }
-void uKitSensor::uKit_Led_off(char id){
+void uKitSensor::setEyelightOff(char id){
   signed char tData[1];
   volatile int State=0;
   tData[0]=id;
@@ -192,7 +194,7 @@ void uKitSensor::uKit_Led_off(char id){
     delay(5);
   }
  } 
-signed char uKitSensor::uKit_Humiture(char id, char choice){
+signed char uKitSensor::readHumitureValue(char id, char choice){
   signed char tRet = 0;
   unsigned char buf[10];
   buf[0] = 0xFB;//帧头
@@ -210,7 +212,7 @@ signed char uKitSensor::uKit_Humiture(char id, char choice){
   return tRet;
 }
 
-unsigned char uKitSensor::uKit_RGB_Read(char id,unsigned char RGB){
+unsigned char uKitSensor::readsetRgbledColor(char id,unsigned char RGB){
   unsigned  char tData[1];
   unsigned char Value=0;
   tData[0]=id;
@@ -227,17 +229,17 @@ unsigned char uKitSensor::uKit_RGB_Read(char id,unsigned char RGB){
  }
 
  
-void uKitSensor::uKit_RGB_off(char id){
+void uKitSensor::setColorOff(char id){
   unsigned  char tData[1];
   tData[0]=id;
   TXD(0xE8,1,1,3,tData); 
     delay(5);   
  }
-bool uKitSensor::uKit_RGB_Readcolor(char id,char color){
+bool uKitSensor::readColor(char id,char color){
   
-  unsigned char Rvalue=uKit_RGB_Read(id,'R');
-  unsigned char Gvalue=uKit_RGB_Read(id,'G');
-  unsigned char Bvalue=uKit_RGB_Read(id,'B');
+  unsigned char Rvalue=readsetRgbledColor(id,'R');
+  unsigned char Gvalue=readsetRgbledColor(id,'G');
+  unsigned char Bvalue=readsetRgbledColor(id,'B');
   if(Rvalue>90 & Rvalue<255 & Gvalue<120 &Bvalue<120 & color=='R')
     return true;
   else if(Gvalue>90 & Gvalue<255 & Rvalue<120 &Bvalue<120 & color=='G')
@@ -259,7 +261,7 @@ bool uKitSensor::uKit_RGB_Readcolor(char id,char color){
   
 
 
-int uKitSensor::uKit_Button(char id){
+int uKitSensor::readButtonValue(char id){
   unsigned  char tData[1];
   volatile int State=0;
   tData[0]=id;
@@ -271,7 +273,7 @@ int uKitSensor::uKit_Button(char id){
   delay(5);
 }
 
-int uKitSensor::uKit_Ultrasonic(char id){
+int uKitSensor::readUltrasonicDistance(char id){
   unsigned char tData[1];
   volatile int State=0;
   int distance;
@@ -286,7 +288,7 @@ int uKitSensor::uKit_Ultrasonic(char id){
     return distance; 
   delay(5);
 }
-void uKitSensor::uKit_NixieTube_Full(char id,uint8_t tpye,uint8_t method,uint8_t frequency,uint8_t times,uint8_t start,uint8_t ends){
+void uKitSensor::setNixieTubeFull(char id,uint8_t tpye,uint8_t method,uint8_t frequency,uint8_t times,uint8_t start,uint8_t ends){
   unsigned char tData[1]; 
   volatile int State=0;
   tData[0]=id;
@@ -315,7 +317,7 @@ void uKitSensor::uKit_NixieTube_Full(char id,uint8_t tpye,uint8_t method,uint8_t
   State=TXD(0xF6,1,17,0x04,xData); 
   delay(5);
 }
-void uKitSensor::uKit_NixieTube(char id,float number){
+void uKitSensor::setNixieTube(char id,float number){
   
   unsigned char tData[1];
   uint16_t method;

@@ -3,50 +3,50 @@
 
 //小车前进speed表示前进速度（速度范围：0-5）
 void TransforRobot::forward(int speeds){
-  ServoRotate(lmotor,1,speeds);//1表示顺时针，0表示逆时针
-  ServoRotate(rmotor,0,speeds);
+  setServoTurn(lmotor,1,speeds);//1表示顺时针，0表示逆时针
+  setServoTurn(rmotor,0,speeds);
 }
 
 //小车前进speed表示前进速度（速度范围：0-5）
 void TransforRobot::forward(int Lspeed,int Rspeed){
-  ServoRotate(lmotor,1,Lspeed);//1表示顺时针，0表示逆时针
-  ServoRotate(rmotor,0,Rspeed);
+  setServoTurn(lmotor,1,Lspeed);//1表示顺时针，0表示逆时针
+  setServoTurn(rmotor,0,Rspeed);
 }
 
 
 //小车左转speed表示前进速度（速度范围：0-5）
 void TransforRobot::turnL(int speed){
-  ServoRotate(lmotor,0,speed);//1表示顺时针，0表示逆时针
-  ServoRotate(rmotor,0,speed);
+  setServoTurn(lmotor,0,speed);//1表示顺时针，0表示逆时针
+  setServoTurn(rmotor,0,speed);
 }
 
 //小车右转speed表示前进速度（速度范围：0-5）
 void TransforRobot::turnR(int speed){
-  ServoRotate(lmotor,1,speed);//1表示顺时针，0表示逆时针
-  ServoRotate(rmotor,1,speed);
+  setServoTurn(lmotor,1,speed);//1表示顺时针，0表示逆时针
+  setServoTurn(rmotor,1,speed);
 }
 
 void TransforRobot::turnL(int Lspeed,int Rspeed){
-  ServoRotate(lmotor,0,Lspeed);//1表示顺时针，0表示逆时针
-  ServoRotate(rmotor,0,Rspeed);
+  setServoTurn(lmotor,0,Lspeed);//1表示顺时针，0表示逆时针
+  setServoTurn(rmotor,0,Rspeed);
 }
 
 //小车右转speed表示前进速度（速度范围：0-5）
 void TransforRobot::turnR(int Lspeed,int Rspeed){
-  ServoRotate(lmotor,1,Lspeed);//1表示顺时针，0表示逆时针
-  ServoRotate(rmotor,1,Rspeed);
+  setServoTurn(lmotor,1,Lspeed);//1表示顺时针，0表示逆时针
+  setServoTurn(rmotor,1,Rspeed);
 }
 
 //小车后退speed表示前进速度（速度范围：0-5）
 void TransforRobot::back(int speed){
-  ServoRotate(lmotor,0,speed);
-  ServoRotate(rmotor,1,speed);
+  setServoTurn(lmotor,0,speed);
+  setServoTurn(rmotor,1,speed);
 }
 
 //小车停止
 void TransforRobot::stops(){
-  ServoStop(lmotor);
-  ServoStop(rmotor);
+  setServoStop(lmotor);
+  setServoStop(rmotor);
   
 }
 void TransforRobot::turn_L(int speed){//90
@@ -58,7 +58,7 @@ void TransforRobot::turn_L(int speed){//90
     {
       turnL(speed);
       delay(140);//若没拐到中心继续拐
-      read_data();
+      getGrayAllValue();
     }while (num3 == 0||num4 == 0);
      stops();
    
@@ -73,7 +73,7 @@ void TransforRobot::turn_R(int speed){
      {
          turnR(speed);
          delay(140);//若没拐到中心继续拐
-         read_data();
+         getGrayAllValue();
       }while(num3 == 0 ||num2 == 0);
       stops();
 } 
@@ -86,7 +86,7 @@ void TransforRobot::turn_U(int speed){
   one_step(speed,300);   //确保足够的转弯半径
   do{
     turnL(speed); //掉头
-    read_data();
+    getGrayAllValue();
   } while ( num3 == 1);
   stops();
 }
@@ -97,8 +97,8 @@ void TransforRobot::turn_U(int speed){
  */
 void TransforRobot::one_step(int speed,int time)
 {
-  ServoRotate(lmotor,1,speed);//1表示顺时针，0表示逆时针
-  ServoRotate(rmotor,0,speed);
+  setServoTurn(lmotor,1,speed);//1表示顺时针，0表示逆时针
+  setServoTurn(rmotor,0,speed);
   delay(time);
   stops();
   
@@ -166,7 +166,7 @@ void TransforRobot::motion_forward(char times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(m_forward)/sizeof(m_forward[0]);i++){
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        ServoAngle(id[t],(m_forward[i][t]),300);
+        setServoAngle(id[t],(m_forward[i][t]),300);
       }  
       delay(forward_times[i]);
     }
@@ -181,7 +181,7 @@ void TransforRobot::motion_car(char times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(car)/sizeof(car[0]);i++){
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        ServoAngle(id[t],(car[i][t]),700);
+        setServoAngle(id[t],(car[i][t]),700);
       }  
       delay(omotion_times[i]);
       }
@@ -195,7 +195,7 @@ void TransforRobot::motion_getup(char times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(get_up)/sizeof(get_up[0]);i++){
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        ServoAngle(id[t],(get_up[i][t]),500);
+        setServoAngle(id[t],(get_up[i][t]),500);
       }  
       delay(get_up_times[i]);
     }
@@ -209,7 +209,7 @@ void TransforRobot::motion_sitdown(char times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(sitdown)/sizeof(sitdown[0]);i++) {
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        ServoAngle(id[t],(sitdown[i][t]),500);
+        setServoAngle(id[t],(sitdown[i][t]),500);
       }  
       delay(sitdown_times[i]);
     }
@@ -223,7 +223,7 @@ void TransforRobot::motion_back(char times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(m_back)/sizeof(m_back[0]);i++){
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        ServoAngle(id[t],(m_back[i][t]),300);
+        setServoAngle(id[t],(m_back[i][t]),300);
       }  
       delay(back_times[i]);
     }
@@ -237,7 +237,7 @@ void TransforRobot::motion_left_shift(char times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(left_shift)/sizeof(left_shift[0]);i++){
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        ServoAngle(id[t],(left_shift[i][t]),280);
+        setServoAngle(id[t],(left_shift[i][t]),280);
       }  
       delay(left_shift_times[i]);
     }
@@ -251,7 +251,7 @@ void TransforRobot::motion_right_shift(char times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(right_shift)/sizeof(right_shift[0]);i++){
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        ServoAngle(id[t],(right_shift[i][t]),300);
+        setServoAngle(id[t],(right_shift[i][t]),300);
       }  
       delay(right_shift_times[i]);
     }
@@ -265,7 +265,7 @@ void TransforRobot::motion_turn_left(char times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(turn_left)/sizeof(turn_left[0]);i++){
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        ServoAngle(id[t],(turn_left[i][t]),300);
+        setServoAngle(id[t],(turn_left[i][t]),300);
       }  
       delay(turn_left_times[i]);
     }
@@ -279,7 +279,7 @@ void TransforRobot::motion_turn_right(char times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(turn_right)/sizeof(turn_right[0]);i++){
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        ServoAngle(id[t],(turn_right[i][t]),300);
+        setServoAngle(id[t],(turn_right[i][t]),300);
       }  
       delay(turn_right_times[i]);
     }
@@ -293,7 +293,7 @@ void TransforRobot::motion_omotion(char times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(omotion)/sizeof(omotion[0]);i++){
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        ServoAngle(id[t],(omotion[i][t]),700);
+        setServoAngle(id[t],(omotion[i][t]),700);
       }  
       delay(omotion_times[i]);
     }
@@ -307,7 +307,7 @@ void TransforRobot::motion_button(char times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(button)/sizeof(button[0]);i++){
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        ServoAngle(id[t],(button[i][t]),300);
+        setServoAngle(id[t],(button[i][t]),300);
       }  
       delay(button_times[i]);
     }
@@ -321,7 +321,7 @@ void TransforRobot::motion_lift(char times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(lift)/sizeof(lift[0]);i++){
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        ServoAngle(id[t],(lift[i][t]),300);
+        setServoAngle(id[t],(lift[i][t]),300);
       }  
       delay(lift_times[i]);
     }
@@ -335,7 +335,7 @@ void TransforRobot::motion_lift_hand(char times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(lift_hand)/sizeof(lift_hand[0]);i++){
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        ServoAngle(id[t],(lift_hand[i][t]),300);
+        setServoAngle(id[t],(lift_hand[i][t]),300);
       }  
       delay(lift_hand_times[i]);
     }
@@ -349,7 +349,7 @@ void TransforRobot::motion_head(char times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(head)/sizeof(head[0]);i++){
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        ServoAngle(id[t],(head[i][t]),300);
+        setServoAngle(id[t],(head[i][t]),300);
       }  
       delay(head_times[i]);
     }
@@ -363,7 +363,7 @@ void TransforRobot::motion_zero(char times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(mzero)/sizeof(mzero[0]);i++){
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        ServoAngle(id[t],(mzero[i][t]),300);
+        setServoAngle(id[t],(mzero[i][t]),300);
       }  
       delay(mzero_times[i]);
     }

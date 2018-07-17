@@ -2,7 +2,7 @@
 #include"uKitMotor.h"  
 
 
-unsigned long uKitMotor::MotorRotate(uint8_t id, uint16_t pwmDuty){
+unsigned long uKitMotor::setMotorTurn(uint8_t id, uint16_t pwmDuty){
   unsigned long tRet = 0;
   unsigned char buf[12];
   uint16_t speeds;
@@ -30,7 +30,7 @@ unsigned long uKitMotor::MotorRotate(uint8_t id, uint16_t pwmDuty){
  *
  * @returns ret EN:0 means motor module acks correct, <0 means no ack or ack error/CN:返回0表示功能正常.
  */
-unsigned long uKitMotor::MotorRotateAdj(uint8_t id, uint16_t speed, uint16_t time){
+unsigned long uKitMotor::setMotorTurnAdj(uint8_t id, uint16_t speed, uint16_t time){
   unsigned long tRet = 0;
   unsigned char buf[16];
   
@@ -59,7 +59,7 @@ unsigned long uKitMotor::MotorRotateAdj(uint8_t id, uint16_t speed, uint16_t tim
  *
  * @returns pSpeed EN:Motor speed/EN:电机速度..
  */
-uint16_t uKitMotor::MotorReadSpeed(uint8_t id){
+uint16_t uKitMotor::readMotorSpeed(uint8_t id){
   unsigned long tRet = 0;
   unsigned char buf[10];
   
@@ -82,7 +82,7 @@ uint16_t uKitMotor::MotorReadSpeed(uint8_t id){
  *
  * @returns tRet EN:0 means motor module acks correct, <0 means no ack or ack error/CN:返回0表示功能正常.
  */
-int uKitMotor::MotorStop(uint8_t id)
+int uKitMotor::setMotorStop(uint8_t id)
 {
   unsigned long tRet = 0;
   unsigned char buf[12];

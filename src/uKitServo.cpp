@@ -3,7 +3,7 @@
 
 
 
-void uKitServo::ServoRotate(char id,int dir, int speed){
+void uKitServo::setServoTurn(char id,int dir, int speed){
   unsigned char buf[4];
   volatile int t=0;
   int speeds;
@@ -11,7 +11,7 @@ void uKitServo::ServoRotate(char id,int dir, int speed){
  
   if(t!=speeds)
   {
-    ServoStop(id);
+    setServoStop(id);
     t=speeds;
    
   }
@@ -41,7 +41,7 @@ void uKitServo::ServoRotate(char id,int dir, int speed){
 
 
 //id表示舵机号，angle表示角度（角度范围-118°~118°），time表示旋转所需时间（时间范围：300~5000）
-void uKitServo::ServoAngle(char id,int angle,int times){
+void uKitServo::setServoAngle(char id,int angle,int times){
   unsigned char tData[4];
   tData[0]=angle+120;
   tData[1]=(times/20);
@@ -50,12 +50,12 @@ void uKitServo::ServoAngle(char id,int angle,int times){
 
   TXD(0xFA,id,4,0x01,tData );
 }
-void uKitServo::ServoStop(char id){
+void uKitServo::setServoStop(char id){
   unsigned char aa[4]={0xFF,0,0,0};
   TXD(0xFA,id,4,0x01,aa); 
 }
 
-int uKitServo::ServoRead_PD(char id){//单个舵机回读(掉电回读）
+int uKitServo::readServoAnglePD(char id){//单个舵机回读(掉电回读）
   int tCmd=0;
   unsigned char aa[4]={0,0,0,0};
   tCmd=TXD(0xFA,id,4,0x02,aa)-120;
@@ -68,9 +68,9 @@ int uKitServo::ServoRead_PD(char id){//单个舵机回读(掉电回读）
 
 }
 
-void uKitServo::ServoRead_PD_M(char read_id[],char num)//舵机回读
+void uKitServo::readServoAnglePD_M(char read_id[],char num)//舵机回读
 {
-    int ServoAngle=0;
+    int setServoAngle=0;
     Serial.println("");
     Serial.print("----------");
     Serial.print(read_num++);
@@ -78,11 +78,11 @@ void uKitServo::ServoRead_PD_M(char read_id[],char num)//舵机回读
     Serial.print("{");
     for(int i=0;i<num;i++)
     {
-        ServoAngle=ServoRead_PD(read_id[i]);
+        setServoAngle=readServoAnglePD(read_id[i]);
         delay(20);
-        if(ServoAngle>=-118 && ServoAngle<=118)
+        if(setServoAngle>=-118 && setServoAngle<=118)
         {
-          Serial.print(ServoAngle);
+          Serial.print(setServoAngle);
           if(i<num-1)
             Serial.print(",");
         }
@@ -90,7 +90,7 @@ void uKitServo::ServoRead_PD_M(char read_id[],char num)//舵机回读
         else
         {
           Serial.print("id-");
-          Serial.print(ServoAngle);
+          Serial.print(setServoAngle);
           Serial.print(":Out of range,");
         }
     }
@@ -101,7 +101,7 @@ void uKitServo::ServoRead_PD_M(char read_id[],char num)//舵机回读
  
 
 }
-int uKitServo::ServoRead_NPD(char id){//单个舵机回读(不掉电回读）
+int uKitServo::readServoAngleNPD(char id){//单个舵机回读(不掉电回读）
   int tCmd=0;
   unsigned char aa[4]={0,0,0,0};
 
@@ -116,9 +116,9 @@ int uKitServo::ServoRead_NPD(char id){//单个舵机回读(不掉电回读）
 
 }
 
-void uKitServo::ServoRead_NPD_M(char read_id[],char num)//舵机回读
+void uKitServo::readServoAngleNPD_M(char read_id[],char num)//舵机回读
 {
-    int ServoAngle=0;
+    int setServoAngle=0;
     Serial.println("");
     Serial.print("----------");
     Serial.print(read_num++);
@@ -126,11 +126,11 @@ void uKitServo::ServoRead_NPD_M(char read_id[],char num)//舵机回读
     Serial.print("{");
     for(int i=0;i<num;i++)
     {
-        ServoAngle=ServoRead_NPD(read_id[i]);
+        setServoAngle=readServoAngleNPD(read_id[i]);
         delay(20);
-        if(ServoAngle>=-118 && ServoAngle<=118)
+        if(setServoAngle>=-118 && setServoAngle<=118)
         {
-          Serial.print(ServoAngle);
+          Serial.print(setServoAngle);
           if(i<num-1)
             Serial.print(",");
         }
@@ -138,7 +138,7 @@ void uKitServo::ServoRead_NPD_M(char read_id[],char num)//舵机回读
         else
         {
           Serial.print("id-");
-          Serial.print(ServoAngle);
+          Serial.print(setServoAngle);
           Serial.print(":Out of range,");
         }
     }
@@ -163,13 +163,13 @@ void uKitServo::ServoRead(){
   }
   start=1;
   }
-  ServoRead_PD_M(ServoIdRead,t);
+  readServoAnglePD_M(ServoIdRead,t);
 }
 void uKitServo::motion(unsigned char id[],signed char action[][sizeof(id)/sizeof(id[0])],signed char time[],int times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(action)/sizeof(action[0]);i++){
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        ServoAngle(id[t],action[i][t],500);
+        setServoAngle(id[t],action[i][t],500);
       }  
       delay(time[i]);
     }

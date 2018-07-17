@@ -20,14 +20,14 @@ public:
   void IR_Send(char pin,uint8_t code);
  
   int num1,num2,num3,num4,num5=0;
-  void read_data();
-  int read_gray(char num,char grayval);
-  void colorRGB(int red, int green, int blue);//板载RGB灯函数
+  void getGrayAllValue();
+  int readGrayValue(char num,char grayval);
+  void setRgbledColor(int red, int green, int blue);//板载RGB灯函数
   void setcolor(int color);
 
-  float Battery_check();
-  float HcSr04Dis(char jp); //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
-  float HcSr04Dis(char EchoPin,char TrigPin); //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
+  float readBatteryVoltage();
+  float readHcsr04Distance(char jp); //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
+  float readHcsr04Distance(char EchoPin,char TrigPin); //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
   
   
   

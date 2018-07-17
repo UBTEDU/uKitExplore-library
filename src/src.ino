@@ -9,6 +9,9 @@ volatile int b;
 volatile int c;
 void setup(){
   Initialization();
+  delay(200);
+  readBatteryVoltage();
+
 
   
 
@@ -17,10 +20,8 @@ void setup(){
 }
 
 void loop() {
-ServoAngle(12,-20,5000);
-delay(120);
-ServoAngle(12,100,20);
-delay(300);
+Serial.println(readHumitureValue(1,'C'));
+delay(400);
 
 
     
