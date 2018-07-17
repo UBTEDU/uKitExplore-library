@@ -71,8 +71,8 @@ stops();
 
 void straight(int speed)
 {
-  read_data();
-  if(Battery_check()<=6.1 & Battery_check()>0.2)//检测电量函数，电池低于6.1V报警
+  getGrayAllValue();
+  if(readBatteryVoltage()<=6.1 & readBatteryVoltage()>0.2)//检测电量函数，电池低于6.1V报警
   {
     stops();
     setcolor(1);

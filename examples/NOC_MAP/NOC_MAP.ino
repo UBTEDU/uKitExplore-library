@@ -40,13 +40,13 @@ void maps()
 {
   unsigned long tCmd = 0;
   unsigned int  H1,H2=0;
-  tCmd = uKit_button(1);
+  tCmd = readButtonValue(1);
   delay(10);
-  H1=ukit_infrared(1);
+  H1=readInfraredDistance(1);
   delay(10);
-  H2=ukit_infrared(2);
+  H2=readInfraredDistance(2);
   delay(10);
-        if(H1!=0 & H1<16 & jiguanbit==0)  
+        if(H1!=0 & H1<18 & jiguanbit==0)  
         {          
         hongwainum++;
         jiguan(2);
@@ -66,7 +66,7 @@ void maps()
           noTone(43);
           Serial.print("buttom:");
         }
-        else if(H2!=0& H2<17 & hongwaibit==0)
+        else if(H2!=0& H2<19 & hongwaibit==0)
         {
            tone(43,200);
           delay(400);
@@ -90,7 +90,7 @@ void ukit_bottom()
     unsigned long tCmd = 0;
 
   
-  tCmd = uKit_button(1);
+  tCmd = readButtonValue(1);
   delay(20);
         if(tCmd == 0x101)  //按一下停
         {
@@ -112,14 +112,14 @@ void door(char action)
 {
   if(action==1)//opendoor
   {
-   ServoAngle(doorLid,90,400);
-   ServoAngle(doorRid,-90,400);
+   setServoAngle(doorLid,90,400);
+   setServoAngle(doorRid,-90,400);
     delay(1000);
   }
     if(action==2)//closedoor
   {
-    ServoAngle(doorLid,0,400);
-    ServoAngle(doorRid,0,400);
+    setServoAngle(doorLid,0,400);
+    setServoAngle(doorRid,0,400);
     delay(300);
   }
 }
@@ -127,14 +127,14 @@ void jiguan(char action)
 {
   if(action==1)//funtion
   {
-    ServoAngle(jiguanid,-40,700);
+    setServoAngle(jiguanid,-40,700);
     delay(1000);
-    ServoAngle(jiguanid,5,700);
+    setServoAngle(jiguanid,5,700);
     delay(1200);
   }
     if(action==2)//closefuntion
   {
-    ServoAngle(jiguanid,-90,700);
+    setServoAngle(jiguanid,-90,700);
 
     delay(300);
   }
