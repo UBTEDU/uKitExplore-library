@@ -1,4 +1,4 @@
-# uKit Explore Library v18.6.29
+# uKit Explore Library v1.0.5
 ```
 git clone git@10.10.1.34:uKit/explorer-library.git
 
