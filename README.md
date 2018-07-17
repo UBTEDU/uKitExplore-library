@@ -20,8 +20,8 @@ Arduino Library for uKit Explore Modules
 - [Drive](http://www.wch.cn/downfile/65)
 - [Instructions](http://10.10.1.245/uKit-explore/Course/blob/master/uKit_Explore_Course_CN.pdf)  
 
-###Update
-V1.0.5更新说明
+### Update
+#### V1.0.5更新说明
 1. 规范化函数命名方式
 2. 若已安装了本程序，安装前加入卸载提示功能
 2. 修复和优化了颜色传感器的读取
