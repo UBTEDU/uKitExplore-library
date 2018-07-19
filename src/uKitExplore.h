@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 // Supported Modules drive needs to be iddded here
-#include"Port.h"
+
 #include"Sensor.h"
 #include"TransforRobot.h"
 #include"uKitMotor.h"
@@ -14,7 +14,7 @@
 #include"uKitId.h"
 
 
-Port Port;
+
 Sensor Sensor;
 TransforRobot TransforRobot;
 uKitMotor uKitMotor;
@@ -24,9 +24,8 @@ uKitId uKitId;
 
 
 
-//Port_API
-#define Button_pin Port.Button_pin
-#define Initialization() Port.Initialization()
+
+
 //uKitServo_API
 
 #define setServoTurn(id,dir,speed) uKitServo.setServoTurn(id,dir,speed)//舵机轮模式控制，id是舵机号，dir是方向（1顺时针，0逆时针），speed是速度（0-5）
@@ -111,10 +110,10 @@ uKitId uKitId;
 #define setcolor(color) Sensor.setcolor(color)
 #define readBatteryVoltage() Sensor.readBatteryVoltage()
 #define readHcsr04Distance(jp) Sensor.readHcsr04Distance(jp) //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
-
+#define Initialization() Sensor.Initialization()
 
 //ClickButton_API
-ClickButton button1(Button_pin, HIGH, CLICKBTN_PULLUP);//设置按键
+ClickButton button1(Sensor.Button_pin, HIGH, CLICKBTN_PULLUP);//设置按键
 
 
 

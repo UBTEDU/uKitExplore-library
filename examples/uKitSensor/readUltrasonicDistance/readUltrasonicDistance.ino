@@ -15,7 +15,7 @@ void setup() {
 //uKit Ultrasonic sensor control function
 void loop(){
   Serial.print("Ultasonic_distance:");
-  Serial.println(uKit_Ultrasonic(1));
+  Serial.println(readUltrasonicDistance(1));
   delay(300);
   
   

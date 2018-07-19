@@ -3,7 +3,7 @@
 * 
  */
 
-#include"uKitExplore.h"
+#include"uKitExplore2.h"
 
 void setup() { 
   Initialization();//CN:初始化/EN:Initialization
@@ -12,11 +12,11 @@ void setup() {
 
 //红色亮300ms,绿灯亮300ms，蓝灯亮300ms，循环
 void loop(){
-  colorRGB(255,0,0);
+  setRgbledColor(255,0,0);
   delay(300);
-  colorRGB(0,255,0);
+  setRgbledColor(0,255,0);
   delay(300);
-  colorRGB(0,0,255);
+  setRgbledColor(0,0,255);
   delay(300);
 
   

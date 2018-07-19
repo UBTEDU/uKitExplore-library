@@ -4,8 +4,8 @@
 #include <Arduino.h>
 
 // Supported Modules drive needs to be iddded here
-#include"Port2.h"
-#include"Sensor.h"
+
+#include"Sensor2.h"
 #include"TransforRobot.h"
 #include"uKitMotor.h"
 #include"uKitSensor.h"
@@ -14,8 +14,7 @@
 #include"uKitId.h"
 
 
-Port2 Port2;
-Sensor Sensor;
+Sensor2 Sensor2;
 TransforRobot TransforRobot;
 uKitMotor uKitMotor;
 uKitServo uKitServo;
@@ -24,9 +23,8 @@ uKitId uKitId;
 
 
 
-//Port_API
-#define Button_pin Port2.Button_pin
-#define Initialization() Port2.Initialization()
+
+
 //uKitServo_API
 
 #define setServoTurn(id,dir,speed) uKitServo.setServoTurn(id,dir,speed)//舵机轮模式控制，id是舵机号，dir是方向（1顺时针，0逆时针），speed是速度（0-5）
@@ -97,24 +95,25 @@ uKitId uKitId;
 #define motion_head(times) TransforRobot.motion_head(times)//拆引爆雷
 #define motion_zero(times) TransforRobot.motion_zero(times)//零状态
     
-//Sensor_API
-#define num1 Sensor.num1
-#define num2 Sensor.num2
-#define num3 Sensor.num3
-#define num4 Sensor.num4
-#define num5 Sensor.num5
-#define tone(frequency,duration) Sensor.tone(frequency,duration)
-#define noTone(pin) Sensor.noTone(pin)
-#define getGrayAllValue() Sensor.getGrayAllValue()
-#define readGrayValue(num,grayval) Sensor.readGrayValue(num,grayval)
-#define setRgbledColor(red,green,blue) Sensor.setRgbledColor(red,green,blue)//板载RGB灯函数
-#define setcolor(color) Sensor.setcolor(color)
-#define readBatteryVoltage() Sensor.readBatteryVoltage()
-#define readHcsr04Distance(jp) Sensor.readHcsr04Distance(jp) //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
+//Sensor2_API
+#define num1 Sensor2.num1
+#define num2 Sensor2.num2
+#define num3 Sensor2.num3
+#define num4 Sensor2.num4
+#define num5 Sensor2.num5
+#define tone(frequency,duration) Sensor2.tone(frequency,duration)
+#define noTone(pin) Sensor2.noTone(pin)
+#define getGrayAllValue() Sensor2.getGrayAllValue()
+#define readGrayValue(num,grayval) Sensor2.readGrayValue(num,grayval)
+#define setRgbledColor(red,green,blue) Sensor2.setRgbledColor(red,green,blue)//板载RGB灯函数
+#define setcolor(color) Sensor2.setcolor(color)
+#define readBatteryVoltage() Sensor2.readBatteryVoltage()
+#define readHcsr04Distance(jp) Sensor2.readHcsr04Distance(jp) //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
+#define Initialization() Sensor2.Initialization()
 
 
 //ClickButton_API
-ClickButton button1(Button_pin, HIGH, CLICKBTN_PULLUP);//设置按键
+ClickButton button1(Sensor2.Button_pin, HIGH, CLICKBTN_PULLUP);//设置按键
 
 
 

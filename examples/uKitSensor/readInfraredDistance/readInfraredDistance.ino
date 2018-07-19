@@ -14,14 +14,9 @@ void setup() {
 //ukit红外传感器控制函数，返回cm,(0-20)cm
 //ukit infrared sensor control function, return cm, (0-20) cm
 void loop(){
-  button1.Update();//读取按键更新
-  if(button1.clicks == 1)//按键按一下
-  {
-    Set_Infrared_Id(2);
-    tone(43,300);
-    delay(300);
-    noTone(43);
-    }
+  Serial.print("Infrared_distance:");
+  Serial.println( readInfraredDistance(1));
+  delay(300);
   
   
   }

@@ -12,20 +12,20 @@ void setup() {
   Initialization();//CN:初始化/EN:Initialization
 } 
 
-//CN:ServoRotate第一个是di号，第二是正反转（0是正转，1是反转），第三是速度（0~5）
+//CN:setServoTurn第一个是di号，第二是正反转（0是正转，1是反转），第三是速度（0~5）
 //EN:The first is the ID number, the second is the positive inversion (0 is the positive rotation, the 1 is the inversion), and the third is the speed (0~5).
 void loop(){
-  ServoRotate(1,0,5);
+  setServoTurn(1,0,5);
   delay(300);
-  ServoRotate(1,1,5);
+  setServoTurn(1,1,5);
   delay(300);
-  ServoRotate(1,0,5);
-  ServoRotate(1,0,5);
+  setServoTurn(1,0,5);
+  setServoTurn(1,0,5);
   delay(300);
-  ServoRotate(1,1,5);
-  ServoRotate(1,1,5);
+  setServoTurn(1,1,5);
+  setServoTurn(1,1,5);
   delay(300);
-  ServoStop(1);
+  setServoStop(1);
   delay(300);
   
   }

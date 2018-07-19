@@ -12,14 +12,14 @@ void setup() {
   Initialization();//CN:初始化/EN:Initialization
 } 
 
-//CN:ServoAngle第一个是di号，第二是角度（-118°~118°），第三是运行时间（100~3000）
-//EN:ServoAngle the first is Di, the second is the angle (-118 degree ~118 degree), and the third is the running time (100~3000).
+//CN:setServoAngle第一个是di号，第二是角度（-118°~118°），第三是运行时间（100~3000）
+//EN:setServoAngle the first is Di, the second is the angle (-118 degree ~118 degree), and the third is the running time (100~3000).
 void loop(){
-  ServoAngle(1,20,300);
+  setServoAngle(1,20,300);
   delay(300);
-  ServoAngle(1,-20,300);
+  setServoAngle(1,-20,300);
   delay(300);
-  ServoStop(1);
+  setServoStop(1);
   delay(300);
   
   

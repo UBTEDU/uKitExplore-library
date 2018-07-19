@@ -1,12 +1,12 @@
 
 
-#ifndef SENSOR_h
-#define SENSOR_h
+#ifndef Sensor2_h
+#define Sensor2_h
 
 #include <Arduino.h>
 #include"uKitId.h"
 
-class Sensor:uKitId
+class Sensor2:uKitId
 {
 public:
   void tone(int pin, uint16_t frequency, uint32_t duration);
@@ -29,24 +29,24 @@ public:
   float readHcsr04Distance(char jp); //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
   float readHcsr04Distance(char EchoPin,char TrigPin); //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
   void Initialization();
-  const char IR_S=37;
+  const char IR_S=3;
   //Button_pin
-  const char Button_pin=41;
+  const char Button_pin=36;
   
   //Buzzer_pin 
-  const char buzzer_pin=43;
+  const char buzzer_pin=38;
  
- //Grayscale_Sensor_pin 
-  const char GrayscaleNum1=31;
-  const char GrayscaleNum2=29;
+ //Grayscale_Sensor2_pin 
+  const char GrayscaleNum1=29;
+  const char GrayscaleNum2=28;
   const char GrayscaleNum3=27;
-  const char GrayscaleNum4=25;
-  const char GrayscaleNum5=23;
+  const char GrayscaleNum4=26;
+  const char GrayscaleNum5=25;
   
   //RGB_LED_pin 
-  const char redPin = 24;
-  const char greenPin = 26;
-  const char bluePin = 22;
+  const char redPin = 44;
+  const char greenPin = 45;
+  const char bluePin = 46;
 
   //HC-SR04
   char Trig;
