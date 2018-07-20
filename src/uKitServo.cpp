@@ -153,14 +153,19 @@ void uKitServo::ServoRead(){
   unsigned char ServoId[18],ServoIdRead[18],t=0;
   static int start=0;
   if(start==0){
+  Serial.print("当前读取的舵机ID：{");
   for(int i=1;i<=18;i++){
     ServoId[i]=getServoId(i);
     if(ServoId[i]!=0){
      
       ServoIdRead[t]=ServoId[i];
+      Serial.print(ServoIdRead[t]);
+        Serial.print(",");
       ++t;
+      
     }
   }
+  Serial.println("}");
   start=1;
   }
   readServoAnglePD_M(ServoIdRead,t);

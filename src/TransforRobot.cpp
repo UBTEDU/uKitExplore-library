@@ -209,7 +209,7 @@ void TransforRobot::motion_sitdown(char times){
   for(int c=0;c<times;c++){
     for(int i=0;i<sizeof(sitdown)/sizeof(sitdown[0]);i++) {
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        setServoAngle(id[t],(sitdown[i][t]),500);
+        setServoAngle(id[t],(sitdown[i][t]),600);
       }  
       delay(sitdown_times[i]);
     }
