@@ -213,7 +213,7 @@ signed char uKitSensor::readHumitureValue(char id, char choice){
   return tRet;
 }
 
-unsigned char uKitSensor::readsetRgbledColor(char id,unsigned char RGB){
+unsigned char uKitSensor::readColorRgb(char id,unsigned char RGB){
   unsigned  char tData[1];
   unsigned char Value=0;
   tData[0]=id;
@@ -238,9 +238,9 @@ void uKitSensor::setColorOff(char id){
  }
 bool uKitSensor::readColor(char id,char color){
   
-  unsigned char Rvalue=readsetRgbledColor(id,'R');
-  unsigned char Gvalue=readsetRgbledColor(id,'G');
-  unsigned char Bvalue=readsetRgbledColor(id,'B');
+  unsigned char Rvalue=readColorRgb(id,'R');
+  unsigned char Gvalue=readColorRgb(id,'G');
+  unsigned char Bvalue=readColorRgb(id,'B');
   if(Rvalue>90 & Rvalue<255 & Gvalue<120 &Bvalue<120 & color=='R')
     return true;
   else if(Gvalue>90 & Gvalue<255 & Rvalue<120 &Bvalue<120 & color=='G')

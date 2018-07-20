@@ -17,7 +17,7 @@ public:
     void setEyelightAllPetals(char id,int red,int green, int blue);//全亮模式， id是id号， RGB
     void setEyelightPetals(char id,unsigned char petalsnum,unsigned char petals[8][4]);
     void setEyelightOff(char id);
-    unsigned char  readsetRgbledColor(char id,unsigned char RGB);
+    unsigned char  readColorRgb(char id,unsigned char RGB);
    
     bool readColor(char id,char color);
     void setColorOff(char id);
