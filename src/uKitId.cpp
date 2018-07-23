@@ -708,12 +708,12 @@ void uKitId::getDeciveId(){
       idbuf[i+96]=getServoId(i);
       delay(5); 
       if(idbuf[i+96]!=0){
-        Serial.print(" [舵机]  ");
+        Serial.print(" [舵机] ");
         Serial.print("ID-");
         Serial.println(idbuf[i+96]);
       }  
        if(idbuf[i+80]!=0){
-        Serial.print(" [电机]  ");
+        Serial.print(" [电机] ");
         Serial.print("ID-");
         Serial.println(idbuf[i+80]);
       } 
@@ -723,7 +723,7 @@ void uKitId::getDeciveId(){
         Serial.println(idbuf[i+30]);
       }   
        if(idbuf[i+60]!=0){
-        Serial.print(" [超声波传感器]  ");
+        Serial.print(" [超声波传感器] ");
         Serial.print("ID-");
         Serial.println(idbuf[i+60]);
       }
@@ -743,7 +743,7 @@ void uKitId::getDeciveId(){
         Serial.println(idbuf[i]);
       }    
        if(idbuf[i+20]!=0){
-        Serial.print(" [温湿度传感器]  ");
+        Serial.print(" [温湿度传感器] ");
         Serial.print("ID-");
         Serial.println(idbuf[i+20]);
       }                 
