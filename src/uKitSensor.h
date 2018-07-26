@@ -19,7 +19,7 @@ public:
     void setEyelightOff(char id);
     unsigned char  readColorRgb(char id,unsigned char RGB);
    
-    bool readColor(char id,char color);
+    bool readColor(char id,String color);
     void setColorOff(char id);
     signed char readHumitureValue(char id, char choice);
     int readButtonValue(char id);//返回256无操作，返回257是单击，返回258是双击

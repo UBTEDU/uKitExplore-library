@@ -236,25 +236,54 @@ void uKitSensor::setColorOff(char id){
   TXD(0xE8,1,1,3,tData); 
     delay(5);   
  }
-bool uKitSensor::readColor(char id,char color){
+bool uKitSensor::readColor(char id,String color){
   
   unsigned char Rvalue=readColorRgb(id,'R');
   unsigned char Gvalue=readColorRgb(id,'G');
   unsigned char Bvalue=readColorRgb(id,'B');
-  if(Rvalue>90 & Rvalue<255 & Gvalue<120 &Bvalue<120 & color=='R')
-    return true;
-  else if(Gvalue>90 & Gvalue<255 & Rvalue<120 &Bvalue<120 & color=='G')
-    return true;
-  else if(Bvalue>90 & Bvalue<255 & Rvalue<120 &Gvalue<180 & color=='B')
-    return true;
-  else if(Bvalue>200  & Rvalue>200 &Gvalue>200 & color=='W')
-    return true;   
-  else if(Rvalue>90 & Rvalue<255  & Bvalue>90& Bvalue<255 &Gvalue<120 & color=='P')
-    return true;      
-  else if(Rvalue>90 & Rvalue<255  & Gvalue>90& Gvalue<255 & Bvalue<120 & color=='Y')
-    return true;  
-  else
-    return false;
+  bool state;
+ 
+  if(color=="Red" & (Rvalue>90 & Rvalue<255 & Gvalue<120 &Bvalue<120)){
+    state=1;
+  }   
+  else if(color=="Green" && (Gvalue>90 & Gvalue<255 & Rvalue<160 &Bvalue<120)&&(abs(Rvalue-Gvalue)>25)){
+    state=1;
+  }
+  else if(color=="LBlue" && (Bvalue>90 & Bvalue<255 & Rvalue>120 & Rvalue<200 &Gvalue<220)&&(abs(Gvalue-Bvalue)<25)){
+    state=1;
+  }
+  else if(color=="Blue" && (Bvalue>90 & Bvalue<255 & Rvalue>60 & Rvalue<120 &Gvalue<220)){
+    state=1;
+  }
+  else if(color=="DBlue" && (Bvalue>90 & Bvalue<255 & Rvalue>20 & Rvalue<60 &Gvalue<220)){
+    state=1;
+  }
+   
+  else if(color=="White" && (Bvalue>200  & Rvalue>200 &Gvalue>200)){
+    state=1;
+   }
+     else if(color=="Gray" && (Rvalue>70 & Rvalue<200 & Bvalue>70 & Bvalue<200 &Gvalue>70 & Gvalue<200) &&(abs(Rvalue-Bvalue)<=25 &abs(Bvalue-Gvalue)<=25)){
+    state=1;
+   }
+ else if(color=="Black" && (Rvalue<70 & Bvalue<70 & Gvalue<70) &&(abs(Rvalue-Bvalue)<=25 &abs(Bvalue-Gvalue)<=25)){
+    state=1;
+   }
+    
+   else if(color=="Purple" && (Rvalue>90 & Rvalue<255  & Bvalue>90& Bvalue<255 &Gvalue<120)&&(abs(Rvalue-Bvalue)<=25)){
+    state=1;
+   }
+    
+   else if(color=="Yellow" &&((Rvalue>=90 & Rvalue<=255)  & (Gvalue>=90& Gvalue<=255) & Bvalue>=50 &Bvalue<=120)&&(abs(Rvalue-Gvalue)<=25)){//yellow
+    state=1;
+   }
+   else if(color=="Orange" &&((Rvalue>=90 & Rvalue<=255)  & (Gvalue>=90& Gvalue<=255) & Bvalue>=0 &Bvalue<50)){//Orgin
+    state=1;
+   }
+
+  else{
+    state=0;
+  }
+    return state;
    
   
 }

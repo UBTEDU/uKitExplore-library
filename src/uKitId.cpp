@@ -176,7 +176,7 @@ unsigned char uKitId::setMotorId(uint8_t id_old, uint8_t id_new){
 unsigned char uKitId::getMotorId(){
   unsigned long tRet = 0;
   unsigned char buf[10];
-  for(int testid=1;testid<=16;testid++){
+  for(int testid=1;testid<=18;testid++){
     buf[0] = 0xFB;//帧头
     buf[1] = 0x03;//设备类型
     buf[2] = 0x06;//长度
@@ -399,7 +399,7 @@ unsigned char uKitId::setServoId(char oldid,char newid){
 unsigned char uKitId::getServoId(){
   unsigned char tRet = 0;
   unsigned char buf[4];
-  for(int testid=1;testid<=16;testid++){
+  for(int testid=1;testid<=18;testid++){
     buf[0]=0x00;
     buf[1]=0x00;
     buf[2]=0x00;
@@ -485,11 +485,11 @@ void uKitId::setDeciveId(){
             }
           }
                   
-        if(id==0 | id>16){
-          Serial.println("请不要输入id-0或大于16");
+        if(id==0 | id>18){
+          Serial.println("ID请控制在1~18");
           comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加
         }
-        else if(id!=0 & id<=16){
+        else if(id!=0 & id<=18){
         if(id<=10){
           if(decive==0 & zeronum==9){
             delay(20);
@@ -633,7 +633,7 @@ void uKitId::setDeciveId(){
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }  
         }
-        else if(id>10 & id<=16 & decive>=8){
+        else if(id>10 & id<=18 & decive>=8){
         if(decive==8 & zeronum==9){
             delay(20);
             if(id!=0)
@@ -683,9 +683,9 @@ void uKitId::setDeciveId(){
 }
 
 void uKitId::getDeciveId(){
-  unsigned char idbuf[112]={0};
+  unsigned char idbuf[116]={0};
   Serial.println("当前接入了以下设备 ");
-  for(int i=1;i<=16;i++){
+  for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getSoundId(i);
       delay(5);
@@ -705,12 +705,12 @@ void uKitId::getDeciveId(){
       delay(5);
       idbuf[i+80]=getMotorId(i);
       delay(5);
-      idbuf[i+96]=getServoId(i);
+      idbuf[i+98]=getServoId(i);
       delay(5); 
-      if(idbuf[i+96]!=0){
+      if(idbuf[i+98]!=0){
         Serial.print(" [舵机] ");
         Serial.print("ID-");
-        Serial.println(idbuf[i+96]);
+        Serial.println(idbuf[i+98]);
       }  
        if(idbuf[i+80]!=0){
         Serial.print(" [电机] ");
@@ -761,12 +761,12 @@ void uKitId::getDeciveId(){
   else{
       idbuf[i+90]=getMotorId(i);
       delay(5);
-      idbuf[i+105]=getServoId(i);
+      idbuf[i+109]=getServoId(i);
       delay(5); 
-          if(idbuf[i+105]!=0){
+          if(idbuf[i+109]!=0){
       Serial.print(" [舵机]  ");
       Serial.print("ID-");
-      Serial.println(idbuf[i+105]);
+      Serial.println(idbuf[i+109]);
     }  
     if(idbuf[i+90]!=0){
       Serial.print(" [电机]  ");
@@ -779,9 +779,10 @@ void uKitId::getDeciveId(){
   }
  void uKitId::getDeciveIds(){
   unsigned char buf[20]={0};
-  unsigned char idbuf[112]={0};
+  unsigned char idbuf[116]={0};
   Serial.println("当前接入了以下设备 ");
-  for(int i=1;i<=16;i++){
+  delay(5);
+  for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getSoundId(i);
       delay(5);
@@ -801,9 +802,9 @@ void uKitId::getDeciveId(){
       delay(5);
       idbuf[i+80]=getMotorId(i);
       delay(5);
-      idbuf[i+96]=getServoId(i);
+      idbuf[i+98]=getServoId(i);
       delay(5); 
-      if(idbuf[i+96]!=0){
+      if(idbuf[i+98]!=0){
           buf[0]+=1;
       }  
        if(idbuf[i+80]!=0){
@@ -837,9 +838,9 @@ void uKitId::getDeciveId(){
   else{
       idbuf[i+90]=getMotorId(i);
       delay(5);
-      idbuf[i+105]=getServoId(i);
+      idbuf[i+107]=getServoId(i);
       delay(5); 
-          if(idbuf[i+105]!=0){
+          if(idbuf[i+107]!=0){
           buf[0]+=1;
     }  
     if(idbuf[i+90]!=0){
@@ -847,17 +848,18 @@ void uKitId::getDeciveId(){
     } 
   }
  }
-  for(int i=0;i<16;i++){
+  for(int i=0;i<18;i++){
     static int t=0;
-    Serial.println(idbuf[i+96]);
+    Serial.println(idbuf[i+98]);
   }
   Serial.println("a");
   
-  for(int i=0;i<=16;i++){
+  for(int i=0;i<=18;i++){
     static int t=0;
     if(idbuf[i+80]!=0){
     if(t==0){
       Serial.print(" [电机]  ");
+      delay(3);
       t=1;
     } 
     buf[1]-=1;
@@ -876,6 +878,7 @@ void uKitId::getDeciveId(){
     if(idbuf[i+30]!=0){
     if(t==0){
       Serial.print(" [红外传感器]  ");
+      delay(3);
       t=1;
     }
     buf[2]-=1;
@@ -893,6 +896,7 @@ void uKitId::getDeciveId(){
     if(idbuf[i+60]!=0){
     if(t==0){
       Serial.print(" [超声波传感器]  ");
+      delay(3);
       t=1;
     }
     buf[3]-=1;
@@ -911,6 +915,7 @@ void uKitId::getDeciveId(){
     if(idbuf[i+40]!=0){
     if(t==0){
       Serial.print(" [LED眼灯]  ");
+      delay(3);
       t=1;
     }
     buf[4]-=1;
@@ -929,6 +934,7 @@ void uKitId::getDeciveId(){
     if(idbuf[i+10]!=0){
     if(t==0){
       Serial.print(" [亮度传感器]  ");
+      delay(3);
       t=1;
     }
     buf[5]-=1;
@@ -947,6 +953,7 @@ void uKitId::getDeciveId(){
     if(idbuf[i]!=0){
     if(t==0){
       Serial.print(" [声音传感器]  ");
+      delay(3);
       t=1;
     }
     buf[6]-=1;
@@ -964,6 +971,7 @@ void uKitId::getDeciveId(){
     if(idbuf[i+20]!=0){
     if(t==0){
       Serial.print(" [温湿度传感器]  ");
+      delay(3);
       t=1;
     }
     buf[7]-=1;
@@ -981,6 +989,7 @@ void uKitId::getDeciveId(){
     if(idbuf[i+50]!=0){
     if(t==0){
       Serial.print(" [按键传感器]  ");
+      delay(3);
       t=1;
     }
     buf[8]-=1;
@@ -998,11 +1007,14 @@ void uKitId::getDeciveId(){
     if(idbuf[i+70]!=0){
     if(t==0){
       Serial.print(" [颜色传感器]  ");
+      delay(5);
       t=1;
     }
     buf[9]-=1;
     Serial.print("ID-");
+    delay(5);
     Serial.print(idbuf[i+70]);
+    delay(5);
     Serial.print(" ");
     if(buf[9]==0){
       Serial.println(); 
