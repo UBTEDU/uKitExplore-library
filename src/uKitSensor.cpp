@@ -130,7 +130,7 @@ void uKitSensor::setEyelightAllPetals(char id,int red,int green,int blue){
   State=TXD(0xF4,1,8,0x0b,tData );
   delay(10);
  }
-void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,unsigned char petals[8][4]){
+void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,unsigned char petals[8][4],unsigned char time){
   signed char tData2[1] ;
   signed char tData[35];
   tData2[0]=id;
@@ -140,7 +140,7 @@ void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,unsigned char
     delay(5);  
   }
   tData[0]=id;  //ID
-  tData[1]=0xff;//持续时间
+  tData[1]=time;//持续时间
   tData[2]=petalsnum;//色块数量
   
   tData[3]=petals[0][0];//第1

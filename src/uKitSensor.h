@@ -15,7 +15,7 @@ public:
     void setEyelightLook(char id,char face,int times,int red,int green,int blue);
     void setEyelightScene(char id,char scene,int times);//情景模式 id是id号，scene是情景灯，times是次数
     void setEyelightAllPetals(char id,int red,int green, int blue);//全亮模式， id是id号， RGB
-    void setEyelightPetals(char id,unsigned char petalsnum,unsigned char petals[8][4]);
+    void setEyelightPetals(char id,unsigned char petalsnum,unsigned char petals[8][4],unsigned char time);
     void setEyelightOff(char id);
     unsigned char  readColorRgb(char id,unsigned char RGB);
    
