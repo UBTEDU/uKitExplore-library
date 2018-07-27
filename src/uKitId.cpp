@@ -570,7 +570,7 @@ void uKitId::setDeciveId(){
             buf[15]=getButtonId();
             delay(30);
             Serial.print("  修改成功!");
-            Serial.print("已将 【触碰传感器】 ID-");
+            Serial.print("已将 【按压传感器】 ID-");
             Serial.print(buf[5]);
             Serial.print("改为ID-");
             Serial.println(buf[15]); 
@@ -748,7 +748,7 @@ void uKitId::getDeciveId(){
         Serial.println(idbuf[i+20]);
       }                 
        if(idbuf[i+50]!=0){
-        Serial.print(" 【眼灯按压传感器】");
+        Serial.print(" 【按压传感器】");
         Serial.print("ID-");
         Serial.println(idbuf[i+50]);
       }

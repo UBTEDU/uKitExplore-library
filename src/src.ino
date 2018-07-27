@@ -8,16 +8,16 @@ void setup() {
     //CarCase('R');
 }
 void loop(){
-  //Serial.println(readColor(1,"Black"));
- rgb();
-  //delay(400);
-  
-  //CarCase('R');
-    //Motion();
-
- 
-  // motion2();
-   // wdt_reset();
+unsigned char buf[8][4]={\
+      {0x01, 255,0,0},\
+      {0x02, 255,128,0},\
+      {0x04, 255,240,0},\
+      {0x08, 0,255,0},\
+      {0x10, 0,255,255},\
+      {0x20, 0,0,255},\
+      {0x40, 255,0,255},\
+      {0x80, 255,255,255}};
+    setEyelightPetals(1, 8, buf, 20);
   
   
   }
