@@ -49,7 +49,7 @@ uKitId uKitId;
 #define setEyelightScene(id,scene,times) uKitSensor.setEyelightScene(id,scene,times)
 #define setEyelightOff(id) uKitSensor.setEyelightOff(id)
 #define setEyelightAllPetals(id,red,green,blue) uKitSensor.setEyelightAllPetals(id,red,green,blue)//ukit led传感器。id为led的id号，face为表情种类（0）
-#define setEyelightPetals(id,petalnum,petals) uKitSensor.setEyelightPetals(id,petalnum,petals)
+#define setEyelightPetals(id,petalnum,petals,time) uKitSensor.setEyelightPetals(id,petalnum,petals,time)
 #define readHumitureValue(id,choice) uKitSensor.readHumitureValue(id,choice)
 #define readButtonValue(id) uKitSensor.readButtonValue(id)//返回256无操作，返回257是单击，返回258是双击
 #define readUltrasonicDistance(id) uKitSensor.readUltrasonicDistance(id)
