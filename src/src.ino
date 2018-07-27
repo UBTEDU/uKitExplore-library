@@ -9,15 +9,14 @@ void setup() {
 }
 void loop(){
   //Serial.println(readColor(1,"Black"));
- //rgb();
+ rgb();
   //delay(400);
   
   //CarCase('R');
     //Motion();
 
  
-   
-   motion2();
+  // motion2();
    // wdt_reset();
   
   
@@ -25,7 +24,7 @@ void loop(){
 void rgb() {
    button1.Update();
     if(button1.clicks == 1){
-uKitServo.ServoRead();
+      uKitServo.ServoRead();
     }
 }
 
@@ -39,7 +38,7 @@ void Motion(){
   delay(1500);
   for(int i=1;i<=16;i++){
     setServoAngle(i,-60,1500);
-    setMotorTurnAdj(i,-60,0xffff);
+    setMotorTurn(i,-60);
     delay(5);
   }
   delay(1500);
@@ -51,14 +50,15 @@ void motion2(){
     for(int i=0;i<sizeof(action)/sizeof(action[0]);i++){
       for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
         setRgbledColor(0,0,0);
-        setServoAngle(id[t],action[i][t],2500);
-        setMotorTurnAdj(1,30,0xffff);
-        setMotorTurnAdj(2,30,0xffff);
+        setServoAngle(id[t],action[i][t],2700);
+        setMotorTurnAdj(1,35,0xffff);
+        setMotorTurnAdj(2,35,0xffff);
       } 
       setRgbledColor(255,0,0);
+   
       
  
-      delay(2500);
+      delay(2700);
     }
 }
 
