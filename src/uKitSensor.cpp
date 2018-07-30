@@ -24,6 +24,7 @@ unsigned char  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
     inval=5;
   else
      inval=inval*20/2700;
+     
  return inval;  
 
   delay(5);
@@ -130,7 +131,7 @@ void uKitSensor::setEyelightAllPetals(char id,int red,int green,int blue){
   State=TXD(0xF4,1,8,0x0b,tData );
   delay(10);
  }
-void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,unsigned char petals[8][4],unsigned char time){
+void uKitSensor::setEyelightPetal(char id,unsigned char petalsnum,unsigned char petals[8][4],unsigned char time){
   signed char tData2[1] ;
   signed char tData[35];
   tData2[0]=id;
@@ -189,7 +190,69 @@ void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,unsigned char
   delay(5);
   
 }
+void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,String petals,unsigned char time){
+  DynamicJsonBuffer jsonBuffer;
+  signed char tData2[1] ;
+  unsigned char tData[35];
+  
+  JsonObject& root = jsonBuffer.parseObject(petals);
+  tData2[0]=id;
+  volatile int State=0;
+  if(State==0){
+    State=TXD(0xF4,1,1,0x2,tData2 );
+    delay(5);  
+  }
+  tData[0]=id;  //ID
+  tData[1]=0xff;//持续时间
+  tData[2]=petalsnum;//色块数量
+  
+  tData[3]=int(root["data"][0]);//第1
+  tData[4]=int(root["data"][1]);
+  tData[5]=int(root["data"][2]);
+  tData[6]=int(root["data"][3]);
+  
+  tData[7]=int(root["data"][4]);//第2
+  tData[8]=int(root["data"][5]);
+  tData[9]=int(root["data"][6]);
+  tData[10]=int(root["data"][7]);
+  
+  tData[11]=int(root["data"][8]);//第3
+  tData[12]=int(root["data"][9]);
+  tData[13]=int(root["data"][10]);
+  tData[14]=int(root["data"][11]);
+  
+  tData[15]=int(root["data"][12]);//第4
+  tData[16]=int(root["data"][13]);
+  tData[17]=int(root["data"][14]);
+  tData[18]=int(root["data"][15]);
+  
+  tData[19]=int(root["data"][16]);//第5
+  tData[20]=int(root["data"][17]);
+  tData[21]=int(root["data"][18]);
+  tData[22]=int(root["data"][19]);
+  
+  tData[23]=int(root["data"][20]);//第6
+  tData[24]=int(root["data"][21]);
+  tData[25]=int(root["data"][22]);
+  tData[26]=int(root["data"][23]);
+  
+  tData[27]=int(root["data"][24]);//第7
+  tData[28]=int(root["data"][25]);
+  tData[29]=int(root["data"][26]);
+  tData[30]=int(root["data"][27]);
+  
+  tData[31]=int(root["data"][28]);//第8
+  tData[32]=int(root["data"][29]);
+  tData[33]=int(root["data"][30]);
+  tData[34]=int(root["data"][31]);  
 
+  State=TXD(0xF4,1,35,0x0b,tData );
+  delay(time*1000);
+  setEyelightOff(id);
+  delay(5);
+  Serial.println(tData[3]);
+  
+}
 void uKitSensor::setEyelightOff(char id){
   signed char tData[1];
   volatile int State=0;
