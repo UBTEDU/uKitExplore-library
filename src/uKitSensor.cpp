@@ -203,7 +203,7 @@ void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,String petals
     delay(5);  
   }
   tData[0]=id;  //ID
-  tData[1]=0xff;//持续时间
+  tData[1]=time;//持续时间
   tData[2]=petalsnum;//色块数量
   
   tData[3]=int(root["data"][0]);//第1
@@ -247,10 +247,8 @@ void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,String petals
   tData[34]=int(root["data"][31]);  
 
   State=TXD(0xF4,1,35,0x0b,tData );
-  delay(time*1000);
-  setEyelightOff(id);
-  delay(5);
-  Serial.println(tData[3]);
+  delay(10);
+  
   
 }
 void uKitSensor::setEyelightOff(char id){
