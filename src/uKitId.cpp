@@ -428,7 +428,7 @@ unsigned char uKitId::getServoId(char id){
 
 void uKitId::setDeciveId(){
   unsigned char buf[20]={0};
-  unsigned char zeronum,num,decive=0;
+  unsigned char zeronum,num,numlength,decive=0;
   String single,ten;
   int id_1,id_2,id;
   static int i=0;
@@ -450,7 +450,8 @@ void uKitId::setDeciveId(){
         id_1=ten.toInt()*10;
         single=comdata[comdata.length()-1];
         id_2=single.toInt();
-        id=id_1+id_2;      
+        id=id_1+id_2;     
+        numlength=comdata.length();
         delay(20);
           buf[0]=getSoundId();
           delay(10);
@@ -485,11 +486,11 @@ void uKitId::setDeciveId(){
             }
           }
                   
-        if(id==0 | id>18){
+        if((id==0 | id>18 | numlength>2) & decive>=8 ){
           Serial.println("请输入1至18的正整数");
           comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加
         }
-        else if(id!=0 & id<=18){
+        else if(id!=0 & id<=18 & numlength<=2){
         if(id<=10){
           if(decive==0 & zeronum==9){
             delay(20);
@@ -663,15 +664,18 @@ void uKitId::setDeciveId(){
             Serial.println("  *如需修改其他设备ID,请接入设备，并按下开发板复位键"); 
           }                         
         }
-        else if(id>10 && decive<9){
+        else if(id==0 | numlength>2 | id>10 && decive<9 ){
           Serial.println("请输入1至10的正整数");
         }
         }
 
                 else if(zeronum==10){
             Serial.println("  *请打开电源,或接入传感器!");
-          }    
-        else{
+          }   
+          else if(id==0 | numlength>2 | id>10 && decive<9 ){
+          Serial.println("请输入1至10的正整数");
+        } 
+        else {
             Serial.println("  *请不要接入多个传感器!");   
         }
     }
