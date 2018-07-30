@@ -130,7 +130,7 @@ void uKitSensor::setEyelightAllPetals(char id,int red,int green,int blue){
   State=TXD(0xF4,1,8,0x0b,tData );
   delay(10);
  }
-void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,unsigned char petals[8][4],unsigned char time){
+void uKitSensor::setEyelightPetal(char id,unsigned char petalsnum,unsigned char petals[8][4],unsigned char time){
   signed char tData2[1] ;
   signed char tData[35];
   tData2[0]=id;
@@ -140,7 +140,7 @@ void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,unsigned char
     delay(5);  
   }
   tData[0]=id;  //ID
-  tData[1]=time;//持续时间
+  tData[1]=0xff;//持续时间
   tData[2]=petalsnum;//色块数量
   
   tData[3]=petals[0][0];//第1
@@ -184,6 +184,67 @@ void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,unsigned char
   tData[34]=petals[7][3];  
 
   State=TXD(0xF4,1,35,0x0b,tData );
+  delay(time*1000);
+  setEyelightOff(id);
+  delay(5);
+  
+}
+void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,unsigned char petals[32],unsigned char time){
+  signed char tData2[1] ;
+  signed char tData[35];
+  tData2[0]=id;
+  volatile int State=0;
+  if(State==0){
+    State=TXD(0xF4,1,1,0x2,tData2 );
+    delay(5);  
+  }
+  tData[0]=id;  //ID
+  tData[1]=time;//持续时间
+  tData[2]=petalsnum;//色块数量
+  
+  tData[3]=petals[0];//第1
+  tData[4]=petals[1];
+  tData[5]=petals[2];
+  tData[6]=petals[3];
+  
+  tData[7]=petals[4];//第2
+  tData[8]=petals[5];
+  tData[9]=petals[6];
+  tData[10]=petals[7];
+  
+  tData[11]=petals[8];//第3
+  tData[12]=petals[9];
+  tData[13]=petals[10];
+  tData[14]=petals[11];
+  
+  tData[15]=petals[12];//第4
+  tData[16]=petals[13];
+  tData[17]=petals[14];
+  tData[18]=petals[15];
+  
+  tData[19]=petals[16];//第5
+  tData[20]=petals[17];
+  tData[21]=petals[18];
+  tData[22]=petals[19];
+  
+  tData[23]=petals[20];//第6
+  tData[24]=petals[21];
+  tData[25]=petals[22];
+  tData[26]=petals[23];
+  
+  tData[27]=petals[24];//第7
+  tData[28]=petals[25];
+  tData[29]=petals[26];
+  tData[30]=petals[27];
+  
+  tData[31]=petals[28];//第8
+  tData[32]=petals[29];
+  tData[33]=petals[30];
+  tData[34]=petals[31];  
+
+  State=TXD(0xF4,1,35,0x0b,tData );
+    delay(time*1000);
+  setEyelightOff(id);
   delay(10);
 }
 void uKitSensor::setEyelightOff(char id){
