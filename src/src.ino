@@ -8,7 +8,11 @@ Serial.begin(115200);
 }
 
 void loop() {
-setDeciveId();
+
+
+
+ Serial.println(readHumitureValue(1,'C'));
+ delay(300);
      
 
 }
@@ -26,3 +30,4 @@ double getAverage(int arr[], int size)
 
   return avg;
 }
+

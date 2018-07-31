@@ -277,20 +277,58 @@ signed char uKitSensor::readHumitureValue(char id, char choice){
   delay(10);
   return tRet;
 }
+int  *uKitSensor::Rgb2Hsb(unsigned char rgbR,unsigned char rgbG,unsigned char rgbB){
+  int *temp = new int[3];
+  int Max,Min=0;
+  Max=max(max(rgbR,rgbG),rgbB);
+  Min=min(min(rgbR,rgbG),rgbB);
+  float hsbB= Max/(float)255.00*100;
+  float hsbS= Max == 0 ? 0:(Max-Min)/(float)Max*100;
+  float hsbH=0;  
+  if (Max == rgbR && rgbG >= rgbB) {
+  hsbH = (rgbG - rgbB) * 60.0 / (Max - Min) + 0;
+  } else if (Max == rgbR && rgbG < rgbB) {
+  hsbH = (rgbG - rgbB) * 60.0 / (Max - Min) + 360;
+  } else if (Max == rgbG) {
+  hsbH = (rgbB - rgbR) * 60.0 / (Max - Min) + 120;
+  } else if (Max == rgbB) {
+  hsbH = (rgbR - rgbG) * 60.0 / (Max - Min) + 240;
+  }
+  temp[0]=hsbH;
+  temp[1]=hsbS;
+  temp[2]=hsbB;
+  
+  
+  return temp;
+  
+  
+}
 
 unsigned char uKitSensor::readColorRgb(char id,unsigned char RGB){
   unsigned  char tData[1];
   unsigned char Value=0;
   tData[0]=id;
-  volatile int State=0;
+  static int State=0;
   if(State==0){
-    State=TXD(0xE8,1,1,2,tData);  
-    delay(5); 
+    TXD(0xE8,1,1,2,tData);  
+    delay(10); 
     State=1;
+    
   }
     Value=TXD(0xE8,1,1,4,RGB,tData);  
     delay(20);
-    return Value;
+  
+    if(Value==0){
+      
+      TXD(0xE8,1,1,2,tData); 
+      delay(10);
+    }
+ 
+      return Value;
+    
+
+      
+
  
  }
 
@@ -306,44 +344,40 @@ bool uKitSensor::readColor(char id,String color){
   unsigned char Rvalue=readColorRgb(id,'R');
   unsigned char Gvalue=readColorRgb(id,'G');
   unsigned char Bvalue=readColorRgb(id,'B');
+  int *buf=Rgb2Hsb(Rvalue,Gvalue,Bvalue);
   bool state;
- 
-  if(color=="Red" & (Rvalue>90 & Rvalue<255 & Gvalue<120 &Bvalue<120)){
+  if(color!="Black"&& (buf[1]>10 & buf[2]>20)){    
+    if(color=="Red" && ((buf[0]>=0 & buf[0]<=18)||(buf[0]>=340 & buf[0]<=360))){
+      state=1;
+    }  
+   else if(color=="Yellow" && ((buf[0]>=53 & buf[0]<=62))){//yellow
+     state=1;
+    } 
+   else if(color=="Purple" && ((buf[0]>=266 & buf[0]<=295))){
+     state=1;
+   }
+    else if(color=="Orange" && ((buf[0]>=22 & buf[0]<=62))){//Orgin
     state=1;
-  }   
-  else if(color=="Green" && (Gvalue>90 & Gvalue<255 & Rvalue<160 &Bvalue<120)&&(abs(Rvalue-Gvalue)>25)){
+    }
+    else if(color=="Blue" && ((buf[0]>=186 & buf[0]<=265))){
+      state=1;
+    }
+    else if(color=="Cyan" && ((buf[0]>=170 & buf[0]<=185))){
+      state=1;
+    }
+    else if(color=="Green" && ((buf[0]>=65 & buf[0]<=169))){
+      state=1;
+    }    
+  }
+  else if(color=="White" && (buf[1]>=0 &buf[1]<=10) &&(buf[2]>=90 & buf[2]<=100)){
     state=1;
   }
-  else if(color=="LBlue" && (Bvalue>90 & Bvalue<255 & Rvalue>120 & Rvalue<200 &Gvalue<220)&&(abs(Gvalue-Bvalue)<25)){
+  else if(color=="Black" && (buf[1]>=0 &buf[1]<=100) &&(buf[2]>=0 & buf[2]<=20)){
     state=1;
   }
-  else if(color=="Blue" && (Bvalue>90 & Bvalue<255 & Rvalue>60 & Rvalue<120 &Gvalue<220)){
+  else if(color=="Gray" && (buf[1]>=0 &buf[1]<=100) &&(buf[2]>=20 & buf[2]<=80)){
     state=1;
   }
-  else if(color=="DBlue" && (Bvalue>90 & Bvalue<255 & Rvalue>20 & Rvalue<60 &Gvalue<220)){
-    state=1;
-  }
-   
-  else if(color=="White" && (Bvalue>200  & Rvalue>200 &Gvalue>200)){
-    state=1;
-   }
-     else if(color=="Gray" && (Rvalue>70 & Rvalue<200 & Bvalue>70 & Bvalue<200 &Gvalue>70 & Gvalue<200) &&(abs(Rvalue-Bvalue)<=25 &abs(Bvalue-Gvalue)<=25)){
-    state=1;
-   }
- else if(color=="Black" && (Rvalue<70 & Bvalue<70 & Gvalue<70) &&(abs(Rvalue-Bvalue)<=25 &abs(Bvalue-Gvalue)<=25)){
-    state=1;
-   }
-    
-   else if(color=="Purple" && (Rvalue>90 & Rvalue<255  & Bvalue>90& Bvalue<255 &Gvalue<120)&&(abs(Rvalue-Bvalue)<=25)){
-    state=1;
-   }
-    
-   else if(color=="Yellow" &&((Rvalue>=90 & Rvalue<=255)  & (Gvalue>=90& Gvalue<=255) & Bvalue>=50 &Bvalue<=120)&&(abs(Rvalue-Gvalue)<=25)){//yellow
-    state=1;
-   }
-   else if(color=="Orange" &&((Rvalue>=90 & Rvalue<=255)  & (Gvalue>=90& Gvalue<=255) & Bvalue>=0 &Bvalue<50)){//Orgin
-    state=1;
-   }
 
   else{
     state=0;

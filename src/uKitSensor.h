@@ -22,7 +22,7 @@ public:
 
     void setEyelightOff(char id);
     unsigned char  readColorRgb(char id,unsigned char RGB);
-   
+    int  *Rgb2Hsb(unsigned char rgbR,unsigned char rgbG,unsigned char rgbB);
     bool readColor(char id,String color);
     void setColorOff(char id);
     signed char readHumitureValue(char id, char choice);

@@ -272,7 +272,7 @@ Retry_Servo:
   
   temp = (Usart3_Rx_Ack_Len + 5) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
   Serial3.begin(115200);  //uart3
-  Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
+  Serial3.setTimeout(temp*87*110/100 /400);  //设置超时ms
   Serial2.begin(115200);  //设置波特率
   Serial2.write(buf,length + 1);  //发送消息
   Serial2.end();  //关闭串口2,否则会影响接收消息
@@ -472,7 +472,7 @@ signed long SemiduplexSerial::TXD(unsigned char len,unsigned char choice,unsigne
       
       if(choice=='C')
       {
-        tRet=((Rx_Buf[len+6]<<8) | (Rx_Buf[len+7] & 0xff))/10;
+        tRet=ceil(((Rx_Buf[len+6]<<8) | (Rx_Buf[len+7] & 0xff))/10.0);
      
        
         

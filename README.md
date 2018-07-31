@@ -1,4 +1,4 @@
-# uKit Explore Library v1.0.5
+# uKit Explore Library v1.0.6
 ```
 git clone git@10.10.1.34:uKit/explorer-library.git
 
@@ -21,6 +21,13 @@ Arduino Library for uKit Explore Modules
 - [Instructions](http://10.10.1.245/uKit-explore/Course/blob/master/uKit_Explore_Course_CN.pdf)  
 
 ### Update
+#### V1.0.6更新说明
+1. 修复了获取ID字符缺漏的问题
+2. 修复了颜色传感器检测颜色问题，并支持10种uKit颜色识别
+3. 增加uKit Explore 2.0主控支持
+4. 加入眼灯灯瓣功能
+5. 修复陀螺仪读取问题
+
 #### V1.0.5更新说明
 1. 规范化函数命名方式
 2. 若已安装了本程序，安装前加入卸载提示功能
