@@ -190,7 +190,7 @@ void uKitSensor::setEyelightPetal(char id,unsigned char petalsnum,unsigned char 
   delay(5);
   
 }
-void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,String petals,unsigned char time){
+void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,String petals){
   DynamicJsonBuffer jsonBuffer;
   signed char tData2[1] ;
   unsigned char tData[35];
@@ -203,7 +203,7 @@ void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,String petals
     delay(5);  
   }
   tData[0]=id;  //ID
-  tData[1]=time;//持续时间
+  tData[1]=0xff;//持续时间
   tData[2]=petalsnum;//色块数量
   
   tData[3]=int(root["data"][0]);//第1
@@ -345,6 +345,8 @@ bool uKitSensor::readColor(char id,String color){
   unsigned char Gvalue=readColorRgb(id,'G');
   unsigned char Bvalue=readColorRgb(id,'B');
   int *buf=Rgb2Hsb(Rvalue,Gvalue,Bvalue);
+  delay(5);
+
   bool state;
   if(color!="Black"&& (buf[1]>10 & buf[2]>20)){    
     if(color=="Red" && ((buf[0]>=0 & buf[0]<=18)||(buf[0]>=340 & buf[0]<=360))){
@@ -356,7 +358,7 @@ bool uKitSensor::readColor(char id,String color){
    else if(color=="Purple" && ((buf[0]>=266 & buf[0]<=295))){
      state=1;
    }
-    else if(color=="Orange" && ((buf[0]>=22 & buf[0]<=62))){//Orgin
+    else if(color=="Orange" && ((buf[0]>=22 & buf[0]<=62))){
     state=1;
     }
     else if(color=="Blue" && ((buf[0]>=186 & buf[0]<=265))){

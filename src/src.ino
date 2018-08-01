@@ -1,33 +1,36 @@
-#include"uKitExplore.h"
+#include "uKitExploreBlockly.h"
 
-String bufs;
+String colours_json;
 
-void setup()
-{
-Serial.begin(115200);
+void setup() {
+    Initialization();
 }
 
 void loop() {
-
-
-
- Serial.println(readHumitureValue(1,'C'));
- delay(300);
-     
+   colours_json = "{\"data\":\
+      [1, 255, 0, 0,\
+      2, 255, 0, 0,\
+      4, 255, 0, 0,\
+      8, 255, 0, 0,\
+      16, 0, 255, 255,\
+      32, 255, 0, 0,\
+      64, 255, 0, 0,\
+      128, 255, 0, 0]}";
+    setEyelightPetals(1, 8, colours_json);
+   colours_json = "{\"data\":\
+      [1, 255, 128, 0,\
+      2, 255, 128, 0,\
+      4, 255, 128, 0,\
+      8, 255, 128, 0,\
+      16, 255, 240, 0,\
+      32, 255, 128, 0,\
+      64, 255, 128, 0,\
+      128, 255, 128, 0]}";
+    setEyelightPetals(2, 8, colours_json);
+    delay(1*1000);
+    setEyelightOff(0);
+    delay(1*1000);
 
 }
-double getAverage(int arr[], int size)
-{
-  int    i, sum = 0;       
-  double avg;          
 
-  for (i = 0; i < size; ++i)
-  {
-    sum += arr[i];
-   }
-
-  avg = double(sum) / size;
-
-  return avg;
-}
 
