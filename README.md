@@ -1,4 +1,4 @@
-# uKit Explore Library v1.0.6
+# uKit Explore Library v1.0.7
 ```
 git clone git@10.10.1.34:uKit/explorer-library.git
 
@@ -21,6 +21,14 @@ Arduino Library for uKit Explore Modules
 - [Instructions](http://10.10.1.245/uKit-explore/Course/blob/master/uKit_Explore_Course_CN.pdf)  
 
 ### Update
+#### V1.0.7更新说明
+1. 温湿度传感器读取数据改为四舍五入，减小误差
+2. 加入RGB转HSB算法，优化颜色识别
+3. 修改ID输入小数、中文等均能提示
+4. 加入json解析库并适配
+5. 优化了灯瓣的逻辑和操作，解决不同嵌入式版本时间问题
+6. 修改了一些传感器名称不统一的问题
+
 #### V1.0.6更新说明
 1. 修复了获取ID字符缺漏的问题
 2. 修复了颜色传感器检测颜色问题，并支持10种uKit颜色识别
