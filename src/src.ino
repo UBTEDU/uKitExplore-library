@@ -1,29 +1,16 @@
-#include "uKitExploreBlockly.h"
-
-String colours_json;
+#include "uKitExploreBlockly2.h"
 
 void setup() {
     Initialization();
 }
 
 void loop() {
-  Serial.print("R:");
-  delay(2);
-  Serial.print(readColorRgb(1,'R'));
-  delay(2);
-  Serial.print(",");
-  delay(2);
-    Serial.print("G:");
-    delay(2);
-  Serial.print(readColorRgb(1,'G'));
-  delay(2);
-  Serial.print(",");
-  delay(2);
-    Serial.print("B:");
-    delay(2);
-  Serial.println(readColorRgb(1,'B'));
-delay(400);
-  
+    Serial.print("Color:");
+  Serial.println(readColor(1,"Purple"));
+   // readColor(1,"Gray");
+    delay(200);
+    
+
 }
 
 

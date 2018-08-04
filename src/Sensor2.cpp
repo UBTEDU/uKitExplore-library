@@ -173,6 +173,7 @@ void Sensor2::setcolor(int color){
 float Sensor2::readBatteryVoltage(){
   float voltage;
   voltage=(analogRead(A14)*5.0/1024.0)*151.0/51.0;
+ 
   return voltage;
  }
 
