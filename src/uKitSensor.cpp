@@ -66,7 +66,10 @@ unsigned short int uKitSensor::readLightValue(char id){
   buf[9] = crc8_itu(&buf[1], buf[2]+2);
   tRet=TXD(10,buf);
   delay(10);
-  return tRet;
+  if(tRet<=4000){
+     return tRet;
+  }
+ 
 }
 void uKitSensor::setEyelightLook(char id,char face,int times,int red,int green,int blue){
 
@@ -354,7 +357,7 @@ bool uKitSensor::readColor(char id,String color){
 
  
   bool state;
-  if(color!="Black"&& (buf[1]>15 & buf[2]>20)){    
+  if(color!="Black"&& (buf[1]>15 & buf[2]>25)){    
     if(color=="Red" && ((buf[0]>=0 & buf[0]<=18)||(buf[0]>=340 & buf[0]<=360))){
       state=1;
     }  
@@ -367,7 +370,7 @@ bool uKitSensor::readColor(char id,String color){
    else if(color=="Orange" && ((buf[0]>=22 & buf[0]<=42))){
     state=1;
     }
-    else if(color=="Blue" && ((buf[0]>=186 & buf[0]<=255))){
+    else if(color=="Blue" && ((buf[0]>185 & buf[0]<=255))){
       state=1;
     }
     else if(color=="Cyan" && ((buf[0]>=170 & buf[0]<=185))){
@@ -380,7 +383,7 @@ bool uKitSensor::readColor(char id,String color){
   else if(color=="White" && buf[0]<20 && (buf[1]>=0 &buf[1]<=7) &&buf[2]>=80){
     state=1;
   }
-  else if(color=="Black"  &&(buf[2]>=0 & buf[2]<=30)){
+  else if(color=="Black"  &&( buf[2]<=25)){
     state=1;
   }
  else if(color=="Gray" && buf[0]>80 & buf[1]<=15 & (buf[2]>=30)&&(buf[1]<buf[2])){
