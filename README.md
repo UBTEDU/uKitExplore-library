@@ -1,4 +1,4 @@
-# uKit Explore Library v1.0.7
+# uKit Explore Library v1.0.8
 ```
 git clone git@10.10.1.34:uKit/explorer-library.git
 
@@ -21,6 +21,12 @@ Arduino Library for uKit Explore Modules
 - [Instructions](http://10.10.1.245/uKit-explore/Course/blob/master/uKit_Explore_Course_CN.pdf)  
 
 ### Update
+#### V1.0.8更新说明
+1. 优化颜色识别算法
+2. 进一步优化Json解析库
+3. 亮度传感器最大值设定在4000
+4. 优化灰度传感器识别灵敏度
+
 #### V1.0.7更新说明
 1. 温湿度传感器读取数据改为四舍五入，减小误差
 2. 加入RGB转HSB算法，优化颜色识别
