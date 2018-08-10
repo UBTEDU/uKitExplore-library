@@ -66,10 +66,10 @@ unsigned short int uKitSensor::readLightValue(char id){
   buf[9] = crc8_itu(&buf[1], buf[2]+2);
   tRet=TXD(10,buf);
   delay(10);
-  if(tRet<=4000){
-     return tRet;
+  if(tRet>4000){
+    tRet=4000;    
   }
- 
+  return tRet;
 }
 void uKitSensor::setEyelightLook(char id,char face,int times,int red,int green,int blue){
 

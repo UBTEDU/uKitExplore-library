@@ -37,11 +37,11 @@ public:
   const char buzzer_pin=38;
  
  //Grayscale_Sensor2_pin 
-  const char GrayscaleNum1=29;
-  const char GrayscaleNum2=28;
-  const char GrayscaleNum3=27;
-  const char GrayscaleNum4=26;
-  const char GrayscaleNum5=25;
+  const char GrayscaleNum1=A10;
+  const char GrayscaleNum2=A9;
+  const char GrayscaleNum3=A8;
+  const char GrayscaleNum4=A7;//26
+  const char GrayscaleNum5=A6;//25
   
   //RGB_LED_pin 
   const char redPin = 44;

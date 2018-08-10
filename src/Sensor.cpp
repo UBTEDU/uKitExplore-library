@@ -232,12 +232,6 @@ float Sensor::readBatteryVoltage(){
   pinMode(buzzer_pin,OUTPUT);
   delay(10);  //开机延时
   //check_servo();  //获取舵机个数,列表
-  
-  unsigned char aa[4]={0xFF,0,0,0};
-  TXD(0xFA,8,4,0x01,aa);
-  delay(5); 
-  TXD(0xFA,13,4,0x01,aa); 
-  delay(5); 
   getDeciveId();
   
 }
