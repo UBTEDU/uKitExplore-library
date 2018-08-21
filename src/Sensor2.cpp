@@ -234,8 +234,10 @@ float Sensor2::readBatteryVoltage(){
   delay(10);  //开机延时
   //check_servo();  //获取舵机个数,列表
   
-  getDeciveId();
-  
+  setAllSensorOff();
+  setMotorStop(0xff);
+  StopServo();
+  getDeciveId2();
   
 }
 

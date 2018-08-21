@@ -11,7 +11,7 @@ public:
     unsigned char  readInfraredDistance(char ID);//ukit红外传感器控制函数，返回cm,(0-20)cm
     unsigned short int readSoundValue(char id);
     unsigned short int readLightValue(char id);
-   
+    void setAllSensorOff();
     //ukit led传感器。id为led的id号，face为表情种类（0眨眼，1伤心，2热泪盈眶，3泪光闪动，4哭泣，5晕，6开心，7惊讶，8呼吸，9闪烁，10风扇，11雨刮）,times是次数 ,rgb
     void setEyelightLook(char id,char face,int times,int red,int green,int blue);
     void setEyelightScene(char id,char scene,int times);//情景模式 id是id号，scene是情景灯，times是次数
@@ -23,6 +23,7 @@ public:
 
     void setEyelightOff(char id);
     unsigned char  readColorRgb(char id,unsigned char RGB);
+    unsigned char  *readColorRgb(char id);
     int  *Rgb2Hsb(unsigned char rgbR,unsigned char rgbG,unsigned char rgbB);
     bool readColor(char id,String color);
     void setColorOff(char id);

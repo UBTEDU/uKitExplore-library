@@ -5,8 +5,9 @@
 
 #include <Arduino.h>
 #include"uKitId.h"
-
-class Sensor2:uKitId
+#include"uKitSensor.h"
+#include"uKitMotor.h"
+class Sensor2:uKitId,uKitSensor,uKitMotor
 {
 public:
   void tone(int pin, uint16_t frequency, uint32_t duration);

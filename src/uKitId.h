@@ -50,7 +50,7 @@ public:
     
     void setDeciveId();
     void getDeciveId();
-    void getDeciveIds();
+    void getDeciveId2();
 
  };
  #endif

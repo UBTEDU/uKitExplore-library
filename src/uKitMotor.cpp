@@ -109,5 +109,10 @@ int uKitMotor::setMotorStop(uint8_t id)
  *
  * @returns tRet EN:0 means motor module acks correct, <0 means no ack or ack error/CN:返回0表示功能正常..
  */
+void uKitMotor::StopServo()
+{
+  unsigned char aa[4]={0xFF,0,0,0};
+  TXD(0xFA,0,4,0x01,aa); 
+}
 
 

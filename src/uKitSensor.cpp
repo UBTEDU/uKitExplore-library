@@ -309,7 +309,7 @@ int  *uKitSensor::Rgb2Hsb(unsigned char rgbR,unsigned char rgbG,unsigned char rg
 
 unsigned char uKitSensor::readColorRgb(char id,unsigned char RGB){
   unsigned  char tData[1];
-  unsigned char Value=0;
+  unsigned char Value;
   tData[0]=id;
   static int State=0;
   if(State==0){
@@ -319,22 +319,27 @@ unsigned char uKitSensor::readColorRgb(char id,unsigned char RGB){
     
   }
     Value=TXD(0xE8,1,1,4,RGB,tData);  
-    delay(20);
-  
-    if(Value==0){
-      
-      TXD(0xE8,1,1,2,tData); 
-      delay(10);
-    }
- 
-      return Value;
-    
-
-      
-
- 
+    delay(100);
+    return Value;
+          
  }
-
+unsigned char *uKitSensor::readColorRgb(char id){
+  unsigned  char tData[1];
+  
+  unsigned char *value=new unsigned char[3];  
+  tData[0]=id;
+  static int State=0;
+  if(State==0){
+    TXD(0xE8,1,1,2,tData);  
+    delay(10); 
+    State=1;
+    
+  }
+    value=TXDRandom(0xE8,1,1,4,tData);  
+    delay(180);
+    return value;
+          
+ }
  
 void uKitSensor::setColorOff(char id){
   unsigned  char tData[1];
@@ -343,11 +348,9 @@ void uKitSensor::setColorOff(char id){
     delay(5);   
  }
 bool uKitSensor::readColor(char id,String color){
-  
-  unsigned char Rvalue=readColorRgb(id,'R');
-  unsigned char Gvalue=readColorRgb(id,'G');
-  unsigned char Bvalue=readColorRgb(id,'B');
-  int *buf=Rgb2Hsb(Rvalue,Gvalue,Bvalue);
+  unsigned char *ColorRgb=readColorRgb(id);
+  delay(5);
+  int *buf=Rgb2Hsb(ColorRgb[0],ColorRgb[1],ColorRgb[2]);
   delay(5);
 // Serial.print(buf[0]);
 // Serial.print(",");
@@ -356,31 +359,34 @@ bool uKitSensor::readColor(char id,String color){
 //  Serial.println(buf[2]);
 
  
-  bool state;
+  bool state=0;
   if(color!="Black"&& (buf[1]>15 & buf[2]>25)){    
-    if(color=="Red" && ((buf[0]>=0 & buf[0]<=18)||(buf[0]>=340 & buf[0]<=360))){
+    if(color=="Red" && ((buf[0]>=0 & buf[0]<=11)||(buf[0]>=340 & buf[0]<=360))){
       state=1;
-    }  
-   else if(color=="Yellow" && ((buf[0]>=45 & buf[0]<=62))){//yellow
+    } 
+   else if(color=="Orange" && ((buf[0]>=18 & buf[0]<=35))){
+    state=1;
+    }     
+   else if(color=="Yellow" && ((buf[0]>=41 & buf[0]<=62))){//yellow
      state=1;
     } 
+  else if(color=="Green" && ((buf[0]>=67 & buf[0]<=169))){
+      state=1;
+    }   
+ 
    else if(color=="Purple" && ((buf[0]>=256 & buf[0]<=337))){
      state=1;
    }
-   else if(color=="Orange" && ((buf[0]>=22 & buf[0]<=42))){
-    state=1;
-    }
-    else if(color=="Blue" && ((buf[0]>185 & buf[0]<=255))){
+
+    else if(color=="Blue" && ((buf[0]>190 & buf[0]<=255))){
       state=1;
     }
     else if(color=="Cyan" && ((buf[0]>=170 & buf[0]<=185))){
       state=1;
     }
-    else if(color=="Green" && ((buf[0]>=65 & buf[0]<=169))){
-      state=1;
-    }  
+  
  }
-  else if(color=="White" && buf[0]<20 && (buf[1]>=0 &buf[1]<=7) &&buf[2]>=80){
+  else if(color=="White" && buf[0]<20 && (buf[1]<=7) &&buf[2]>=80){
     state=1;
   }
   else if(color=="Black"  &&( buf[2]<=25)){
@@ -398,7 +404,10 @@ bool uKitSensor::readColor(char id,String color){
   
 }
  
-  
+void uKitSensor::setAllSensorOff(){
+  setEyelightOff(0);
+  setColorOff(0);
+}
 
 
 int uKitSensor::readButtonValue(char id){

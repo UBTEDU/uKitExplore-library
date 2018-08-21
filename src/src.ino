@@ -1,30 +1,19 @@
-#include "uKitExplore2.h"
+#include "uKitExploreBlockly.h"
 
 void setup() {
     Initialization();
 }
 
 void loop() {
-    if (readGrayValue(1,0)) {
-        Serial.print("1");
+//setRgbledColor(255,0,0);
+  //readColor(2,"Red");
+  //setMotorTurn(1,120);
 
-    }
-    if (readGrayValue(2,0)) {
-        Serial.print("2");
 
-    }
-    if (readGrayValue(3,0)) {
-        Serial.print("3");
-
-    }
-    if (readGrayValue(4,0)) {
-        Serial.print("4");
-
-    }
-    if (readGrayValue(5,0)) {
-        Serial.print("5");
-
-    }
-    delay(200);
 
 }
+
+ 
+
+
+
