@@ -1,4 +1,4 @@
-# uKit Explore Library v1.0.8
+# uKit Explore Library v1.0.9
 ```
 git clone git@10.10.1.34:uKit/explorer-library.git
 
@@ -21,6 +21,12 @@ Arduino Library for uKit Explore Modules
 - [Instructions](http://10.10.1.245/uKit-explore/Course/blob/master/uKit_Explore_Course_CN.pdf)  
 
 ### Update
+#### V1.0.9更新说明
+1. 开机获取ID按照设备类型排序
+2. 优化颜色传感器读取，修复颜色传感器多次读取r值时，有时获取的数值为0的问题
+3. 亮度传感器最大值设定在4000
+4. 新增复位关闭所有设备
+
 #### V1.0.8更新说明
 1. 优化颜色识别算法
 2. 进一步优化Json解析库
