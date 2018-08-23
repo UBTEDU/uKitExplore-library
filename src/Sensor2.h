@@ -7,6 +7,7 @@
 #include"uKitId.h"
 #include"uKitSensor.h"
 #include"uKitMotor.h"
+
 class Sensor2:uKitId,uKitSensor,uKitMotor
 {
 public:
@@ -25,7 +26,6 @@ public:
   int readGrayValue(char num,char grayval);
   void setRgbledColor(int red, int green, int blue);//板载RGB灯函数
   void setcolor(int color);
-
   float readBatteryVoltage();
   float readHcsr04Distance(char jp); //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
   float readHcsr04Distance(char EchoPin,char TrigPin); //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
@@ -53,8 +53,7 @@ public:
   char Trig;
   char Echo;
   
-  
-  
+
 };
 
 

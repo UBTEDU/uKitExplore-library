@@ -1,19 +1,20 @@
-#include "uKitExploreBlockly.h"
+#include"uKitExplore.h"
 
 void setup() {
-    Initialization();
+  Serial.begin(115200);       // 初始化串口通信
+
 }
 
 void loop() {
-//setRgbledColor(255,0,0);
-  //readColor(2,"Red");
-  //setMotorTurn(1,120);
-
-
-
+ float *tepm=getMpu6050Data();
+ Serial.print(tepm[0]);
+ Serial.print(",");
+ Serial.print(tepm[1]);
+ Serial.print(",");
+ Serial.println(tepm[2]);
+ delay(300);
 }
 
- 
 
 
 

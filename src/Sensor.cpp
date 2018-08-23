@@ -1,6 +1,5 @@
 
 #include"Sensor.h" 
-
 void Sensor::tone(int pin, uint16_t frequency, uint32_t duration) 
 {
   

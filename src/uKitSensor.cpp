@@ -350,6 +350,7 @@ void uKitSensor::setColorOff(char id){
 bool uKitSensor::readColor(char id,String color){
   unsigned char *ColorRgb=readColorRgb(id);
   delay(5);
+  //ColorRgb[0]为R,ColorRgb[1]为G,ColorRgb[2]为B
   int *buf=Rgb2Hsb(ColorRgb[0],ColorRgb[1],ColorRgb[2]);
   delay(5);
 // Serial.print(buf[0]);
@@ -357,14 +358,13 @@ bool uKitSensor::readColor(char id,String color){
 //  Serial.print(buf[1]);
 // Serial.print(",");
 //  Serial.println(buf[2]);
-
- 
+ //buf[0]为H,buf[1]为S,buf[2]为B
   bool state=0;
   if(color!="Black"&& (buf[1]>15 & buf[2]>25)){    
     if(color=="Red" && ((buf[0]>=0 & buf[0]<=11)||(buf[0]>=340 & buf[0]<=360))){
       state=1;
     } 
-   else if(color=="Orange" && ((buf[0]>=18 & buf[0]<=35))){
+   else if(color=="Orange" && ((buf[0]>=18 & buf[0]<=39))){
     state=1;
     }     
    else if(color=="Yellow" && ((buf[0]>=41 & buf[0]<=62))){//yellow
@@ -378,10 +378,10 @@ bool uKitSensor::readColor(char id,String color){
      state=1;
    }
 
-    else if(color=="Blue" && ((buf[0]>190 & buf[0]<=255))){
+    else if(color=="Blue" && ((buf[0]>194 & buf[0]<=255))){
       state=1;
     }
-    else if(color=="Cyan" && ((buf[0]>=170 & buf[0]<=185))){
+    else if(color=="Cyan" && ((buf[0]>=170 & buf[0]<=193))){
       state=1;
     }
   

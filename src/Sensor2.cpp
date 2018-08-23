@@ -135,6 +135,8 @@ void Sensor2::setRgbledColor(int red, int green, int blue){
   analogWrite(greenPin,constrain((255-green),0,255));
   analogWrite(bluePin,constrain((255-blue),0,255));
 }
+
+
 /**@brief EN:The presupposed color function of board RGB LED/CN:板载RGB灯预设颜色函数.
  *
  * @param[in] color EN:color selection/CN:颜色选择.
