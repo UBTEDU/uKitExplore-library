@@ -121,7 +121,8 @@ void uKitSensor::setEyelightAllPetals(char id,int red,int green,int blue){
   volatile int State=0;
   if(State==0){
     State=TXD(0xF4,1,1,0x2,tData2 );
-    delay(5);  
+    delay(5); 
+    State=1; 
   }
   tData[0]=id;  //ID
   tData[1]=0xff;
