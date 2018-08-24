@@ -13,6 +13,7 @@ void loop() {
 // Serial.print(",");
 // Serial.println(tepm[2]);
 // delay(300);
+  motion_case(1,3);
 
 }
 
