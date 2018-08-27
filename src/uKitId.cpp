@@ -785,6 +785,7 @@ void uKitId::getDeciveId2(){
   unsigned char idbuf[116]={0};
   unsigned char decivenum[10]={0};
   unsigned char deciveid[116]={0};
+ 
  if (Serial) {
   Serial.println("------当前接入了以下设备------ ");
   for(int i=1;i<=18;i++){
@@ -933,7 +934,7 @@ void uKitId::getDeciveId2(){
     Serial.println("");
   }
   if(decivenum[7]!=0){      
-    Serial.print(" 【电机】");
+    Serial.print(" 【声音传感器】");
     for(int i=1;i<=decivenum[7];i++){
       Serial.print("ID-");
       Serial.print(deciveid[i+86]);
@@ -966,6 +967,7 @@ void uKitId::getDeciveId2(){
     Serial.println("");
   }
   Serial.println("------------------------------ ");
+ 
 }
 }
   

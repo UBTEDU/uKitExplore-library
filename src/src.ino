@@ -1,11 +1,12 @@
-#include"uKitExplore.h"
+#include"uKitExplore2.h"
 
 void setup() {
-  Serial.begin(115200);       // 初始化串口通信
-
+ Initialization();
+ 
 }
 
 void loop() {
+  Serial.println("Hello");
 // float *tepm=getMpu6050Data();
 // Serial.print(tepm[0]);
 // Serial.print(",");
@@ -13,8 +14,7 @@ void loop() {
 // Serial.print(",");
 // Serial.println(tepm[2]);
 // delay(300);
-  motion_case(1,3);
-
+//motion_case(1,3);
 }
 
 
