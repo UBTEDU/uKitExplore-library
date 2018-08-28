@@ -49,8 +49,9 @@ public:
     unsigned char getServoId(char id);  
     
     void setDeciveId();
+    void setDeciveIdEn();
     void getDeciveId();
-    void getDeciveId2();
+    void getDeciveIdEn();
 
  };
  #endif

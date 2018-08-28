@@ -40,7 +40,7 @@ Gyroscope gyro;
 
 //uKitSensor_API
 
-
+#define setAllSensorOff() uKitSensor.setAllSensorOff()
 #define readLightValue(id) uKitSensor.readLightValue(id)
 #define readSoundValue(id) uKitSensor.readSoundValue(id)
 #define readInfraredDistance(id) uKitSensor.readInfraredDistance(id)//ukit红外传感器控制函数，返回cm,(0-20)cm
@@ -61,6 +61,7 @@ Gyroscope gyro;
 #define redvalue uKitSensor.redvalue
 #define greenvalue uKitSensor.greenvalue
 #define bluevalue uKitSensor.bluevalue
+
 //uKitMotor_API
 #define setMotorTurn(id,pwmDuty) uKitMotor.setMotorTurn(id,pwmDuty)
 #define setMotorTurnAdj(id,speed,time) uKitMotor.setMotorTurnAdj(id,speed,time)
@@ -68,9 +69,11 @@ Gyroscope gyro;
 #define setMotorStop(id) uKitMotor.setMotorStop(id)
 #define MotorSetID(id_old,id_new) uKitMotor.MotorSetID(id_old,id_new)
 #define MotorCheckID(id) uKitMotor.MotorCheckID(id)
-
+#define StopServo() uKitMotor.StopServo()
 //uKitId
 #define setDeciveId() uKitId.setDeciveId()
+#define getDeciveId() uKitId.getDeciveId()
+
 //TransforRobot_API
 #define forward(a) TransforRobot.forward(a)//小车前进函数，速度0-5
 #define turnL(speed) TransforRobot.turnL(speed)//小车左转，速度0-5
@@ -112,12 +115,55 @@ Gyroscope gyro;
 #define setcolor(color) Sensor2.setcolor(color)
 #define readBatteryVoltage() Sensor2.readBatteryVoltage()
 #define readHcsr04Distance(jp) Sensor2.readHcsr04Distance(jp) //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
-#define Initialization() Sensor2.Initialization()
+#define redPin Sensor2.redPin
+#define greenPin Sensor2.greenPin
+#define bluePin Sensor2.bluePin
+#define Button_pin Sensor2.Button_pin
+#define GrayscaleNum1 Sensor2.GrayscaleNum1
+#define GrayscaleNum2 Sensor2.GrayscaleNum2
+#define GrayscaleNum3 Sensor2.GrayscaleNum3
+#define GrayscaleNum4 Sensor2.GrayscaleNum4
+#define GrayscaleNum5 Sensor2.GrayscaleNum5
+#define IR_S Sensor2.IR_S
+#define buzzer_pin Sensor2.buzzer_pin
+
+
+
 
 
 //ClickButton_API
-ClickButton button1(Sensor2.Button_pin, HIGH, CLICKBTN_PULLUP);//设置按键
+ClickButton button1(Button_pin, HIGH, CLICKBTN_PULLUP);//设置按键
 
+ void Initialization(){
+ 
+  pinMode(redPin, OUTPUT); //EN:Main board RGB lamp, R interface set to output/CN:主板RGB灯，R接口设置为输出.
+  pinMode(greenPin, OUTPUT);//EN:Main board RGB lamp, G interface set to output/CN:主板RGB灯，G接口设置为输出.
+  pinMode(bluePin, OUTPUT);//EN:Main board RGB lamp, B interface set to output/CN:主板RGB灯，B接口设置为输出.
+  digitalWrite(redPin,HIGH);//EN:Main board RGB lamp, R interface set to HIGH/CN:主板RGB灯，R接口设置为高电平输出.
+  digitalWrite(greenPin,HIGH);//EN:Main board RGB lamp, G interface set to HIGH/CN:主板RGB灯，G接口设置为高电平输出.
+  digitalWrite(bluePin,HIGH);//EN:Main board RGB lamp, B interface set to HIGH/CN:主板RGB灯，B接口设置为高电平输出.
+  pinMode(Button_pin,INPUT);
+  pinMode(GrayscaleNum1, INPUT);  //左1的循迹传感器
+  pinMode(GrayscaleNum2, INPUT);  //左2的循迹传感器
+  pinMode(GrayscaleNum3, INPUT);  //中间的循迹传感器
+  pinMode(GrayscaleNum4, INPUT);  //右2的循迹传感器
+  pinMode(GrayscaleNum5, INPUT);  //右1的循迹传感器
+  pinMode(IR_S,OUTPUT);
+//  pinMode(A3, INPUT);    // 定义超声波输入脚
+//  pinMode(A2, OUTPUT);   // 定义超声波输出脚 
+//  pinMode(A1, INPUT);    // 定义超声波输入脚
+//  pinMode(A0, OUTPUT);   // 定义超声波输出脚 
+  pinMode(buzzer_pin,OUTPUT);
+  delay(5);  //开机延时
+  //check_servo();  //获取舵机个数,列表
+  
+  setAllSensorOff();
+  setMotorStop(0xff);
+  StopServo();
+  Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
+  getDeciveId();
+  
+}
 
 
 #endif
