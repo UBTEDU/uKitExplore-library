@@ -45,7 +45,7 @@ Gyroscope gyro;
 #define readSoundValue(id) uKitSensor.readSoundValue(id)
 #define readInfraredDistance(id) uKitSensor.readInfraredDistance(id)//ukit红外传感器控制函数，返回cm,(0-20)cm
 #define Set_Infrared_Id(id) uKitSensor.Set_Infrared_Id(id)//设置红外ID
-#define readColorRgb(id,rgb) uKitSensor.readColorRgb(id,rgb)
+#define readColorRgb(id) uKitSensor.readColorRgb(id)
 #define readColor(id,color) uKitSensor.readColor(id,color)
 #define setColorOff(id) uKitSensor.setColorOff(id)
 #define setEyelightLook(id,face,times,red,green,blue) uKitSensor.setEyelightLook(id,face,times,red,green,blue)//ukit led传感器。id为led的id号，face为表情种类（0）

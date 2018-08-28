@@ -398,7 +398,8 @@ Retry_Servo:
 
 unsigned char  * SemiduplexSerial::TXDRandom(unsigned char Head,unsigned char ServoNO,unsigned char len,unsigned char CMD,unsigned char * Data){
   unsigned long tRet = 0;
-  unsigned char *data=new unsigned char[3];  
+  unsigned char *data=NULL;
+  data=new unsigned char [3];  
   unsigned char tCnt = 0;
   unsigned long temp = 2; //2ms 发完
   unsigned char buf[40];
@@ -462,6 +463,8 @@ Retry_Servo:
   
   tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+10); //接收应答
   Serial3.end();  //关闭串口3,否则会影响接收消息
+ 
+  
   if(tRet > RXD_OFFSET) //打印返回消息
   {
       //Serial.write(Usart3_Rx_Buf + RXD_OFFSET,tRet - RXD_OFFSET);
@@ -578,7 +581,10 @@ Retry_Servo:
     }
 
   }
+  
   return data;
+  delete [] data;
+  
 }
 
 unsigned long SemiduplexSerial::TXD(unsigned char len,unsigned char * Data){

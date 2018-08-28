@@ -326,8 +326,8 @@ unsigned char uKitSensor::readColorRgb(char id,unsigned char RGB){
  }
 unsigned char *uKitSensor::readColorRgb(char id){
   unsigned  char tData[1];
-  
-  unsigned char *value=new unsigned char[3];  
+  unsigned char *value=NULL;
+  value=new unsigned char[3];  
   tData[0]=id;
   static int State=0;
   if(State==0){
@@ -337,8 +337,13 @@ unsigned char *uKitSensor::readColorRgb(char id){
     
   }
     value=TXDRandom(0xE8,1,1,4,tData);  
-    delay(180);
+    delay(180);   
     return value;
+    delete []value;
+     
+    
+    
+    
           
  }
  
@@ -400,6 +405,8 @@ bool uKitSensor::readColor(char id,String color){
   else{
     state=0;
   }
+   delete [] ColorRgb;
+   delete [] buf;
     return state;
    
   
