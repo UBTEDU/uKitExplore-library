@@ -21,12 +21,18 @@ Arduino Library for uKit Explore Modules
 - [Instructions](http://10.10.1.245/uKit-explore/Course/blob/master/uKit_Explore_Course_CN.pdf)  
 
 ### Update
+#### V1.1.1更新说明
+1. 修复初次打开串口时，读取设备信息提示有时缺少
+2. 修复接入两个颜色传感器时只有一个可以使用
+3. 调整了一些翻译问题
+
 #### V1.1.0更新说明
 1. 修复长时间打印颜色传感器会读取不出来的问题
 2. 解决颜色传感器多次读取r值时，有时获取的数值为0的问题
-3. 
-4. 
-5. 
+3. 增加英文库，uKitExploreEn.h/uKitExplore2En.h
+4. 修复ID获取声音传感器为电机的BUG
+5. 优化频繁打印串口时，开始的几个数据会乱码的情况
+
 
 #### V1.0.9更新说明
 1. 开机获取ID按照设备类型排序

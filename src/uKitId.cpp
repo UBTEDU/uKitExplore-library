@@ -681,6 +681,7 @@ void uKitId::setDeciveId(){
    comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加
    zeronum=0;
    decive=0;
+  
  
   
 }
@@ -939,6 +940,7 @@ void uKitId::setDeciveIdEn(){
    comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加
    zeronum=0;
    decive=0;
+   
  
   
 }
