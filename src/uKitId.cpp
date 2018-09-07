@@ -435,9 +435,8 @@ void uKitId::setDeciveId(){
   String comdata="";
    if(i==0){
     delay(10);
-    Serial.println("/----------------------------------------------/");
-    Serial.println(" 请输入数字修改外设ID号"); 
-    Serial.println(" *注意,请确保当前仅连接一个设外设,并打开电源.");    
+    Serial.println("  请输入数字修改外设ID号"); 
+    Serial.println("  *注意,请确保当前仅连接一个设外设,并打开电源.");    
     delay(300); 
     i=1;
   }  
@@ -487,7 +486,7 @@ void uKitId::setDeciveId(){
           }
                   
         if((id==0 | id>18 | numlength>2) & decive>=8 ){
-          Serial.println("请输入1至18的正整数");
+          Serial.println("  *请输入1至18的正整数");
           comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加
         }
         else if(id!=0 & id<=18 & numlength<=2){
@@ -665,7 +664,7 @@ void uKitId::setDeciveId(){
           }                         
         }
         else if(id==0 | numlength>2 | id>10 && decive<9 ){
-          Serial.println("请输入1至10的正整数");
+          Serial.println("  *请输入1至10的正整数");
         }
         }
 
@@ -673,7 +672,7 @@ void uKitId::setDeciveId(){
             Serial.println("  *请打开电源,或接入传感器!");
           }   
           else if(id==0 | numlength>2 | id>10 && decive<9 ){
-          Serial.println("请输入1至10的正整数");
+          Serial.println("  *请输入1至10的正整数");
         } 
         else {
             Serial.println("  *请不要接入多个传感器!");   
@@ -694,9 +693,8 @@ void uKitId::setDeciveIdEn(){
   String comdata="";
    if(i==0){
     delay(10);
-    Serial.println("/----------------------------------------------/");
-    Serial.println(" Please enter number to modify device ID"); 
-    Serial.println(" * Please make sure that only ONE device is connected, and the board is switched on.");    
+    Serial.println("  Please enter number to modify device ID"); 
+    Serial.println("  *Please make sure that only ONE device is connected, and the board is switched on.");    
     delay(300); 
     i=1;
   }  
@@ -746,7 +744,7 @@ void uKitId::setDeciveIdEn(){
           }
                   
         if((id==0 | id>18 | numlength>2) & decive>=8 ){
-          Serial.println("Please enter positive integer from 1 to 18");
+          Serial.println("  *Please enter positive integer from 1 to 18");
           comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加
         }
         else if(id!=0 & id<=18 & numlength<=2){
@@ -761,9 +759,9 @@ void uKitId::setDeciveIdEn(){
             Serial.print("  Modification succeeded!");
             Serial.print("【Sound sensor】ID-");
             Serial.print(buf[0]);
-            Serial.print("has been changed to ID-");
+            Serial.print(" has been changed to ID-");
             Serial.println(buf[10]); 
-            Serial.println("  * If you want to modify another device ID, please replace the device and press reset button at the board."); 
+            Serial.println("  *If you want to modify another device ID, please replace the device and press reset button at the board."); 
             
           }
           else if(decive==1 & zeronum==9){
@@ -776,9 +774,9 @@ void uKitId::setDeciveIdEn(){
             Serial.print("  Modification succeeded!");
             Serial.print("【Light sensor】ID-");
             Serial.print(buf[1]);
-            Serial.print("has been changed to ID-");
+            Serial.print(" has been changed to ID-");
             Serial.println(buf[11]); 
-            Serial.println("  * If you want to modify another device ID, please replace the device and press reset button at the board."); 
+            Serial.println("  *If you want to modify another device ID, please replace the device and press reset button at the board."); 
           }
           else if(decive==2 & zeronum==9){
             delay(20);
@@ -790,9 +788,9 @@ void uKitId::setDeciveIdEn(){
             Serial.print("  Modification succeeded!");
             Serial.print("【Temp. & Humi. sensor】ID-");
             Serial.print(buf[2]);
-            Serial.print("has been changed to ID-");
+            Serial.print(" has been changed to ID-");
             Serial.println(buf[12]); 
-            Serial.println("  * If you want to modify another device ID, please replace the device and press reset button at the board."); 
+            Serial.println("  *If you want to modify another device ID, please replace the device and press reset button at the board."); 
           }
           else if(decive==3 & zeronum==9){
             delay(20);
@@ -804,9 +802,9 @@ void uKitId::setDeciveIdEn(){
             Serial.print("  Modification succeeded!");
             Serial.print("【IR sensor】ID-");
             Serial.print(buf[3]);
-            Serial.print("has been changed to ID-");
+            Serial.print(" has been changed to ID-");
             Serial.println(buf[13]); 
-            Serial.println("  * If you want to modify another device ID, please replace the device and press reset button at the board."); 
+            Serial.println("  *If you want to modify another device ID, please replace the device and press reset button at the board."); 
           }
            else if(decive==4 & zeronum==9){
             delay(20);
@@ -818,9 +816,9 @@ void uKitId::setDeciveIdEn(){
             Serial.print("  Modification succeeded!");
             Serial.print("【Eye lamp】ID-");
             Serial.print(buf[4]);
-            Serial.print("has been changed to ID-");
+            Serial.print(" has been changed to ID-");
             Serial.println(buf[14]); 
-            Serial.println("  * If you want to modify another device ID, please replace the device and press reset button at the board."); 
+            Serial.println("  *If you want to modify another device ID, please replace the device and press reset button at the board."); 
           }         
            else if(decive==5 & zeronum==9){
             delay(20);
@@ -832,9 +830,9 @@ void uKitId::setDeciveIdEn(){
             Serial.print("  Modification succeeded!");
             Serial.print("【Touch sensor】 ID-");
             Serial.print(buf[5]);
-            Serial.print("has been changed to ID-");
+            Serial.print(" has been changed to ID-");
             Serial.println(buf[15]); 
-            Serial.println("  * If you want to modify another device ID, please replace the device and press reset button at the board."); 
+            Serial.println("  *If you want to modify another device ID, please replace the device and press reset button at the board."); 
           } 
           else if(decive==6 & zeronum==9){
             delay(20);
@@ -846,9 +844,9 @@ void uKitId::setDeciveIdEn(){
             Serial.print("  Modification succeeded!");
             Serial.print("【Ultrasonic sensor】ID-");
             Serial.print(buf[6]);
-            Serial.print("has been changed to ID-");
+            Serial.print(" has been changed to ID-");
             Serial.println(buf[16]); 
-            Serial.println("  * If you want to modify another device ID, please replace the device and press reset button at the board."); 
+            Serial.println("  *If you want to modify another device ID, please replace the device and press reset button at the board."); 
           }    
           else if(decive==7 & zeronum==9){
             delay(20);
@@ -860,9 +858,9 @@ void uKitId::setDeciveIdEn(){
             Serial.print("  Modification succeeded!");
             Serial.print("【Color sensor】ID-");
             Serial.print(buf[7]);
-            Serial.print("has been changed to ID-");
+            Serial.print(" has been changed to ID-");
             Serial.println(buf[17]); 
-            Serial.println("  * If you want to modify another device ID, please replace the device and press reset button at the board."); 
+            Serial.println("  *If you want to modify another device ID, please replace the device and press reset button at the board."); 
           }    
           if(decive==8 & zeronum==9){
             delay(20);
@@ -874,9 +872,9 @@ void uKitId::setDeciveIdEn(){
             Serial.print("  Modification succeeded!");
             Serial.print("【Motor】ID-");
             Serial.print(buf[8]);
-            Serial.print("has been changed to ID-");
+            Serial.print(" has been changed to ID-");
             Serial.println(buf[18]); 
-            Serial.println("  * If you want to modify another device ID, please replace the device and press reset button at the board."); 
+            Serial.println("  *If you want to modify another device ID, please replace the device and press reset button at the board."); 
           }                   
           else if(decive==9 & zeronum==9){
             delay(20);
@@ -888,9 +886,9 @@ void uKitId::setDeciveIdEn(){
             Serial.print("  Modification succeeded!");
             Serial.print("【Servo】ID-");
             Serial.print(buf[9]);
-            Serial.print("has been changed to ID-");
+            Serial.print(" has been changed to ID-");
             Serial.println(buf[19]); 
-            Serial.println("  * If you want to modify another device ID, please replace the device and press reset button at the board."); 
+            Serial.println("  *If you want to modify another device ID, please replace the device and press reset button at the board."); 
           }  
         }
         else if(id>10 & id<=18 & decive>=8){
@@ -904,9 +902,9 @@ void uKitId::setDeciveIdEn(){
             Serial.print("  Modification succeeded!");
             Serial.print("【Motor】ID-");
             Serial.print(buf[8]);
-            Serial.print("has been changed to ID-");
+            Serial.print(" has been changed to ID-");
             Serial.println(buf[18]); 
-            Serial.println("  * If you want to modify another device ID, please replace the device and press reset button at the board."); 
+            Serial.println("  *If you want to modify another device ID, please replace the device and press reset button at the board."); 
           }                   
           else if(decive==9 & zeronum==9){
             delay(20);
@@ -918,13 +916,13 @@ void uKitId::setDeciveIdEn(){
             Serial.print("  Modification succeeded!");
             Serial.print("【Servo】ID-");
             Serial.print(buf[9]);
-            Serial.print("has been changed to ID-");
+            Serial.print(" has been changed to ID-");
             Serial.println(buf[19]); 
-            Serial.println("  * If you want to modify another device ID, please replace the device and press reset button at the board."); 
+            Serial.println("  *If you want to modify another device ID, please replace the device and press reset button at the board."); 
           }                         
         }
         else if(id==0 | numlength>2 | id>10 && decive<9 ){
-          Serial.println("Please enter positive integer from 1 to 10");
+          Serial.println("  Please enter positive integer from 1 to 10");
         }
         }
 
@@ -932,10 +930,10 @@ void uKitId::setDeciveIdEn(){
             Serial.println("  *Please turn on the power or insert sensors.");
           }   
           else if(id==0 | numlength>2 | id>10 && decive<9 ){
-          Serial.println("Please enter positive integer from 1 to 10");
+          Serial.println("  Please enter positive integer from 1 to 10");
         } 
         else {
-            Serial.println("  * Please do not connect multiple devices.");   
+            Serial.println("  *Please do not connect multiple devices.");   
         }
     }
    comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加
@@ -946,12 +944,14 @@ void uKitId::setDeciveIdEn(){
 }
 
 void uKitId::getDeciveId(){
+  Serial.println("------当前接入了以下外设------ ");
+  
   unsigned char idbuf[116]={0};
   unsigned char decivenum[10]={0};
   unsigned char deciveid[116]={0};
  
  if (Serial) {
-  Serial.println("------当前接入了以下外设------ ");
+  
   for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getServoId(i);
@@ -1136,12 +1136,14 @@ void uKitId::getDeciveId(){
 }
   
 void uKitId::getDeciveIdEn(){
+  Serial.println("------Following device has been connected to the board------ ");
+  Serial.flush();
   unsigned char idbuf[116]={0};
   unsigned char decivenum[10]={0};
   unsigned char deciveid[116]={0};
  
  if (Serial) {
-  Serial.println("------Following device has been connected to the board------ ");
+  
   for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getServoId(i);

@@ -312,7 +312,8 @@ unsigned char uKitSensor::readColorRgb(char id,unsigned char RGB){
   unsigned  char tData[1];
   unsigned char Value;
   tData[0]=id;
-  static int State=0;
+  volatile int State=0;
+
   if(State==0){
     TXD(0xE8,1,1,2,tData);  
     delay(10); 
@@ -329,7 +330,7 @@ unsigned char *uKitSensor::readColorRgb(char id){
   unsigned char *value=NULL;
   value=new unsigned char[3];  
   tData[0]=id;
-  static int State=0;
+  volatile int State=0;
   if(State==0){
     TXD(0xE8,1,1,2,tData);  
     delay(10); 
