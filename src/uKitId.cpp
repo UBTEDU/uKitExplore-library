@@ -946,14 +946,15 @@ void uKitId::setDeciveIdEn(){
 }
 
 void uKitId::getDeciveId(){
-  Serial.println("------当前接入了以下外设------ ");
+  
   
   unsigned char idbuf[116]={0};
   unsigned char decivenum[10]={0};
   unsigned char deciveid[116]={0};
- 
- if (Serial) {
   
+ if (Serial) {
+  Serial.println();
+  Serial.println("-----当前接入了以下外设----- ");
   for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getServoId(i);
@@ -1132,20 +1133,20 @@ void uKitId::getDeciveId(){
     }
     Serial.println("");
   }
-  Serial.println("------------------------------ ");
+  Serial.println("------------------------ ");
  
 }
 }
   
 void uKitId::getDeciveIdEn(){
-  Serial.println("------Following device has been connected to the board------ ");
-  Serial.flush();
+ 
+  
   unsigned char idbuf[116]={0};
   unsigned char decivenum[10]={0};
   unsigned char deciveid[116]={0};
- 
- if (Serial) {
   
+ if (Serial) {
+  Serial.println("------Following device has been connected to the board------ ");
   for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getServoId(i);

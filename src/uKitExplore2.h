@@ -135,7 +135,7 @@ Gyroscope gyro;
 ClickButton button1(Button_pin, HIGH, CLICKBTN_PULLUP);//设置按键
 
  void Initialization(){
- 
+  
   pinMode(redPin, OUTPUT); //EN:Main board RGB lamp, R interface set to output/CN:主板RGB灯，R接口设置为输出.
   pinMode(greenPin, OUTPUT);//EN:Main board RGB lamp, G interface set to output/CN:主板RGB灯，G接口设置为输出.
   pinMode(bluePin, OUTPUT);//EN:Main board RGB lamp, B interface set to output/CN:主板RGB灯，B接口设置为输出.
@@ -161,6 +161,7 @@ ClickButton button1(Button_pin, HIGH, CLICKBTN_PULLUP);//设置按键
   setMotorStop(0xff);
   StopServo();
   Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
+  
   
   getDeciveId();
  
