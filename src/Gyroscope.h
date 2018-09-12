@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 #include "Wire.h"
-#include "I2Cdev/I2Cdev.h"
+#include "I2Cdev.h"
 #include "MPU6050.h"
 
 class Gyroscope:MPU6050
