@@ -953,7 +953,6 @@ void uKitId::getDeciveId(){
   unsigned char deciveid[116]={0};
   
  if (Serial) {
-  Serial.println();
   Serial.println(">-----当前接入了以下外设-----< ");
   for(int i=1;i<=18;i++){
     if(i<=10){

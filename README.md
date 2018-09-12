@@ -1,4 +1,4 @@
-# uKit Explore Library v1.1.0
+# uKit Explore Library v1.1.2
 ```
 git clone git@10.10.1.34:uKit/explorer-library.git
 
@@ -21,6 +21,11 @@ Arduino Library for uKit Explore Modules
 - [Instructions](http://10.10.1.245/uKit-explore/Course/blob/master/uKit_Explore_Course_CN.pdf)  
 
 ### Update
+#### V1.1.2更新说明
+1. 修复了初次打开串口时，读取设备信息提示有时缺少的问题
+2. 修复打印四个颜色传感器【B】值（仅连接三个颜色传感器）时，未连接的传感器ID打印值不为0的问题
+3. 修复了频繁打印串口时，开始的几个数据会乱码的问题
+
 #### V1.1.1更新说明
 1. 修复初次打开串口时，读取设备信息提示有时缺少
 2. 修复接入两个颜色传感器时只有一个可以使用
