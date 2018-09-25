@@ -55,6 +55,16 @@ void uKitServo::setServoStop(char id){
   TXD(0xFA,id,4,0x01,aa); 
 }
 
+void uKitServo::setServoStiffness(char id,unsigned char stiffness){
+  unsigned char tData[4];
+  tData[0]=stiffness;
+  tData[1]=0;
+  tData[2]=0;
+  tData[3]=0;
+  
+  TXD(0xFA,id,8,0x01,tData );
+}
+
 int uKitServo::readServoAnglePD(char id){//单个舵机回读(掉电回读）
   int tCmd=0;
   unsigned char aa[4]={0,0,0,0};
@@ -181,4 +191,3 @@ void uKitServo::motion(unsigned char id[],signed char action[][sizeof(id)/sizeof
     }
   }
 }
-

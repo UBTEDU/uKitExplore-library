@@ -127,7 +127,7 @@ Retry_Servo:
           tRet = ServoNO;
         }
       }
-      else if(CMD == 2 | CMD==3)
+      else if(CMD == 2 | CMD==3 |CMD==8)
       {
         if( (Usart3_Rx_Buf[RXD_OFFSET + 3] == 0xAA) && (Usart3_Rx_Buf[RXD_OFFSET + 2] == ServoNO) )
         {
@@ -428,7 +428,29 @@ unsigned char  * SemiduplexSerial::TXDRandom(unsigned char Head,unsigned char Se
   buf[length ] = 0xED;
   
   
-
+  if(Head == 0xFA)
+  {
+    if(CMD == 1 )
+    {
+      if(ServoNO == 0)
+      {
+        //这句有问题 memset 不支持双字节的填充
+        //memset((void *)&gsSave_Angle,0xFF,sizeof(gsSave_Angle));  //保存所有角度
+        //memset((void *)&gsSave_Angle,Data,sizeof(gsSave_Angle));  //保存所有角度
+        memset((void *)&gsSave_Angle,Data[0],sizeof(gsSave_Angle)); //保存所有角度
+      }
+      else
+      {
+        if(Data[0] == gsSave_Angle.Angle[ServoNO - 1])  return  0;  //不发送,直接返回
+        else
+        {
+          gsSave_Angle.Angle[ServoNO - 1] = Data[0];  //保存单个角度,以后可能双字节角度
+        }
+      }
+      Usart3_Rx_Ack_Len = 1;  //1,4命令只应答一个字节
+    }
+    else if( CMD == 4)  Usart3_Rx_Ack_Len = 1;  //1,4命令只应答一个字节
+  }
   
 Retry_Servo:
   
@@ -529,21 +551,26 @@ Retry_Servo:
       }
       else if(CMD == 0x04 )
       {
-
-          if(Usart3_Rx_Buf[length + 3] == 17)
+        //Serial.println(Usart3_Rx_Buf[length + 3]);
+        if(Usart3_Rx_Buf[length + 3] == 7)
+          tRet = ((Usart3_Rx_Buf[length + 5] - 0xAA) << 8) + Usart3_Rx_Buf[length + 6];                
+        else   if(Usart3_Rx_Buf[length + 3] == 8)
+          tRet = (Usart3_Rx_Buf[length + 6] << 8) + Usart3_Rx_Buf[length + 7];
+        else   if(Usart3_Rx_Buf[length + 3] == 9)
+          tRet = (Usart3_Rx_Buf[length + 7] << 8) + Usart3_Rx_Buf[length + 8];
+        else   if(Usart3_Rx_Buf[length + 3] == 17)
         {          
           data[0] = Usart3_Rx_Buf[length + 6]; //R
-          data[1]= Usart3_Rx_Buf[length + 7]; //G           
-          data[2]= Usart3_Rx_Buf[length + 8]; //B       
+          data[1] = Usart3_Rx_Buf[length + 7]; //G           
+          data[2] = Usart3_Rx_Buf[length + 8]; //B       
                 
         }
         else{
           data[0]=0;
           data[1]=0;
           data[2]=0;
-          
         }
-       
+          tRet=0;
           
       }
       else if(CMD==0x06|CMD==0x07)
@@ -557,7 +584,6 @@ Retry_Servo:
   
   return data;
   delete [] data;
-  
   
 }
 
@@ -741,4 +767,3 @@ uint32_t SemiduplexSerial::crc8_itu(const uint8_t *pBuf, uint32_t len){
   
   return crc;
 }
-

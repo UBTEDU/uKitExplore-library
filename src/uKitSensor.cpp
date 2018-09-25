@@ -282,7 +282,8 @@ signed char uKitSensor::readHumitureValue(char id, char choice){
   return tRet;
 }
 int  *uKitSensor::Rgb2Hsb(unsigned char rgbR,unsigned char rgbG,unsigned char rgbB){
-  int *temp = new int[3];
+  int *temp =NULL; 
+  temp=new int[3];
   int Max,Min=0;
   Max=max(max(rgbR,rgbG),rgbB);
   Min=min(min(rgbR,rgbG),rgbB);
@@ -302,8 +303,8 @@ int  *uKitSensor::Rgb2Hsb(unsigned char rgbR,unsigned char rgbG,unsigned char rg
   temp[1]=hsbS;
   temp[2]=hsbB;
   
-  
   return temp;
+  delete [] temp;
   
   
 }
@@ -328,7 +329,7 @@ unsigned char uKitSensor::readColorRgb(char id,unsigned char RGB){
 unsigned char *uKitSensor::readColorRgb(char id){
   unsigned  char tData[1];
   unsigned char *value=NULL;
-  value=new unsigned char[3];  
+  
   tData[0]=id;
   unsigned char getid=0;
   volatile int State=0;
@@ -347,10 +348,11 @@ unsigned char *uKitSensor::readColorRgb(char id){
       value[0]=0;
       value[1]=0;
       value[2]=0;
+      
        
     }
     return value;
-    delete []value;
+    delete [] value;
    
      
     
@@ -366,18 +368,14 @@ void uKitSensor::setColorOff(char id){
     delay(5);   
  }
 bool uKitSensor::readColor(char id,String color){
-  unsigned char *ColorRgb=readColorRgb(id);
-  delay(5);
-  //ColorRgb[0]为R,ColorRgb[1]为G,ColorRgb[2]为B
-  int *buf=Rgb2Hsb(ColorRgb[0],ColorRgb[1],ColorRgb[2]);
-  delay(5);
-// Serial.print(buf[0]);
-// Serial.print(",");
-//  Serial.print(buf[1]);
-// Serial.print(",");
-//  Serial.println(buf[2]);
- //buf[0]为H,buf[1]为S,buf[2]为B
+  unsigned char *ColorRgb=NULL;  
+  unsigned int *buf=NULL;
   bool state=0;
+  ColorRgb=readColorRgb(id);//ColorRgb[0]为R,ColorRgb[1]为G,ColorRgb[2]为B
+  delay(5);
+  buf=Rgb2Hsb(ColorRgb[0],ColorRgb[1],ColorRgb[2]);
+  delay(5);
+  delete [] ColorRgb;
   if(color!="Black"&& (buf[1]>15 & buf[2]>25)){    
     if(color=="Red" && ((buf[0]>=0 & buf[0]<=11)||(buf[0]>=340 & buf[0]<=360))){
       state=1;
@@ -410,15 +408,16 @@ bool uKitSensor::readColor(char id,String color){
   else if(color=="Black"  &&( buf[2]<=25)){
     state=1;
   }
- else if(color=="Gray" && buf[0]>80 & buf[1]<=15 & (buf[2]>=30)&&(buf[1]<buf[2])){
+  else if(color=="Gray" && buf[0]>80 & buf[1]<=15 & (buf[2]>=30)&&(buf[1]<buf[2])){
     state=1;
- } 
+  } 
 
   else{
     state=0;
   }
-   delete [] ColorRgb;
-   delete [] buf;
+
+     //delete [] ColorRgb;
+    delete [] buf;
     return state;
    
   
