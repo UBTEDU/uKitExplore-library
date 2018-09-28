@@ -45,7 +45,7 @@ unsigned short int uKitSensor::readSoundValue(char id){
   buf[7] = 0x00;
   buf[8] = 0x01;
   buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=map(TXD(10,buf),0,4069,0,1023);
+  tRet=(TXD(10,buf)-2048)/2;
   delay(10);
   if(tRet>1023)
     tRet=1023;

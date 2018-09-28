@@ -436,7 +436,7 @@ void uKitId::setDeciveId(){
    if(i==0){
     delay(10);
     Serial.println("  请输入数字修改外设ID号"); 
-    Serial.println("  *注意,请确保当前仅连接一个设外设,并打开电源.");    
+    Serial.println("  *注意,请确保当前仅连接一个外设,并打开电源.");    
     delay(300); 
     i=1;
   }  

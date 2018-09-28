@@ -644,6 +644,7 @@ unsigned long SemiduplexSerial::TXD(unsigned char len,unsigned char * Data){
   memset((void *)Data,0,sizeof(Data));
   return tRet;
 }
+
 signed long SemiduplexSerial::TXD(unsigned char len,unsigned char choice,unsigned char * Data){
   unsigned char Rx_Buf[26];
   signed long tRet = 0;
