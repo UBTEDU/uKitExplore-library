@@ -144,10 +144,6 @@ void Initialization(){
   pinMode(GrayscaleNum4, INPUT);  //右2的循迹传感器
   pinMode(GrayscaleNum5, INPUT);  //右1的循迹传感器
   pinMode(IR_S,OUTPUT);
-//  pinMode(A3, INPUT);    // 定义超声波输入脚
-//  pinMode(A2, OUTPUT);   // 定义超声波输出脚 
-//  pinMode(A1, INPUT);    // 定义超声波输入脚
-//  pinMode(A0, OUTPUT);   // 定义超声波输出脚 
   pinMode(buzzer_pin,OUTPUT);
 
   delay(5);  //开机延时

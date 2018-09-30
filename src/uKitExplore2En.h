@@ -149,10 +149,10 @@ ClickButton button1(Button_pin, HIGH, CLICKBTN_PULLUP);//设置按键
   pinMode(GrayscaleNum4, INPUT);  //右2的循迹传感器
   pinMode(GrayscaleNum5, INPUT);  //右1的循迹传感器
   pinMode(IR_S,OUTPUT);
-//  pinMode(A3, INPUT);    // 定义超声波输入脚
-//  pinMode(A2, OUTPUT);   // 定义超声波输出脚 
-//  pinMode(A1, INPUT);    // 定义超声波输入脚
-//  pinMode(A0, OUTPUT);   // 定义超声波输出脚 
+  pinMode(43, INPUT);    // 定义超声波输入脚
+  pinMode(42, OUTPUT);   // 定义超声波输出脚 
+  pinMode(41, INPUT);    // 定义超声波输入脚
+  pinMode(40, OUTPUT);   // 定义超声波输出脚 
   pinMode(buzzer_pin,OUTPUT);
   delay(5);  //开机延时
   //check_servo();  //获取舵机个数,列表

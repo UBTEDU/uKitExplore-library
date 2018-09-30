@@ -7,7 +7,6 @@ void setup() {
 }
 
 void loop() {
-Serial.println(readSoundValue(1));
-delay(300);
+   readHcsr04Distance(5);
 
 }

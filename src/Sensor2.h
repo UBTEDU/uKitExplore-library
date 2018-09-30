@@ -27,8 +27,8 @@ public:
   void setRgbledColor(int red, int green, int blue);//板载RGB灯函数
   void setcolor(int color);
   float readBatteryVoltage();
-  float readHcsr04Distance(char jp); //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
-  float readHcsr04Distance(char EchoPin,char TrigPin); //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
+  long readHcsr04Distance(unsigned char jp); //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
+
 
   const char IR_S=3;
   //Button_pin
@@ -50,12 +50,11 @@ public:
   const char bluePin = 46;
 
   //HC-SR04
-  char Trig;
-  char Echo;
+  unsigned char Trig;
+  unsigned char Echo;
   
 
 };
 
 
 #endif
-

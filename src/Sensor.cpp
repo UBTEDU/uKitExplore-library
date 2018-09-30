@@ -176,7 +176,8 @@ float Sensor::readBatteryVoltage(){
  }
 
 
- float Sensor::readHcsr04Distance(char jp){
+long Sensor::readHcsr04Distance(unsigned char jp){
+  float distance=0;
   if(jp==1){
     Trig=A0;
     Echo=A1;
@@ -185,29 +186,16 @@ float Sensor::readBatteryVoltage(){
     Trig=A2;
     Echo=A3;
   }
+  pinMode(Echo, INPUT);    // 定义超声波输入脚
+  pinMode(Trig, OUTPUT);   // 定义超声波输出脚 
   digitalWrite(Trig, LOW);   // 给触发脚低电平2μs
   delayMicroseconds(2);
   digitalWrite(Trig, HIGH);  // 给触发脚高电平10μs，这里至少是10μs
   delayMicroseconds(10);
   digitalWrite(Trig, LOW);    // 持续给触发脚低电
-  float distance = pulseIn(Echo, HIGH)/58.00;  // 读取高电平时间(单位：微秒)
+  distance = pulseIn(Echo, HIGH)/58.00;  // 读取高电平时间(单位：微秒)
   delay(10);
   //为什么除以58等于厘米，  Y米=（X秒*344）/2
   // X秒=（ 2*Y米）/344 ==》X秒=0.0058*Y米 ==》厘米=微秒/58
   return distance;
  }
-  float Sensor::readHcsr04Distance(char EchoPin,char TrigPin){
-  digitalWrite(TrigPin, LOW);   // 给触发脚低电平2μs
-  delayMicroseconds(2);
-  digitalWrite(TrigPin, HIGH);  // 给触发脚高电平10μs，这里至少是10μs
-  delayMicroseconds(10);
-  digitalWrite(TrigPin, LOW);    // 持续给触发脚低电
-  float distance = pulseIn(EchoPin, HIGH)/58.00;  // 读取高电平时间(单位：微秒)
-  delay(10);
-  //为什么除以58等于厘米，  Y米=（X秒*344）/2
-  // X秒=（ 2*Y米）/344 ==》X秒=0.0058*Y米 ==》厘米=微秒/58
-  return distance;
- }
-
-
-
