@@ -3,7 +3,7 @@
 unsigned char  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
   unsigned char hData[1];
   volatile int State=0;
-  unsigned int  inval;
+  unsigned int  inval=0;
   hData[0]=ID;
   if(State==0){
     State=TXD(0xF8,1,1,0x02,hData);
@@ -444,7 +444,7 @@ int uKitSensor::readButtonValue(char id){
 int uKitSensor::readUltrasonicDistance(char id){
   unsigned char tData[1];
   volatile int State=0;
-  int distance;
+  int distance=0;
   tData[0]=id;
   if(State==0){
     State=TXD(0xF5,1,1,0x02,tData);
@@ -452,7 +452,6 @@ int uKitSensor::readUltrasonicDistance(char id){
   }
    distance+=TXD(0xF5,1,1,4,tData);
    distance/=10;
-   if(distance!=0)
     return distance; 
   delay(5);
 }

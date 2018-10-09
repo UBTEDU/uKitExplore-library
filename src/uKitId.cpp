@@ -428,9 +428,9 @@ unsigned char uKitId::getServoId(char id){
 
 void uKitId::setDeciveId(){
   unsigned char buf[20]={0};
-  unsigned char zeronum,num,numlength,decive=0;
-  String single,ten;
-  int id_1,id_2,id;
+  unsigned char zeronum=0,num=0,numlength=0,decive=0;
+  String single="",ten="";
+  int id_1=0,id_2=0,id=0;
   static int i=0;
   String comdata="";
    if(i==0){
@@ -442,14 +442,14 @@ void uKitId::setDeciveId(){
   }  
     while (Serial.available() > 0){
         comdata += char(Serial.read());
-        delay(2);//为了防止数据丢失,在此设置短暂延时delay(2)        
+        delay(2);//为了防止数据丢失,在此设置短暂延时delay(2)         
     }
       if(comdata.length() !=0){
         ten=comdata[comdata.length()-2];
         id_1=ten.toInt()*10;
         single=comdata[comdata.length()-1];
         id_2=single.toInt();
-        id=id_1+id_2;     
+        id=id_1+id_2;    
         numlength=comdata.length();
         delay(20);
           buf[0]=getSoundId();
@@ -484,7 +484,7 @@ void uKitId::setDeciveId(){
 
             }
           }
-                  
+               
         if((id==0 | id>18 | numlength>2) & decive>=8 ){
           Serial.println("  *请输入1至18的正整数");
           comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加

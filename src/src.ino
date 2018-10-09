@@ -7,6 +7,9 @@ void setup() {
 }
 
 void loop() {
-   readHcsr04Distance(5);
+   Serial.println(readUltrasonicDistance(2));
+   delay(300);
+   
+   
 
 }
