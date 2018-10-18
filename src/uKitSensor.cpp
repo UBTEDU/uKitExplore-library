@@ -352,7 +352,7 @@ unsigned char *uKitSensor::readColorRgb(char id){
        
     }
     return value;
-    delete [] value;
+
    
      
     
@@ -370,53 +370,52 @@ void uKitSensor::setColorOff(char id){
 bool uKitSensor::readColor(char id,String color){
   unsigned char *ColorRgb=NULL;  
   unsigned int *buf=NULL;
-  bool state=0;
+  bool state=false;
   ColorRgb=readColorRgb(id);//ColorRgb[0]为R,ColorRgb[1]为G,ColorRgb[2]为B
   delay(5);
   buf=Rgb2Hsb(ColorRgb[0],ColorRgb[1],ColorRgb[2]);
   delay(5);
-  delete [] ColorRgb;
+  
   if(color!="Black"&& (buf[1]>15 & buf[2]>25)){    
-    if(color=="Red" && ((buf[0]>=0 & buf[0]<=11)||(buf[0]>=340 & buf[0]<=360))){
-      state=1;
+    if(color=="Red" && ((buf[0]>0 & buf[0]<=11)||(buf[0]>=340 & buf[0]<=360))){
+      state=true;
     } 
    else if(color=="Orange" && ((buf[0]>=18 & buf[0]<=39))){
-    state=1;
+    state=true;
     }     
    else if(color=="Yellow" && ((buf[0]>=41 & buf[0]<=62))){//yellow
-     state=1;
+     state=true;
     } 
   else if(color=="Green" && ((buf[0]>=67 & buf[0]<=169))){
-      state=1;
+      state=true;
     }   
  
    else if(color=="Purple" && ((buf[0]>=256 & buf[0]<=337))){
-     state=1;
+     state=true;
    }
 
     else if(color=="Blue" && ((buf[0]>194 & buf[0]<=255))){
-      state=1;
+      state=true;
     }
     else if(color=="Cyan" && ((buf[0]>=170 & buf[0]<=193))){
-      state=1;
+      state=true;
     }
   
  }
   else if(color=="White" && buf[0]<20 && (buf[1]<=7) &&buf[2]>=80){
-    state=1;
+    state=true;
   }
   else if(color=="Black"  &&( buf[2]<=25)){
     state=1;
   }
   else if(color=="Gray" && buf[0]>80 & buf[1]<=15 & (buf[2]>=30)&&(buf[1]<buf[2])){
-    state=1;
+    state=true;
   } 
 
   else{
-    state=0;
+    state=false;
   }
-
-     //delete [] ColorRgb;
+    delete [] ColorRgb;
     delete [] buf;
     return state;
    

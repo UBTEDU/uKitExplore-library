@@ -669,7 +669,7 @@ signed long SemiduplexSerial::TXD(unsigned char len,unsigned char choice,unsigne
         
       }
       else if(choice=='F'){
-       tRet=((Rx_Buf[len+6]<<8) | (Rx_Buf[len+7] & 0xff))/10;
+       tRet=ceil(((Rx_Buf[len+6]<<8) | (Rx_Buf[len+7] & 0xff))/10.0);
         tRet*=1.8;
         tRet+=32;
             

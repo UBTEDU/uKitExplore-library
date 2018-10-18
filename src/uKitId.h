@@ -49,8 +49,11 @@ public:
     unsigned char getServoId(char id);  
     
     void setDeciveId();
+    void setAllDeciveId(unsigned char decive,unsigned char oldid,unsigned char newid);
     void setDeciveIdEn();
     void getDeciveId();
+    void getDeciveIdJs();
+   
     void getDeciveIdEn();
 
  };

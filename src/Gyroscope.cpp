@@ -1,7 +1,7 @@
 #include"Gyroscope.h"
 
 float *Gyroscope::getMpu6050Data(){
-   float *data = new float[3];
+   float *data =NULL;
   static int initFlog=0;
   if(initFlog==0){
     Wire.begin();
