@@ -6,7 +6,7 @@
 void uKitServo::setServoTurn(char id,int dir, int speed){
   unsigned char buf[4];
   volatile int t=0;
-  int speeds;
+  int speeds=0;
   speeds=constrain((speed*3.92),0,1000);
  
   if(t!=speeds)
