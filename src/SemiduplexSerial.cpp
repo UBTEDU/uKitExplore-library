@@ -586,25 +586,75 @@ Retry_Servo:
   delete [] data;
   
 }
-
 unsigned long SemiduplexSerial::TXD(unsigned char len,unsigned char * Data){
    unsigned char Rx_Buf[23];
-  unsigned long tRet = 0;
+  unsigned long tRet = 0,lens=0;
   memset((void *)Rx_Buf,0,sizeof(Rx_Buf));
-  
-  Serial3.begin(115200);  //uart3
-  Serial3.setTimeout(len+5*87*110/100/400);  //设置超时ms
-  Serial2.begin(115200);  //设置波特率
+  lens=len+5;
+  Serial3.begin(115200,SERIAL_8N1);  //uart3
+  Serial3.setTimeout(lens*87*110/100/400);  //设置超时ms
+  Serial2.begin(115200,SERIAL_8N1);  //设置波特率
   Serial2.write(Data,len);  //发送消息
   Serial2.end();  //关闭串口2,否则会影响接收消息
   Serial3.readBytes(Rx_Buf,23); //接收应答
   Serial3.end();  //关闭串口3,否则会影响接收消息
 
-
-  if((Rx_Buf[6]==4 |Rx_Buf[6]==6 | Rx_Buf[6]==3) &( Rx_Buf[8]==3 | Rx_Buf[8]==1)){//move&stop&setid//getsoundid
+  if((Rx_Buf[6]==4 |Rx_Buf[6]==6 | Rx_Buf[6]==3) &( Rx_Buf[8]==3 | Rx_Buf[8]==1)){//move&stop&setid//getsoundid   
+     if(Rx_Buf[len+3]==0x05 & Rx_Buf[len+5]==0){   
+      tRet= Rx_Buf[len+6]<<8 | Rx_Buf[len+7]&0xff; 
+    }
+    else{
+      tRet=0;
+    }
     
-     if(Rx_Buf[len+3]==0x05 & Rx_Buf[len+5]==0){
-     
+  }
+  else if((Rx_Buf[6]==7)  & (Rx_Buf[8]==1)){//readspeed
+    if(Rx_Buf[len+3]==0x05 & Rx_Buf[len+5]==0){
+      tRet=abs((Rx_Buf[len+6]<<8) | (Rx_Buf[len+7] &0xff));
+    }
+    else{
+      tRet=0;//停止成功返回0 
+      
+    }
+  }  
+    else if((Rx_Buf[6]==0)  & (Rx_Buf[8]==1)){//sound read
+    if(Rx_Buf[len+3]==0x05 & Rx_Buf[len+5]==0){
+       tRet=(Rx_Buf[len+6]<<8) |(Rx_Buf[len+7] & 0xff);
+    }
+    else{
+      tRet=0;//停止成功返回0 
+      
+    }
+  }  
+    else if(Rx_Buf[6]==0x0e  & Rx_Buf[8]==0x01){//readspeed
+    if(Rx_Buf[len+3]==0x06 & Rx_Buf[len+5]==0){
+        tRet=0;//停止成功返回0
+
+    }
+    else{
+      tRet=0;//停止成功返回0 
+      
+    }
+  }
+
+  memset((void *)Data,0,sizeof(Data));
+  return tRet;
+}
+unsigned long SemiduplexSerial::MTXD(unsigned char len,unsigned char * Data){
+   unsigned char Rx_Buf[23];
+  unsigned long tRet = 0,lens=0;
+  memset((void *)Rx_Buf,0,sizeof(Rx_Buf));
+  lens=len+5;
+  Serial3.begin(114200,SERIAL_8N1);  //uart3
+  Serial3.setTimeout(lens*87*110/100/400);  //设置超时ms
+  Serial2.begin(114200,SERIAL_8N1);  //设置波特率
+  Serial2.write(Data,len);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  Serial3.readBytes(Rx_Buf,23); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+
+  if((Rx_Buf[6]==4 |Rx_Buf[6]==6 | Rx_Buf[6]==3) &( Rx_Buf[8]==3 | Rx_Buf[8]==1)){//move&stop&setid//getsoundid   
+     if(Rx_Buf[len+3]==0x05 & Rx_Buf[len+5]==0){   
       tRet= Rx_Buf[len+6]<<8 | Rx_Buf[len+7]&0xff; 
     }
     else{

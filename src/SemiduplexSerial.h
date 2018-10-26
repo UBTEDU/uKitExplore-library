@@ -16,6 +16,7 @@ public:
     unsigned long TXD(unsigned char Head,unsigned char ServoNO,unsigned char len,unsigned char CMD,unsigned char * Data);
     unsigned char * TXDRandom(unsigned char Head,unsigned char ServoNO,unsigned char len,unsigned char CMD,unsigned char * Data);
     unsigned long TXD(unsigned char len,unsigned char * Data);
+    unsigned long MTXD(unsigned char len,unsigned char * Data);
    
     signed long TXD(unsigned char len,unsigned char choice,unsigned char * Data);
   

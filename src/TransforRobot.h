@@ -60,7 +60,7 @@ public:
     const signed char omotion[1][12]={{90,-75,55,-5,-5,0,-90,75,-55,5,5,0}};  
     const signed char mzero[1][12]={{0,0,0,0,0,0,0,0,0,0,0,0}};   
     const int get_up_times[5]={600,600,1000,1000,1000};
-    const int sitdown_times[5]={400,400,400,400,400};
+    const int sitdown_times[5]={600,600,600,600};
     const int forward_times[4]={300,300,300,250};
     const int back_times[4]={300,300,300,300};//时间    
     const int left_shift_times[2]={280,280};//时间
@@ -80,4 +80,3 @@ public:
 };
 
 #endif
-

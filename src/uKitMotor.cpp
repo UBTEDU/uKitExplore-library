@@ -19,7 +19,7 @@ unsigned long uKitMotor::setMotorTurn(uint8_t id, uint16_t pwmDuty){
   buf[9] = (speeds & 0xFF00) >> 8;
   buf[10] = speeds & 0x00FF;
   buf[11] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(12,buf);  
+  tRet=MTXD(12,buf);  
   return tRet;
 }
 /**@brief EN:Motor run at a target speed for a target time/CN:电机以目标速度为目标时间运行.
@@ -50,7 +50,7 @@ unsigned long uKitMotor::setMotorTurnAdj(uint8_t id, uint16_t speed, uint16_t ti
   buf[13] = 0x00;
   buf[14] = 0x01;
   buf[15] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(16,buf);  
+  tRet=MTXD(16,buf);  
   return tRet;
 }
 /**@brief Read motor speed.
@@ -73,7 +73,7 @@ uint16_t uKitMotor::readMotorSpeed(uint8_t id){
   buf[7] = 0x00;
   buf[8] = 0x01;
   buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(10,buf);
+  tRet=MTXD(10,buf);
   return tRet;
 }
 /**@brief EN:Motor stop/CN:电机停止.
@@ -99,7 +99,7 @@ int uKitMotor::setMotorStop(uint8_t id)
   buf[9] = 0x00;
   buf[10] = 0x00;
   buf[11] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(12,buf);
+  tRet=MTXD(12,buf);
   return tRet;
 }
 /**@brief EN:Set motor module ID/CN:设置电机ID号.
@@ -114,5 +114,3 @@ void uKitMotor::StopServo()
   unsigned char aa[4]={0xFF,0,0,0};
   TXD(0xFA,0,4,0x01,aa); 
 }
-
-

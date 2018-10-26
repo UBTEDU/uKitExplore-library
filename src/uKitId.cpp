@@ -169,12 +169,12 @@ unsigned char uKitId::setMotorId(uint8_t id_old, uint8_t id_new){
   buf[9] = 0x00;
   buf[10] = id_new;
   buf[11] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(12,buf); 
+  tRet=MTXD(12,buf); 
   return tRet;
 }
 
 unsigned char uKitId::getMotorId(){
-  unsigned long tRet = 0;
+  unsigned char tRet = 0;
   unsigned char buf[10];
   for(int testid=1;testid<=18;testid++){
     buf[0] = 0xFB;//帧头
@@ -187,18 +187,19 @@ unsigned char uKitId::getMotorId(){
     buf[7] = 0x00;
     buf[8] = 0x01;
     buf[9] = crc8_itu(&buf[1], buf[2]+2);
-    tRet=TXD(10,buf); 
+    tRet=MTXD(10,buf); 
     delay(5); 
     if(tRet==testid){
       return tRet;
     }
-    delay(5);
-     
+    else{
+      return 0;    
+    }
   }
-   return 0; 
+  
 }
 unsigned char uKitId::getMotorId(char id){
-  unsigned long tRet = 0;
+  unsigned char tRet = 0;
   unsigned char buf[10];
     buf[0] = 0xFB;//帧头
     buf[1] = 0x03;//设备类型
@@ -210,7 +211,7 @@ unsigned char uKitId::getMotorId(char id){
     buf[7] = 0x00;
     buf[8] = 0x01;
     buf[9] = crc8_itu(&buf[1], buf[2]+2);
-    tRet=TXD(10,buf); 
+    tRet=MTXD(10,buf); 
     delay(5);  
     return tRet; 
 }
@@ -991,7 +992,7 @@ void uKitId::getDeciveId(){
   for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getServoId(i);
-      idbuf[i+18]=getMotorId(i);
+      idbuf[i+18]=getMotorId(i); 
       idbuf[i+36]=getInfraredId(i);
       idbuf[i+46]=getUltrasonicId(i);
       idbuf[i+56]=getLedId(i);
