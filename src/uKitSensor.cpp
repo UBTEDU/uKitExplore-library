@@ -333,34 +333,39 @@ unsigned char uKitSensor::readColorRgb(char id,unsigned char RGB){
     return Value;
           
  }
+ 
 unsigned char *uKitSensor::readColorRgb(char id){
   unsigned  char tData[1];
   unsigned char *values=NULL;
-
+ 
   tData[0]=id;
   unsigned char getid=0;
   volatile int State=0;
+  values=TXDRandom(0xE8,1,1,4,tData);   
   if(State==0){
     getid=TXD(0xE8,1,1,2,tData);  
     delay(10); 
     State=1;
-    
-    
+     
   }
+  
     if(getid==id){
     values=TXDRandom(0xE8,1,1,4,tData);  
     delay(180);   
+
     }
     else {
-       memset((void *)values,0,sizeof(values));
+         
+      values[0]=0;
+      values[1]=0;
+      values[2]=0;      
        
     }
+    
     return values;
+  
 
    
-     
-    
-    
     
           
  }
@@ -372,11 +377,12 @@ void uKitSensor::setColorOff(char id){
     delay(5);   
  }
 bool uKitSensor::readColor(char id,String color){
-  unsigned char *ColorRgb=NULL;  
+  unsigned char *ColorRgb=NULL;
   unsigned int *buf=NULL;
   bool state=false;
   ColorRgb=readColorRgb(id);//ColorRgb[0]为R,ColorRgb[1]为G,ColorRgb[2]为B
   delay(5);
+
   buf=Rgb2Hsb(ColorRgb[0],ColorRgb[1],ColorRgb[2]);
   delay(5);
   

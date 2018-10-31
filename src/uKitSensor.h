@@ -19,7 +19,7 @@ public:
     void setEyelightPetal(char id,unsigned char petalsnum,unsigned char petals[8][4],unsigned char time);
     void setEyelightPetals(char id,unsigned char petalsnum,String petals);
    
-
+    
 
     void setEyelightOff(char id);
     unsigned char  readColorRgb(char id,unsigned char RGB);
@@ -41,4 +41,3 @@ public:
 };
 
 #endif
-

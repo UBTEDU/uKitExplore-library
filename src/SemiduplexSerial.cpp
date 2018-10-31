@@ -403,9 +403,9 @@ unsigned char  * SemiduplexSerial::TXDRandom(unsigned char Head,unsigned char Se
   unsigned long temp = 2; //2ms 发完
   unsigned char buf[40];
   unsigned char length = 9; //9+1
-
-  unsigned char Usart3_Rx_Ack_Len=0;
   
+  unsigned char Usart3_Rx_Ack_Len=0;
+   memset((void *)data,0,sizeof(data));
   memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
   memset((void *)buf,0,sizeof(buf));
   Usart3_Rx_Ack_Len = 30; //应答消息长度

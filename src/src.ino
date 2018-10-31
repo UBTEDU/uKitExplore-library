@@ -1,37 +1,57 @@
 #include "uKitExplore2.h"
-#include <LCD5110_Basic.h>
-LCD5110 myGLCD(8,4,5,6,7);
-extern uint8_t SmallFont[];
-unsigned char buf[3]={0};
-int x=0;
+
+unsigned char *rgbValue1=NULL;
+
 void setup() {
-    //Initialization();
-     myGLCD.InitLCD(); //Intializing LCD
-    Serial.begin(115200);
-    buf[1]=uKitId.getMotorId(2);
-   x=0;
-    delay(20);
+    Initialization();
 }
 
 void loop() {
+    rgbValue1=readColorRgb(1);
+    Serial.println(rgbValue1[0]);
+    Serial.println(rgbValue1[1]);
+    Serial.println(rgbValue1[2]);
+    if (readColor(1,"Red")) {
+        Serial.println("红色");
 
-   setMotorTurnAdj(2,50,0xffff);
-  if(buf[0]==1){
-        setRgbledColor(255,0,0);
-        delay(100);
-  }
-   if(buf[1]==2){
-    tone(110,200);
-  }
-  x= readMotorSpeed(2);
-  buf[0]=0;
-  buf[1]=0;
-  setRgbledColor(0,0,0);    
-  myGLCD.setFont(SmallFont);
-  myGLCD.printNumI(x, CENTER, 16);
-  delay(200);
-  myGLCD.clrScr();
+    }
+    if (readColor(2,"Green")) {
+        Serial.println("绿色");
+
+    }
+    if (readColor(1,"Blue")) {
+        Serial.println("蓝色");
+
+    }
+    if (readColor(1,"Yellow")) {
+        Serial.println("黄色");
+
+    }
+    if (readColor(1,"Cyan")) {
+        Serial.println("青色");
+
+    }
+    if (readColor(1,"Purple")) {
+        Serial.println("紫色");
+
+    }
+    if (readColor(1,"Orange")) {
+        Serial.println("橙色");
+
+    }
+    if (readColor(1,"Black")) {
+        Serial.println("黑色");
+
+    }
+    if (readColor(1,"White")) {
+        Serial.println("白色");
+
+    }
+    if (readColor(1,"Gray")) {
+        Serial.println("灰色");
+
+    }
 
 
-   
+    delete [] rgbValue1;
 }
