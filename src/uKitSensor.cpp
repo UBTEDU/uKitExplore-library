@@ -290,10 +290,9 @@ signed char uKitSensor::readHumitureValue(char id, char choice){
 int  *uKitSensor::Rgb2Hsb(unsigned char rgbR,unsigned char rgbG,unsigned char rgbB){
   int *temp =NULL; 
   temp=new int[3];
-  int Max=0,Min=0;
+  int Max,Min=0;
   Max=max(max(rgbR,rgbG),rgbB);
   Min=min(min(rgbR,rgbG),rgbB);
- 
   float hsbB= Max/(float)255.00*100;
   float hsbS= Max == 0 ? 0:(Max-Min)/(float)Max*100;
   float hsbH=0;  
@@ -336,36 +335,35 @@ unsigned char uKitSensor::readColorRgb(char id,unsigned char RGB){
  
 unsigned char *uKitSensor::readColorRgb(char id){
   unsigned  char tData[1];
-  unsigned char *values=NULL;
- 
+  unsigned char *value=NULL;
+  
   tData[0]=id;
   unsigned char getid=0;
   volatile int State=0;
-  values=TXDRandom(0xE8,1,1,4,tData);   
   if(State==0){
     getid=TXD(0xE8,1,1,2,tData);  
     delay(10); 
     State=1;
-     
+    
+    
   }
-  
-    if(getid==id){
-    values=TXDRandom(0xE8,1,1,4,tData);  
+ 
+    value=TXDRandom(0xE8,1,1,4,tData);  
     delay(180);   
-
-    }
-    else {
-         
-      values[0]=0;
-      values[1]=0;
-      values[2]=0;      
+    
+    if(getid!=id){
+      value[0]=0;
+      value[1]=0;
+      value[2]=0;
+      
        
     }
-    
-    return values;
-  
+    return value;
 
    
+     
+    
+    
     
           
  }
