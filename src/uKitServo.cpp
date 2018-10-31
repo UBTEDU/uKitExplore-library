@@ -181,13 +181,13 @@ void uKitServo::ServoRead(){
   }
   readServoAnglePD_M(ServoIdRead,t);
 }
-void uKitServo::motion(unsigned char id[],signed char action[][sizeof(id)/sizeof(id[0])],signed char time[],int times){
-  for(int c=0;c<times;c++){
-    for(int i=0;i<sizeof(action)/sizeof(action[0]);i++){
-      for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
-        setServoAngle(id[t],action[i][t],500);
-      }  
-      delay(time[i]);
+
+void uKitServo::playMotion(signed char *id,signed char **action,int *times){
+  for(int i=0;i<sizeof(action)/sizeof(action[0]);i++){
+    for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
+      setServoAngle(id[t],action[i][t],500);
+    }  
+      delay(times[i]);
     }
-  }
+  
 }

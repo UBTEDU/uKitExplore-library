@@ -37,7 +37,7 @@ Gyroscope gyro;
 #define readServoAnglePD_M(read_id,num) uKitServo.readServoAnglePD_M(read_id,num)//单个舵机回读，返回舵机角度值(掉电回读）
 #define readServoAngleNPD(id) uKitServo.readServoAngleNPD(id)//单个舵机回读，返回舵机角度值(不掉电回读）
 #define readServoAngleNPD_M(read_id,num) uKitServo.readServoAngleNPD_M(read_id,num)//单个舵机回读，返回舵机角度值(掉电回读）
-
+#define playMotion(id,action,times) uKitServo.playMotion(id,action,times)//播放动作
 //uKitSensor_API
 
 #define setAllSensorOff() uKitSensor.setAllSensorOff()
