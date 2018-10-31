@@ -12,10 +12,10 @@ public:
     uint16_t readMotorSpeed(uint8_t id);
     int setMotorStop(uint8_t id);
     void StopServo();
+    
 
 
   
 };
 
 #endif
-

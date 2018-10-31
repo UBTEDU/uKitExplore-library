@@ -33,7 +33,7 @@ unsigned char  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
 
 
 unsigned short int uKitSensor::readSoundValue(char id){
-  unsigned short int tRet = 0;
+  unsigned short int tRet = 0,tRet2=0;
   unsigned char buf[10];
   buf[0] = 0xFB;//帧头
   buf[1] = 0x10;//设备类型
@@ -45,11 +45,17 @@ unsigned short int uKitSensor::readSoundValue(char id){
   buf[7] = 0x00;
   buf[8] = 0x01;
   buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=(TXD(10,buf)-2048)/2;
+  tRet=TXD(10,buf);
+  tRet2=(tRet-2048)/2;
   delay(10);
-  if(tRet>1023)
-    tRet=1023;
-  return tRet;
+  if(tRet==0){
+    tRet2=0;
+  }
+  else if(tRet2>=1023){
+    tRet2=1023;
+  }
+    
+  return tRet2;
 }
 unsigned short int uKitSensor::readLightValue(char id){
   unsigned short int tRet = 0;
@@ -284,9 +290,10 @@ signed char uKitSensor::readHumitureValue(char id, char choice){
 int  *uKitSensor::Rgb2Hsb(unsigned char rgbR,unsigned char rgbG,unsigned char rgbB){
   int *temp =NULL; 
   temp=new int[3];
-  int Max,Min=0;
+  int Max=0,Min=0;
   Max=max(max(rgbR,rgbG),rgbB);
   Min=min(min(rgbR,rgbG),rgbB);
+ 
   float hsbB= Max/(float)255.00*100;
   float hsbS= Max == 0 ? 0:(Max-Min)/(float)Max*100;
   float hsbH=0;  
@@ -328,8 +335,8 @@ unsigned char uKitSensor::readColorRgb(char id,unsigned char RGB){
  }
 unsigned char *uKitSensor::readColorRgb(char id){
   unsigned  char tData[1];
-  unsigned char *value=NULL;
-  
+  unsigned char *values=NULL;
+
   tData[0]=id;
   unsigned char getid=0;
   volatile int State=0;
@@ -341,17 +348,14 @@ unsigned char *uKitSensor::readColorRgb(char id){
     
   }
     if(getid==id){
-    value=TXDRandom(0xE8,1,1,4,tData);  
+    values=TXDRandom(0xE8,1,1,4,tData);  
     delay(180);   
     }
     else {
-      value[0]=0;
-      value[1]=0;
-      value[2]=0;
-      
+       memset((void *)values,0,sizeof(values));
        
     }
-    return value;
+    return values;
 
    
      
@@ -375,6 +379,7 @@ bool uKitSensor::readColor(char id,String color){
   delay(5);
   buf=Rgb2Hsb(ColorRgb[0],ColorRgb[1],ColorRgb[2]);
   delay(5);
+  
   
   if(color!="Black"&& (buf[1]>15 & buf[2]>25)){    
     if(color=="Red" && ((buf[0]>0 & buf[0]<=11)||(buf[0]>=340 & buf[0]<=360))){

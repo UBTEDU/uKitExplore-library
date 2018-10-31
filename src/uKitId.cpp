@@ -169,7 +169,7 @@ unsigned char uKitId::setMotorId(uint8_t id_old, uint8_t id_new){
   buf[9] = 0x00;
   buf[10] = id_new;
   buf[11] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=MTXD(12,buf); 
+  tRet=IdTxd(12,buf); 
   return tRet;
 }
 
@@ -183,20 +183,20 @@ unsigned char uKitId::getMotorId(){
     buf[3] = 0x05;//命令号
     buf[4] = testid;//ID
     buf[5] = 0x00;//参数
-    buf[6] = 0x03;
+    buf[6] = 0x09;
     buf[7] = 0x00;
-    buf[8] = 0x01;
+    buf[8] = 0x05;
     buf[9] = crc8_itu(&buf[1], buf[2]+2);
-    tRet=MTXD(10,buf); 
-    delay(5); 
+
+    tRet=IdTxd(10,buf);
+    delay(5);
     if(tRet==testid){
       return tRet;
     }
-    else{
-      return 0;    
-    }
-  }
+    delay(5);
   
+  }
+   return 0;
 }
 unsigned char uKitId::getMotorId(char id){
   unsigned char tRet = 0;
@@ -207,11 +207,11 @@ unsigned char uKitId::getMotorId(char id){
     buf[3] = 0x05;//命令号
     buf[4] = id;//ID
     buf[5] = 0x00;//参数
-    buf[6] = 0x03;
+    buf[6] = 0x09;
     buf[7] = 0x00;
-    buf[8] = 0x01;
+    buf[8] = 0x05;
     buf[9] = crc8_itu(&buf[1], buf[2]+2);
-    tRet=MTXD(10,buf); 
+    tRet=IdTxd(10,buf); 
     delay(5);  
     return tRet; 
 }
@@ -507,6 +507,7 @@ void uKitId::setDeciveId(){
           delay(10);
           buf[9]=getServoId();
           delay(10);
+        
           for(int i=0;i<=9;i++){
             if(buf[i]==0){
               zeronum+=1;
@@ -639,6 +640,7 @@ void uKitId::setDeciveId(){
             Serial.println(buf[17]); 
             Serial.println("  *如需修改其他设备ID，请接入设备，并按下开发板复位键。"); 
           }    
+          
           if(decive==8 & zeronum==9){
             delay(20);
             if(id!=0)

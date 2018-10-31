@@ -398,8 +398,7 @@ Retry_Servo:
 
 unsigned char  * SemiduplexSerial::TXDRandom(unsigned char Head,unsigned char ServoNO,unsigned char len,unsigned char CMD,unsigned char * Data){
   unsigned long tRet = 0;
-  unsigned char *data=NULL;
-  data=new unsigned char [3];  
+  unsigned char *data=new unsigned char [3];  
   unsigned char tCnt = 0;
   unsigned long temp = 2; //2ms 发完
   unsigned char buf[40];
@@ -645,15 +644,25 @@ unsigned long SemiduplexSerial::MTXD(unsigned char len,unsigned char * Data){
   unsigned long tRet = 0,lens=0;
   memset((void *)Rx_Buf,0,sizeof(Rx_Buf));
   lens=len+5;
-  Serial3.begin(114200,SERIAL_8N1);  //uart3
+  Serial3.begin(115200);  //uart3
   Serial3.setTimeout(lens*87*110/100/400);  //设置超时ms
-  Serial2.begin(114200,SERIAL_8N1);  //设置波特率
+  Serial2.begin(115200);  //设置波特率
   Serial2.write(Data,len);  //发送消息
   Serial2.end();  //关闭串口2,否则会影响接收消息
   Serial3.readBytes(Rx_Buf,23); //接收应答
   Serial3.end();  //关闭串口3,否则会影响接收消息
 
-  if((Rx_Buf[6]==4 |Rx_Buf[6]==6 | Rx_Buf[6]==3) &( Rx_Buf[8]==3 | Rx_Buf[8]==1)){//move&stop&setid//getsoundid   
+  if(Rx_Buf[len+4]==0){
+    Serial3.begin(114200);  //uart3
+    Serial3.setTimeout(lens*88*110/100/400);  //设置超时ms
+    Serial2.begin(114200);  //设置波特率
+    Serial2.write(Data,len);  //发送消息
+    Serial2.end();  //关闭串口2,否则会影响接收消息
+    Serial3.readBytes(Rx_Buf,23); //接收应答
+    Serial3.end();  //关闭串口3,否则会影响接收消息
+  }
+
+  if((Rx_Buf[6]==4 |Rx_Buf[6]==6 | Rx_Buf[6]==3 ) &( Rx_Buf[8]==3 | Rx_Buf[8]==1)){//move&stop&setid//getsoundid   
      if(Rx_Buf[len+3]==0x05 & Rx_Buf[len+5]==0){   
       tRet= Rx_Buf[len+6]<<8 | Rx_Buf[len+7]&0xff; 
     }
@@ -661,6 +670,17 @@ unsigned long SemiduplexSerial::MTXD(unsigned char len,unsigned char * Data){
       tRet=0;
     }
     
+  }
+  else if(Rx_Buf[6]==9  && Rx_Buf[8]==5){//id
+    
+    if(Rx_Buf[len+3]==0x05 & Rx_Buf[len+5]==0){
+      tRet=Rx_Buf[len+4];
+          
+    }
+    else{
+      tRet=0;
+      
+    }
   }
   else if((Rx_Buf[6]==7)  & (Rx_Buf[8]==1)){//readspeed
     if(Rx_Buf[len+3]==0x05 & Rx_Buf[len+5]==0){
@@ -694,7 +714,45 @@ unsigned long SemiduplexSerial::MTXD(unsigned char len,unsigned char * Data){
   memset((void *)Data,0,sizeof(Data));
   return tRet;
 }
+unsigned char SemiduplexSerial::IdTxd(unsigned char len,unsigned char * Data){
+   unsigned char Rx_Buf[23];
+  unsigned char tRet = 0,tCnt=0;
+  unsigned long lens=0;
+  memset((void *)Rx_Buf,0,sizeof(Rx_Buf));
+  lens=len+5;
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(lens*88*110/100/400);  //设置超时ms
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(Data,len);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  Serial3.readBytes(Rx_Buf,23); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
 
+if(Rx_Buf[len+4]==0){
+    Serial3.begin(114200);  //uart3
+  Serial3.setTimeout(lens*88*110/100/400);  //设置超时ms
+  Serial2.begin(114200);  //设置波特率
+  Serial2.write(Data,len);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  Serial3.readBytes(Rx_Buf,23); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+}
+    
+    if(Rx_Buf[len+3]==0x05 && Rx_Buf[len+5]==0){
+      tRet=Rx_Buf[len+4];
+          
+    }
+    else{
+      tRet=0;
+      
+    }
+
+  
+  
+
+  //memset((void *)Data,0,sizeof(Data));
+  return tRet;
+}
 signed long SemiduplexSerial::TXD(unsigned char len,unsigned char choice,unsigned char * Data){
   unsigned char Rx_Buf[26];
   signed long tRet = 0;
