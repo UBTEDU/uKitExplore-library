@@ -33,7 +33,7 @@ unsigned char  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
 
 
 unsigned short int uKitSensor::readSoundValue(char id){
-  unsigned short int tRet = 0,tRet2=0;
+  int tRet = 0,tRet2=0;
   unsigned char buf[10];
   buf[0] = 0xFB;//帧头
   buf[1] = 0x10;//设备类型
@@ -45,12 +45,13 @@ unsigned short int uKitSensor::readSoundValue(char id){
   buf[7] = 0x00;
   buf[8] = 0x01;
   buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(10,buf);
-  tRet2=(tRet-2048)/2;
-  delay(10);
-  if(tRet==0){
+  tRet=(TXD(10,buf)-2048);
+  tRet2=tRet/2;
+  delay(15);
+  if(tRet==0 || tRet<0){
     tRet2=0;
   }
+
   else if(tRet2>=1023){
     tRet2=1023;
   }
