@@ -51,10 +51,12 @@ public:
     void setDeciveId();
     void setAllDeciveId(unsigned char decive,unsigned char oldid,unsigned char newid);
     void setDeciveIdEn();
+    void setDeciveIdKo();
     void getDeciveId();
     void getDeciveIdJs();
    
     void getDeciveIdEn();
+     void getDeciveIdKo();
 
  };
  #endif
