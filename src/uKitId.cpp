@@ -1299,56 +1299,59 @@ void uKitId::getDeciveId(){
       idbuf[i+76]=getLightId(i);
       idbuf[i+86]=getSoundId(i);           
       idbuf[i+96]=getHumitureId(i);              
-      idbuf[i+106]=getColorId(i);                  
-      if(idbuf[i]!=0){
+      idbuf[i+106]=getColorId(i);  
+                      
+      if(idbuf[i]!=0 && idbuf[i]<19){
         ++decivenum[0];
         deciveid[decivenum[0]]=idbuf[i];
       }  
-      if(idbuf[i+18]!=0){
+      if(idbuf[i+18]!=0 && idbuf[i+18]<19){
         ++decivenum[1];
         deciveid[decivenum[1]+18]=idbuf[i+18];
       } 
-      if(idbuf[i+36]!=0){
+      if(idbuf[i+36]!=0 && idbuf[i+36]<11){
         ++decivenum[2];
         deciveid[decivenum[2]+36]=idbuf[i+36];
       } 
-      if(idbuf[i+46]!=0){
+      if(idbuf[i+46]!=0 && idbuf[i+46]<11){
         ++decivenum[3];
         deciveid[decivenum[3]+46]=idbuf[i+46];
       } 
-      if(idbuf[i+56]!=0){
+      if(idbuf[i+56]!=0 && idbuf[i+56]<11){
         ++decivenum[4];
         deciveid[decivenum[4]+56]=idbuf[i+56];
       } 
-      if(idbuf[i+66]!=0){
+      if(idbuf[i+66]!=0 && idbuf[i+66]<11){
         ++decivenum[5];
         deciveid[decivenum[5]+66]=idbuf[i+66];
       } 
-      if(idbuf[i+76]!=0){
+      if(idbuf[i+76]!=0 && idbuf[i+76]<11){
         ++decivenum[6];
         deciveid[decivenum[6]+76]=idbuf[i+76];
       } 
-      if(idbuf[i+86]!=0){
+      if(idbuf[i+86]!=0 && idbuf[i+86]<11){
         ++decivenum[7];
         deciveid[decivenum[7]+86]=idbuf[i+86];
       } 
-      if(idbuf[i+96]!=0){
+      if(idbuf[i+96]!=0 && idbuf[i+96]<11){
         ++decivenum[8];
         deciveid[decivenum[8]+96]=idbuf[i+96];
       } 
-      if(idbuf[i+106]!=0){
-        ++decivenum[9];
+      if(idbuf[i+106]!=0 && idbuf[i+106]<11){
+        ++decivenum[9]; 
         deciveid[decivenum[9]+106]=idbuf[i+106];
+        
+
       } 
   }
   else{
       idbuf[i]=getServoId(i);
       idbuf[i+18]=getMotorId(i);
-      if(idbuf[i]!=0){
+      if(idbuf[i]!=0 && idbuf[i]<19){
         ++decivenum[0];
         deciveid[decivenum[0]]=idbuf[i];
       } 
-      if(idbuf[i+18]!=0){
+      if(idbuf[i+18]!=0 && idbuf[i+18]<19){
         ++decivenum[1];
         deciveid[decivenum[1]+18]=idbuf[i+18];
       } 
@@ -1458,8 +1461,16 @@ void uKitId::getDeciveId(){
   if(decivenum[9]!=0){      
     Serial.print(" 【颜色传感器】");
     for(int i=1;i<=decivenum[9];i++){
-      Serial.print("ID-");
-      Serial.print(deciveid[i+106]);
+      Serial.print("ID-"); 
+//      if(deciveid[i+106]==254){
+//        Serial.print(i+1);
+//        Serial.print("重复");  
+//      }
+//      else{
+      
+      Serial.print(deciveid[i+106]); 
+    //  }  
+       
       if(i!=decivenum[9]){
         Serial.print("、");
       }   
@@ -1645,7 +1656,7 @@ void uKitId::getDeciveIdEn(){
   for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getServoId(i);
-      idbuf[i+18]=getMotorId(i);
+      idbuf[i+18]=getMotorId(i); 
       idbuf[i+36]=getInfraredId(i);
       idbuf[i+46]=getUltrasonicId(i);
       idbuf[i+56]=getLedId(i);
@@ -1653,56 +1664,59 @@ void uKitId::getDeciveIdEn(){
       idbuf[i+76]=getLightId(i);
       idbuf[i+86]=getSoundId(i);           
       idbuf[i+96]=getHumitureId(i);              
-      idbuf[i+106]=getColorId(i);                  
-      if(idbuf[i]!=0){
+      idbuf[i+106]=getColorId(i);  
+                      
+      if(idbuf[i]!=0 && idbuf[i]<19){
         ++decivenum[0];
         deciveid[decivenum[0]]=idbuf[i];
       }  
-      if(idbuf[i+18]!=0){
+      if(idbuf[i+18]!=0 && idbuf[i+18]<19){
         ++decivenum[1];
         deciveid[decivenum[1]+18]=idbuf[i+18];
       } 
-      if(idbuf[i+36]!=0){
+      if(idbuf[i+36]!=0 && idbuf[i+36]<11){
         ++decivenum[2];
         deciveid[decivenum[2]+36]=idbuf[i+36];
       } 
-      if(idbuf[i+46]!=0){
+      if(idbuf[i+46]!=0 && idbuf[i+46]<11){
         ++decivenum[3];
         deciveid[decivenum[3]+46]=idbuf[i+46];
       } 
-      if(idbuf[i+56]!=0){
+      if(idbuf[i+56]!=0 && idbuf[i+56]<11){
         ++decivenum[4];
         deciveid[decivenum[4]+56]=idbuf[i+56];
       } 
-      if(idbuf[i+66]!=0){
+      if(idbuf[i+66]!=0 && idbuf[i+66]<11){
         ++decivenum[5];
         deciveid[decivenum[5]+66]=idbuf[i+66];
       } 
-      if(idbuf[i+76]!=0){
+      if(idbuf[i+76]!=0 && idbuf[i+76]<11){
         ++decivenum[6];
         deciveid[decivenum[6]+76]=idbuf[i+76];
       } 
-      if(idbuf[i+86]!=0){
+      if(idbuf[i+86]!=0 && idbuf[i+86]<11){
         ++decivenum[7];
         deciveid[decivenum[7]+86]=idbuf[i+86];
       } 
-      if(idbuf[i+96]!=0){
+      if(idbuf[i+96]!=0 && idbuf[i+96]<11){
         ++decivenum[8];
         deciveid[decivenum[8]+96]=idbuf[i+96];
       } 
-      if(idbuf[i+106]!=0){
-        ++decivenum[9];
+      if(idbuf[i+106]!=0 && idbuf[i+106]<11){
+        ++decivenum[9]; 
         deciveid[decivenum[9]+106]=idbuf[i+106];
+        
+
       } 
   }
   else{
       idbuf[i]=getServoId(i);
       idbuf[i+18]=getMotorId(i);
-      if(idbuf[i]!=0){
+      if(idbuf[i]!=0 && idbuf[i]<19){
         ++decivenum[0];
         deciveid[decivenum[0]]=idbuf[i];
       } 
-      if(idbuf[i+18]!=0){
+      if(idbuf[i+18]!=0 && idbuf[i+18]<19){
         ++decivenum[1];
         deciveid[decivenum[1]+18]=idbuf[i+18];
       } 
@@ -1836,7 +1850,7 @@ void uKitId::getDeciveIdKo(){
   for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getServoId(i);
-      idbuf[i+18]=getMotorId(i);
+      idbuf[i+18]=getMotorId(i); 
       idbuf[i+36]=getInfraredId(i);
       idbuf[i+46]=getUltrasonicId(i);
       idbuf[i+56]=getLedId(i);
@@ -1844,56 +1858,59 @@ void uKitId::getDeciveIdKo(){
       idbuf[i+76]=getLightId(i);
       idbuf[i+86]=getSoundId(i);           
       idbuf[i+96]=getHumitureId(i);              
-      idbuf[i+106]=getColorId(i);                  
-      if(idbuf[i]!=0){
+      idbuf[i+106]=getColorId(i);  
+                      
+      if(idbuf[i]!=0 && idbuf[i]<19){
         ++decivenum[0];
         deciveid[decivenum[0]]=idbuf[i];
       }  
-      if(idbuf[i+18]!=0){
+      if(idbuf[i+18]!=0 && idbuf[i+18]<19){
         ++decivenum[1];
         deciveid[decivenum[1]+18]=idbuf[i+18];
       } 
-      if(idbuf[i+36]!=0){
+      if(idbuf[i+36]!=0 && idbuf[i+36]<11){
         ++decivenum[2];
         deciveid[decivenum[2]+36]=idbuf[i+36];
       } 
-      if(idbuf[i+46]!=0){
+      if(idbuf[i+46]!=0 && idbuf[i+46]<11){
         ++decivenum[3];
         deciveid[decivenum[3]+46]=idbuf[i+46];
       } 
-      if(idbuf[i+56]!=0){
+      if(idbuf[i+56]!=0 && idbuf[i+56]<11){
         ++decivenum[4];
         deciveid[decivenum[4]+56]=idbuf[i+56];
       } 
-      if(idbuf[i+66]!=0){
+      if(idbuf[i+66]!=0 && idbuf[i+66]<11){
         ++decivenum[5];
         deciveid[decivenum[5]+66]=idbuf[i+66];
       } 
-      if(idbuf[i+76]!=0){
+      if(idbuf[i+76]!=0 && idbuf[i+76]<11){
         ++decivenum[6];
         deciveid[decivenum[6]+76]=idbuf[i+76];
       } 
-      if(idbuf[i+86]!=0){
+      if(idbuf[i+86]!=0 && idbuf[i+86]<11){
         ++decivenum[7];
         deciveid[decivenum[7]+86]=idbuf[i+86];
       } 
-      if(idbuf[i+96]!=0){
+      if(idbuf[i+96]!=0 && idbuf[i+96]<11){
         ++decivenum[8];
         deciveid[decivenum[8]+96]=idbuf[i+96];
       } 
-      if(idbuf[i+106]!=0){
-        ++decivenum[9];
+      if(idbuf[i+106]!=0 && idbuf[i+106]<11){
+        ++decivenum[9]; 
         deciveid[decivenum[9]+106]=idbuf[i+106];
+        
+
       } 
   }
   else{
       idbuf[i]=getServoId(i);
       idbuf[i+18]=getMotorId(i);
-      if(idbuf[i]!=0){
+      if(idbuf[i]!=0 && idbuf[i]<19){
         ++decivenum[0];
         deciveid[decivenum[0]]=idbuf[i];
       } 
-      if(idbuf[i+18]!=0){
+      if(idbuf[i+18]!=0 && idbuf[i+18]<19){
         ++decivenum[1];
         deciveid[decivenum[1]+18]=idbuf[i+18];
       } 

@@ -1,12 +1,12 @@
-#include "uKitExplore2Ko.h"
+#include "uKitExplore2.h"
 
-String colours_json;
-unsigned char *rgbValue1=NULL;
+
 
 void setup() {
     Initialization();
 }
 
 void loop() {
-setDeciveId();
+uKitId.getColorId(2);
+delay(200);
 }

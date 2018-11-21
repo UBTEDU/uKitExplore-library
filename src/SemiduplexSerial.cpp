@@ -205,8 +205,16 @@ Retry_Servo:
       }
       else if(CMD==0x06|CMD==0x07)
       {
+        if(Usart3_Rx_Buf[length + 4]==7 && Usart3_Rx_Buf[length + 5]-0xAA!=Data[0]){
+           tRet =254;
+        }
+        else if(Usart3_Rx_Buf[length + 4]==7&& Usart3_Rx_Buf[length + 5]-0xAA==Data[0]){    
+          tRet = Usart3_Rx_Buf[length + 5] - 0xAA;
+        }
+        else{
+          tRet = 0;
+        }
         
-        tRet = Usart3_Rx_Buf[length + 5] - 0xAA;
       }
       
     }
