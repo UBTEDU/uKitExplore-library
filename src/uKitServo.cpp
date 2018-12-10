@@ -47,8 +47,8 @@ void uKitServo::setServoAngle(char id,int angle,int times){
   tData[1]=(times/20);
   tData[2]=((times/20) & 0xFF00) >> 8;
   tData[3]=(times/20) & 0x00FF;
-
   TXD(0xFA,id,4,0x01,tData );
+  
 }
 void uKitServo::setServoStop(char id){
   unsigned char aa[4]={0xFF,0,0,0};
