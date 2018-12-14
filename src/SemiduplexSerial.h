@@ -9,8 +9,12 @@ class SemiduplexSerial
 {  
 public:
    
-
-    
+    unsigned char *ubtColorProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+    unsigned char ubtButtonProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+    unsigned short ubtInfraredProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+    unsigned char ubtEyelightProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+    unsigned char ubtServoProtocol(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data);
+  
     unsigned char Cheak_Sum(unsigned char len, unsigned char *buf);
     unsigned long TXD(unsigned char Head,unsigned char ServoNO,unsigned char len,unsigned char CMD,unsigned char RGB,unsigned char * Data);
     unsigned long TXD(unsigned char Head,unsigned char ServoNO,unsigned char len,unsigned char CMD,unsigned char * Data);

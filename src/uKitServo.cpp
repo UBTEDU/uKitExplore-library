@@ -5,36 +5,25 @@
 
 void uKitServo::setServoTurn(char id,int dir, int speed){
   unsigned char buf[4];
-  volatile int t=0;
   int speeds=0;
-  speeds=constrain((speed*3.92),0,1000);
+  speeds=map(speed,0,255,0,1000);
  
-  if(t!=speeds)
-  {
-    setServoStop(id);
-    t=speeds;
-   
-  }
- 
-    
+     
     if(dir==0){
         buf[0]=0xFD;
         buf[1]=0x00;
         buf[2]=(speeds &0xFF00) >> 8;
-        buf[3] = speeds & 0x00FF;
-      
-        TXD(0xFA,id,4,0x01,buf); 
+        buf[3] = speeds & 0x00FF;          
     }     
     else if(dir==1){
         buf[0]=0xFE;
         buf[1]=0x00;
         buf[2]=(speeds &0xFF00) >> 8;
-        buf[3] = speeds & 0x00FF;
-        TXD(0xFA,id,4,0x01,buf);
-         
+        buf[3] = speeds & 0x00FF;             
     }
         
-  // t=speed;
+  ubtServoProtocol(0xFA,id,0x01,buf);
+  //TXD(0xFA,id,4,0x01,buf); 
   
 }
 

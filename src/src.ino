@@ -1,14 +1,30 @@
 #include "uKitExplore2.h"
 
-
-
+String colours_json;
+volatile int item;
+volatile int item2;
+volatile int item3;
 void setup() {
+      item = 0;
+    item2 = 0;
+    item3 = 0;
+    
     Initialization();
+    item = millis();
+     
 }
 
 void loop() {
-setServoAngle(1,118,600);
-delay(600);
-setServoAngle(1,0,600);
-delay(600);
+item3=uKitId.setLedId(2,1);
+if(item3==170){
+    item2 = millis();
+Serial.println(item2-item);
+while(1);
+}
+
+
+
+    
+
+
 }

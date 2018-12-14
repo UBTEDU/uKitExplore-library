@@ -221,7 +221,8 @@ unsigned char uKitId::setInfraredId(char oldid,char newid){
   unsigned char buf[2];
   buf[0]=oldid;
   buf[1]=newid;
-  tRet=TXD(0xF8,1,2,0x06,buf);
+  //tRet=TXD(0xF8,1,2,0x06,buf);
+  tRet=ubtInfraredProtocol(0xf8,0x07,0x06,buf);
   delay(5);
   return tRet;
  
@@ -231,12 +232,13 @@ unsigned char uKitId::getInfraredId(){
   unsigned char buf[1];
   for(int testid=1;testid<=10;testid++){
     buf[0]=testid;
-    tRet=TXD(0xF8,1,1,0x07,buf);
+    //tRet=TXD(0xF8,1,1,0x07,buf);
+    tRet=ubtInfraredProtocol(0xf8,0x06,0x07,buf);
     delay(5);
     if(tRet==testid){
       return tRet;
     }
-    delay(5);
+   
   }
   return 0;
 
@@ -245,7 +247,7 @@ unsigned char uKitId::getInfraredId(char id){
   unsigned char tRet = 0;
   unsigned char buf[1];
   buf[0]=id;
-  tRet=TXD(0xF8,1,1,0x07,buf);
+  tRet=ubtInfraredProtocol(0xf8,0x06,0x07,buf);
   delay(5);
   return tRet;
 
@@ -255,8 +257,8 @@ unsigned char uKitId::setLedId(char oldid,char newid){
   unsigned char buf[2];
   buf[0]=oldid;
   buf[1]=newid;
-  tRet=TXD(0xF4,1,2,0x06,buf);
-  delay(5);
+  tRet=ubtEyelightProtocol(0xf4,0x07,0x06,buf);
+  delay(2);
   return tRet;
  
 }
@@ -265,12 +267,12 @@ unsigned char uKitId::getLedId(){
   unsigned char buf[1];
   for(int testid=1;testid<=10;testid++){
     buf[0]=testid;
-    tRet=TXD(0xF4,1,1,0x07,buf);
+    tRet=ubtEyelightProtocol(0xf4,0x06,0x07,buf);
     delay(5);
     if(tRet==testid){
       return tRet;
     }
-    delay(5);
+    
   }
   return 0;
 
@@ -278,9 +280,9 @@ unsigned char uKitId::getLedId(){
 unsigned char uKitId::getLedId(char id){
   unsigned char tRet = 0;
   unsigned char buf[1];
-
     buf[0]=id;
-    tRet=TXD(0xF4,1,1,0x07,buf);
+    //tRet=TXD(0xF4,1,1,0x07,buf);
+    tRet=ubtEyelightProtocol(0xf4,0x06,0x07,buf);
     delay(5);
     return tRet;
 
@@ -290,7 +292,8 @@ unsigned char uKitId::setButtonId(char oldid,char newid){
   unsigned char buf[2];
   buf[0]=oldid;
   buf[1]=newid;
-  tRet=TXD(0xF7,1,2,0x06,buf);
+  //tRet=TXD(0xF7,1,2,0x06,buf);
+  tRet=ubtButtonProtocol(0xf7,0x07,0x06,buf);
   delay(5);
   return tRet;
  
@@ -300,12 +303,13 @@ unsigned char uKitId::getButtonId(){
   unsigned char buf[1];
   for(int testid=1;testid<=10;testid++){
     buf[0]=testid;
-    tRet=TXD(0xF7,1,1,0x07,buf);
-    delay(5);
+    //tRet=TXD(0xF7,1,1,0x07,buf);  
+    tRet=ubtButtonProtocol(0xf7,0x06,0x07,buf);
+    delay(2);
     if(tRet==testid){
       return tRet;
     }
-    delay(5);
+
   }
   return 0;
 
@@ -314,7 +318,8 @@ unsigned char uKitId::getButtonId(char id){
   unsigned char tRet = 0;
   unsigned char buf[1];
   buf[0]=id;
-  tRet=TXD(0xF7,1,1,0x07,buf);
+  //tRet=TXD(0xF7,1,1,0x07,buf); 
+  tRet=ubtButtonProtocol(0xf7,0x06,0x07,buf);
   delay(5);
   return tRet;
 
@@ -354,37 +359,39 @@ unsigned char uKitId::getUltrasonicId(char id){
 
 }
 unsigned char uKitId::setColorId(char oldid,char newid){
-  unsigned char tRet = 0;
+  unsigned char *tRet = NULL;
   unsigned char buf[2];
   buf[0]=oldid;
   buf[1]=newid;
-  tRet=TXD(0xE8,1,2,0x06,buf);
-  delay(5);
-  return tRet;
+  //tRet=TXD(0xE8,1,2,0x06,buf);
+  tRet=ubtColorProtocol(0xe8,0x07,0x06,buf);
+  delay(5);  
+  return tRet[0];
  
 }
 
 unsigned char uKitId::getColorId(){
-  unsigned char tRet = 0;
+  unsigned char *tRet = NULL;
   unsigned char buf[1];
   for(int testid=1;testid<=10;testid++){
     buf[0]=testid;
-    tRet=TXD(0xE8,1,1,0x07,buf);
+    tRet=ubtColorProtocol(0xe8,0x06,0x07,buf);
     delay(5);
-    if(tRet==testid){
-      return tRet;
-    }
-    delay(5);
+    if(tRet[0]==testid){
+      return tRet[0];
+    } 
   }
+  delete [] tRet;
+  tRet=NULL;
   return 0;
 }
 unsigned char uKitId::getColorId(char id){
-  unsigned char tRet = 0;
+  unsigned char *tRet = NULL;
   unsigned char buf[1];
   buf[0]=id;
-  tRet=TXD(0xE8,1,1,0x07,buf);
+  tRet=ubtColorProtocol(0xe8,0x06,0x07,buf);;
   delay(5);
-  return tRet;
+  return tRet[0];
 }
 
 unsigned char uKitId::setServoId(char oldid,char newid){
@@ -1300,6 +1307,7 @@ void uKitId::getDeciveId(){
       idbuf[i+86]=getSoundId(i);           
       idbuf[i+96]=getHumitureId(i);              
       idbuf[i+106]=getColorId(i);  
+
                       
       if(idbuf[i]!=0 && idbuf[i]<19){
         ++decivenum[0];

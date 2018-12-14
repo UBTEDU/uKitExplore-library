@@ -21,6 +21,407 @@ unsigned char SemiduplexSerial::Cheak_Sum(unsigned char len, unsigned char *buf)
   return  (uint8_t)(sum);
 }
 
+unsigned char *SemiduplexSerial::ubtColorProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
+  unsigned char tRet=0;
+  unsigned char tCnt = 0;
+  unsigned long temp = 2; //2ms 发完
+  unsigned char buf[20];
+  unsigned char Usart3_Rx_Ack_Len=0;
+  unsigned char *rxBuf= new unsigned char[3];  
+  
+  memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
+  memset((void *)buf,0,sizeof(buf));
+ 
+  buf[0] = Head;  //协议头
+  buf[1] = swab8(Head);
+  buf[2] = len;
+  buf[3] = CMD;
+  memcpy((void *)&buf[4],(void *)Data,len-5);
+  buf[len - 1] = Cheak_Sum( (len - 3),(u8*)&buf[2]);
+  buf[len] = 0xED;
+  if(CMD==0x04){
+    Usart3_Rx_Ack_Len = 16; //应答消息长度 
+  }
+  else{
+    Usart3_Rx_Ack_Len = 7; //应答消息长度 
+  }
+    
+Retry_Servo:
+  
+  temp = (Usart3_Rx_Ack_Len + 5) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(buf,len + 1);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  if(CMD==0x06){
+    delay(10);
+  } 
+  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+  if(tRet == 0){ //没有接收到消息 
+    if( tCnt < 2){
+      tCnt ++;  //重试
+      goto  Retry_Servo;
+    }
+  }
+  else{ //接收到消息
+   
+    if(Usart3_Rx_Buf[len+1]==0xE8 && Usart3_Rx_Buf[len+2]==0x8E && Usart3_Rx_Buf[len+5]-0xAA==Data[0]){
+      switch(CMD){      
+        case 0x01://重启颜色传感器
+          rxBuf[0]=0xAA;  //成功信息
+          rxBuf[1]=0; 
+          rxBuf[2]=0;           
+          break;   
+        case 0x02://开启颜色传感器传输功能
+          rxBuf[0]=0xAA;  //成功信息
+          rxBuf[1]=0; 
+          rxBuf[2]=0;          
+          break;     
+        case 0x03://关闭颜色传感器传输功能
+          rxBuf[0]=0xAA;  //成功信息
+          rxBuf[1]=0; 
+          rxBuf[2]=0;        
+          break;    
+        case 0x04://读取颜色传感器数据
+          rxBuf[0]=Usart3_Rx_Buf[len+6];//R   
+          rxBuf[1]=Usart3_Rx_Buf[len+7];//G  
+          rxBuf[2]=Usart3_Rx_Buf[len+8];//B  
+          break; 
+        case 0x06://修改ID
+          rxBuf[0]=Usart3_Rx_Buf[len+5]-Data[0];  //成功信息 
+          rxBuf[1]=Usart3_Rx_Buf[len+5]-0xAA; //老ID
+          rxBuf[2]=0;   
+         
+          break;              
+        case 0x07://读取ID
+          rxBuf[0]=Usart3_Rx_Buf[len+5]-0xAA;  //ID
+          rxBuf[1]=0; 
+          rxBuf[2]=0;        
+          break;                                         
+      }
+      
+    }
+    else if(Usart3_Rx_Buf[len+1]==0xE8 && Usart3_Rx_Buf[len+2]==0x8E || Usart3_Rx_Buf[len+5]-0xEE==Data[0]){
+      rxBuf[0]=0xee;
+      rxBuf[1]=0; 
+      rxBuf[2]=0;   
+    }
+
+    else{
+      rxBuf[0]=0;
+      rxBuf[1]=0; 
+      rxBuf[2]=0;   
+      
+    }
+  
+   
+  
+  }
+  return rxBuf;
+}
+
+unsigned char SemiduplexSerial::ubtButtonProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
+  unsigned char tRet=0;
+  unsigned char tCnt = 0;
+  unsigned long temp = 2; //2ms 发完
+  unsigned char buf[8];
+  unsigned char Usart3_Rx_Ack_Len=0;
+
+  
+  memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
+  memset((void *)buf,0,sizeof(buf));
+  Usart3_Rx_Ack_Len = 8; //应答消息长度 
+  buf[0] = Head;  //协议头
+  buf[1] = swab8(Head);
+  buf[2] = len;
+  buf[3] = CMD;
+  memcpy((void *)&buf[4],(void *)Data,len-5);
+  buf[len - 1] = Cheak_Sum( (len - 3),(u8*)&buf[2]);
+  buf[len] = 0xED;
+    
+Retry_Servo:
+  
+  temp = (Usart3_Rx_Ack_Len + 5) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(buf,len + 1);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  if(CMD==0x06){
+    delay(20);
+  } 
+  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+  if(tRet == 0){ //没有接收到消息 
+    if( tCnt < 2){
+      tCnt ++;  //重试
+      goto  Retry_Servo;
+    }
+  }
+  else{ //接收到消息
+  
+    if(Usart3_Rx_Buf[len+1]==0xF7 && Usart3_Rx_Buf[len+2]==0x7F && Usart3_Rx_Buf[len+5]-0xAA==Data[0]){
+      switch(CMD){      
+        case 0x01://重启传感器
+          tRet=0xAA;  //成功信息         
+          break;   
+        case 0x02://开启传感器传输功能
+          tRet=0xAA;  //成功信息             
+          break;     
+        case 0x03://关闭传感器传输功能
+          tRet=0xAA;  //成功信息         
+          break;    
+        case 0x04://读取传感器数据
+          tRet=Usart3_Rx_Buf[len+6];  //成功信息   
+          break; 
+        case 0x06://修改ID
+          tRet=Usart3_Rx_Buf[len+5]-Data[0];  //成功信息                   
+          break;              
+        case 0x07://读取ID
+          tRet=Usart3_Rx_Buf[len+5]-0xAA;  //ID       
+          break;                                         
+      }
+      
+    }
+
+    else if(Usart3_Rx_Buf[len+1]==0xF7 && Usart3_Rx_Buf[len+2]==0x7F || Usart3_Rx_Buf[len+5]-0xEE==Data[0]){
+      tRet=0xee;
+  
+    }
+
+    else{
+      tRet=0;  
+      
+    }
+  
+   
+  
+  }
+  return tRet;
+}
+
+unsigned short SemiduplexSerial::ubtInfraredProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
+  unsigned short tRet=0;
+  unsigned char tCnt = 0;
+  unsigned long temp = 2; //2ms 发完
+  unsigned char buf[8];
+  unsigned char Usart3_Rx_Ack_Len=0;
+
+  
+  memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
+  memset((void *)buf,0,sizeof(buf));
+  Usart3_Rx_Ack_Len = 8; //应答消息长度 
+  buf[0] = Head;  //协议头
+  buf[1] = swab8(Head);
+  buf[2] = len;
+  buf[3] = CMD;
+  memcpy((void *)&buf[4],(void *)Data,len-5);
+  buf[len - 1] = Cheak_Sum( (len - 3),(u8*)&buf[2]);
+  buf[len] = 0xED;
+    
+Retry_Servo:
+  
+  temp = (Usart3_Rx_Ack_Len+12) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(buf,len + 1);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  if(CMD==0x06){
+    delay(25);
+  }  
+  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len+2); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+  if(tRet == 0){ //没有接收到消息 
+    if( tCnt < 2){
+      tCnt ++;  //重试
+      goto  Retry_Servo;
+    }
+  }
+  else{ //接收到消息
+    if(Usart3_Rx_Buf[len+1]==0xF8 && Usart3_Rx_Buf[len+2]==0x8F && Usart3_Rx_Buf[len+5]-0xAA==Data[0]){
+      switch(CMD){      
+        case 0x01://重启传感器
+          tRet=0xAA;  //成功信息         
+          break;   
+        case 0x02://开启传感器传输功能
+          tRet=0xAA;  //成功信息             
+          break;     
+        case 0x03://关闭传感器传输功能
+          tRet=0xAA;  //成功信息         
+          break;    
+        case 0x04://读取传感器数据
+          tRet = (Usart3_Rx_Buf[len + 6] << 8) + Usart3_Rx_Buf[len + 7];       
+          break; 
+        case 0x06://修改ID
+          tRet=Usart3_Rx_Buf[len+5]-Data[0];  //成功信息                   
+          break;              
+        case 0x07://读取ID
+          tRet=Usart3_Rx_Buf[len+5]-0xAA;  //ID       
+          break;                                         
+      }
+      
+    }
+
+    else if(Usart3_Rx_Buf[len+1]==0xF8 && Usart3_Rx_Buf[len+2]==0x8F || Usart3_Rx_Buf[len+5]-0xEE==Data[0]){
+      tRet=0xee;
+  
+    }
+
+    else{
+      tRet=0;  
+      
+    }
+  
+   
+  
+  }
+  return tRet;
+}
+
+unsigned char SemiduplexSerial::ubtEyelightProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
+  unsigned char tRet=0;
+  unsigned char tCnt = 0;
+  unsigned long temp = 2; //2ms 发完
+  unsigned char buf[40];
+  unsigned char Usart3_Rx_Ack_Len=0;
+
+  
+  memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
+  memset((void *)buf,0,sizeof(buf));
+  Usart3_Rx_Ack_Len = 8; //应答消息长度 
+  buf[0] = Head;  //协议头
+  buf[1] = swab8(Head);
+  buf[2] = len;
+  buf[3] = CMD;
+  memcpy((void *)&buf[4],(void *)Data,len-5);
+  buf[len - 1] = Cheak_Sum( (len - 3),(u8*)&buf[2]);
+  buf[len] = 0xED;
+    
+Retry_Servo:
+  
+  temp = (Usart3_Rx_Ack_Len+12) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(buf,len + 1);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  if(CMD==0x06){
+    delay(10);
+  }  
+  
+  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len+1); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+  if(tRet == 0){ //没有接收到消息 
+    if( tCnt < 2){
+      tCnt ++;  //重试
+      goto  Retry_Servo;
+    }
+  }
+  else{ //接收到消息
+    if(Usart3_Rx_Buf[len+1]==0xF4 && Usart3_Rx_Buf[len+2]==0x4F && Usart3_Rx_Buf[len+5]-0xAA==Data[0]){
+      switch(CMD){      
+        case 0x01://重启传感器
+          tRet=0xAA;  //成功信息         
+          break;   
+        case 0x02://开启传感器传输功能
+          tRet=0xAA;  //成功信息             
+          break;     
+        case 0x03://关闭传感器传输功能
+          tRet=0xAA;  //成功信息         
+          break;    
+        case 0x04://读取传感器数据
+          tRet = (Usart3_Rx_Buf[len + 6] << 8) + Usart3_Rx_Buf[len + 7];       
+          break; 
+        case 0x06://修改ID
+          tRet=Usart3_Rx_Buf[len+5]-Data[0];  //成功信息                   
+          break;              
+        case 0x07://读取ID
+          tRet=Usart3_Rx_Buf[len+5]-0xAA;  //ID       
+          break;                                         
+      }
+      
+    }
+
+    else if(Usart3_Rx_Buf[len+1]==0xF4 && Usart3_Rx_Buf[len+2]==0x4F || Usart3_Rx_Buf[len+5]-0xEE==Data[0]){
+      tRet=0xee;
+  
+    }
+
+    else{
+      tRet=0;  
+      
+    }
+  
+   
+  
+  }
+  return tRet;
+}
+
+unsigned char SemiduplexSerial::ubtServoProtocol(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data){
+  unsigned long tRet = 0;
+  unsigned char tCnt = 0;
+  unsigned long temp = 2; //2ms 发完
+  unsigned char buf[10];
+  unsigned char len = 9; //9+1
+  unsigned char Usart3_Rx_Ack_Len=0; 
+  memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
+  memset((void *)buf,0,sizeof(buf)); 
+  buf[0] = Head;  //填充协议头
+  buf[1] = swab8(Head);
+  buf[2] = ServoNO; //舵机好
+  buf[3] = CMD;
+  memcpy((void *)&buf[4],(void *)Data,4);
+  buf[len - 1] = Cheak_Sum( (len - 3),(u8*)&buf[2]);
+  buf[len] = 0xED;
+
+  if(CMD == 0x01 ||CMD==0x04){    
+    Usart3_Rx_Ack_Len = 1;  //1,4命令只应答一个字节
+  }
+   
+  
+  
+    
+Retry_Servo:
+  
+  temp = (Usart3_Rx_Ack_Len + 5) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(buf,len + 1);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+10); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+
+  if(tRet == 0) //没有接收到消息
+  {
+    if( tCnt < 2)
+    {
+      tCnt ++;  //重试
+      goto  Retry_Servo;
+    }
+  }
+  else  //接收到消息
+  { 
+    Usart3_Rx_Buf_count = tRet;
+    tRet = 0;
+    switch(CMD){
+      case 0x01:
+        tRet=Usart3_Rx_Buf[len+1]-0xAA-ServoNO;
+        break;
+
+      
+    }
+    
+    
+
+
+  }
+  return tRet;
+}
 
 
 /**@brief EN:Communication protocol sending and receiving functions/CN:通讯协议发送和接受函数.
