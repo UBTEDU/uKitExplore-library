@@ -13,7 +13,13 @@ public:
     unsigned char ubtButtonProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
     unsigned short ubtInfraredProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
     unsigned char ubtEyelightProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
-    unsigned char ubtServoProtocol(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data);
+    unsigned short ubtUltrasonicProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+    unsigned short ubtServoProtocol(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data);
+
+    unsigned short ubtSoundProtocol(unsigned char len,unsigned char CMD,unsigned char * Data);
+    unsigned short ubtHumitureProtocol(unsigned char len,unsigned char CMD,char choice,unsigned char * Data);
+    unsigned short ubtLightProtocol(unsigned char len,unsigned char CMD,unsigned char * Data);
+    unsigned short ubtMotorProtocol(unsigned char len,unsigned char CMD,unsigned char * Data);
   
     unsigned char Cheak_Sum(unsigned char len, unsigned char *buf);
     unsigned long TXD(unsigned char Head,unsigned char ServoNO,unsigned char len,unsigned char CMD,unsigned char RGB,unsigned char * Data);

@@ -31,17 +31,17 @@ void uKitServo::setServoTurn(char id,int dir, int speed){
 
 //id表示舵机号，angle表示角度（角度范围-118°~118°），time表示旋转所需时间（时间范围：300~5000）
 void uKitServo::setServoAngle(char id,int angle,int times){
-  unsigned char tData[4];
-  tData[0]=angle+120;
-  tData[1]=(times/20);
-  tData[2]=((times/20) & 0xFF00) >> 8;
-  tData[3]=(times/20) & 0x00FF;
-  TXD(0xFA,id,4,0x01,tData );
+  unsigned char buf[4];
+  buf[0]=angle+120;
+  buf[1]=(times/20);
+  buf[2]=((times/20) & 0xFF00) >> 8;
+  buf[3]=(times/20) & 0x00FF;
+  ubtServoProtocol(0xFA,id,0x01,buf);
   
 }
 void uKitServo::setServoStop(char id){
-  unsigned char aa[4]={0xFF,0,0,0};
-  TXD(0xFA,id,4,0x01,aa); 
+  unsigned char buf[4]={0xFF,0,0,0}; 
+  ubtServoProtocol(0xFA,id,0x01,buf);
 }
 
 void uKitServo::setServoStiffness(char id,unsigned char stiffness){
@@ -57,9 +57,9 @@ void uKitServo::setServoStiffness(char id,unsigned char stiffness){
 int uKitServo::readServoAnglePD(char id){//单个舵机回读(掉电回读）
   int tCmd=0;
   unsigned char aa[4]={0,0,0,0};
-  tCmd=TXD(0xFA,id,4,0x02,aa)-120;
+  tCmd=ubtServoProtocol(0xFA,id,0x02,aa)-120;
   delay(5);
-  if(tCmd>=-118 & tCmd<=118 )
+  if(tCmd>=-120 & tCmd<=120 )
     return tCmd;
   else
     return 0;
@@ -105,10 +105,10 @@ int uKitServo::readServoAngleNPD(char id){//单个舵机回读(不掉电回读�
   unsigned char aa[4]={0,0,0,0};
 
 
-  tCmd=TXD(0xFA,id,4,0x03,aa)-120;
+  tCmd=ubtServoProtocol(0xFA,id,0x03,aa)-120;
   delay(5);
   
-  if(tCmd>=-118 & tCmd<=118)
+  if(tCmd>=-120 & tCmd<=120)
     return tCmd;
   else
     return 0;

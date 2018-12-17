@@ -2,219 +2,167 @@
 #include "ArduinoJson/ArduinoJson.h"
 unsigned char uKitId::setLightId(char oldid,char newid){
   unsigned short int tRet = 0;
-  unsigned char buf[11];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x06;//设备类型
-  buf[2] = 0x08;//长度
-  buf[3] = 0x06;//命令号
-  buf[4] = oldid;//id
-  buf[5] = 0x00;//参数
-  buf[6] = 0x06;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = (newid & 0xFF00) >> 8;//new id
-  buf[10] = newid & 0x00FF;//new id
-  buf[11] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(12,buf);
+  unsigned char buf[7];
+
+  buf[0] = oldid;//id
+  buf[1] = 0x00;//参数
+  buf[2] = 0x06;
+  buf[3] = 0x00;
+  buf[4] = 0x01;
+  buf[5] = (newid & 0xFF00) >> 8;//new id
+  buf[6] = newid & 0x00FF;//new id
+  tRet=ubtLightProtocol(0x0C,0x06,buf);
   return tRet;
 }
 
 unsigned char uKitId::getLightId(){
   unsigned short int tRet = 0;
-  unsigned char buf[10];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x06;//设备类型
-  buf[2] = 0x06;//长度
-  buf[3] = 0x05;//命令号
-  buf[4] = 0xff;//id
-  buf[5] = 0x00;//参数
-  buf[6] = 0x06;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(10,buf);
+  unsigned char buf[5];
+  buf[0] = 0xff;//id
+  buf[1] = 0x00;//参数
+  buf[2] = 0x06;
+  buf[3] = 0x00;
+  buf[4] = 0x01;
+  tRet=ubtLightProtocol(0x0A,0x05,buf);
   return tRet;
 }
 unsigned char uKitId::getLightId(char id){
   unsigned short int tRet = 0;
-  unsigned char buf[10];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x06;//设备类型
-  buf[2] = 0x06;//长度
-  buf[3] = 0x05;//命令号
-  buf[4] = id;//id
-  buf[5] = 0x00;//参数
-  buf[6] = 0x06;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(10,buf);
+  unsigned char buf[5];
+  buf[0] = id;//id
+  buf[1] = 0x00;//参数
+  buf[2] = 0x06;
+  buf[3] = 0x00;
+  buf[4] = 0x01;
+  tRet=ubtLightProtocol(0x0A,0x05,buf);
   return tRet;
 }
 unsigned char uKitId::setSoundId(char oldid,char newid){
-  unsigned short int tRet = 0;
-  unsigned char buf[11];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x10;//设备类型
-  buf[2] = 0x08;//长度
-  buf[3] = 0x06;//命令号
-  buf[4] = oldid;//id
-  buf[5] = 0x00;//参数
-  buf[6] = 0x06;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = (newid & 0xFF00) >> 8;//new id
-  buf[10] = newid & 0x00FF;//new id
-  buf[11] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(12,buf);
+  unsigned char tRet = 0;
+  unsigned char buf[7];
+
+  buf[0] = oldid;//id
+  buf[1] = 0x00;//参数
+  buf[2] = 0x06;
+  buf[3] = 0x00;
+  buf[4] = 0x01;
+  buf[5] = (newid & 0xFF00) >> 8;//new id
+  buf[6] = newid & 0x00FF;//new id
+  tRet=ubtSoundProtocol(0x0C,0x06,buf);
   return tRet;
 }
 
 unsigned char uKitId::getSoundId(){
-  unsigned short int tRet = 0;
-  unsigned char buf[10];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x10;//设备类型
-  buf[2] = 0x06;//长度
-  buf[3] = 0x05;//命令号
-  buf[4] = 0xff;//id
-  buf[5] = 0x00;//参数
-  buf[6] = 0x06;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(10,buf);
+  unsigned char tRet = 0;
+  unsigned char buf[5];
+
+  buf[0] = 0xff;//id
+  buf[1] = 0x00;//参数
+  buf[2] = 0x06;
+  buf[3] = 0x00;
+  buf[4] = 0x01;
+  tRet=ubtSoundProtocol(0x0A,0x05,buf);
   return tRet;
 }
 unsigned char uKitId::getSoundId(char id){
-  unsigned short int tRet = 0;
-  unsigned char buf[10];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x10;//设备类型
-  buf[2] = 0x06;//长度
-  buf[3] = 0x05;//命令号
-  buf[4] = id;//id
-  buf[5] = 0x00;//参数
-  buf[6] = 0x06;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(10,buf);
+  unsigned char tRet = 0;
+  unsigned char buf[5];
+
+  buf[0] = id;//id
+  buf[1] = 0x00;//参数
+  buf[2] = 0x06;
+  buf[3] = 0x00;
+  buf[4] = 0x01;
+  tRet=ubtSoundProtocol(0x0A,0x05,buf);
   return tRet;
 }
 
 unsigned char uKitId::setHumitureId(char oldid,char newid){
-  unsigned short int tRet = 0;
-  unsigned char buf[11];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x05;//设备类型
-  buf[2] = 0x08;//长度
-  buf[3] = 0x06;//命令号
-  buf[4] = oldid;//id
-  buf[5] = 0x00;//参数
-  buf[6] = 0x06;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = (newid & 0xFF00) >> 8;//new id
-  buf[10] = newid & 0x00FF;//new id
-  buf[11] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(12,buf);
+  unsigned char tRet = 0;
+  unsigned char buf[7];
+
+  buf[0] = oldid;//id
+  buf[1] = 0x00;//参数
+  buf[2] = 0x06;
+  buf[3] = 0x00;
+  buf[4] = 0x01;
+  buf[5] = (newid & 0xFF00) >> 8;//new id
+  buf[6] = newid & 0x00FF;//new id
+  tRet=ubtHumitureProtocol(0x0C,0x06,0x00,buf);
   return tRet;
 }
 
 unsigned char uKitId::getHumitureId(){
-  unsigned short int tRet = 0;
-  unsigned char buf[10];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x05;//设备类型
-  buf[2] = 0x06;//长度
-  buf[3] = 0x05;//命令号
-  buf[4] = 0xff;//id
-  buf[5] = 0x00;//参数
-  buf[6] = 0x06;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(10,buf);
+  unsigned char tRet = 0;
+  unsigned char buf[5];
+  buf[0] = 0xff;//id
+  buf[1] = 0x00;//参数
+  buf[2] = 0x06;
+  buf[3] = 0x00;
+  buf[4] = 0x01;
+  //tRet=TXD(10,buf);
+  tRet=ubtHumitureProtocol(0x0A,0x05,0x00,buf);
   return tRet;
 }
 unsigned char uKitId::getHumitureId(char id){
-  unsigned short int tRet = 0;
-  unsigned char buf[10];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x05;//设备类型
-  buf[2] = 0x06;//长度
-  buf[3] = 0x05;//命令号
-  buf[4] = id;//id
-  buf[5] = 0x00;//参数
-  buf[6] = 0x06;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(10,buf);
+  unsigned char  tRet = 0;
+  unsigned char buf[5];
+  buf[0] = id;//id
+  buf[1] = 0x00;//参数
+  buf[2] = 0x06;
+  buf[3] = 0x00;
+  buf[4] = 0x01;
+  //tRet=TXD(10,buf);
+  tRet=ubtHumitureProtocol(0x0A,0x05,0x00,buf);
   return tRet;
 }
 unsigned char uKitId::setMotorId(uint8_t id_old, uint8_t id_new){
   unsigned long tRet = 0;
-  unsigned char buf[12];  
-  buf[0] = 0xFB;
-  buf[1] = 0x03;
-  buf[2] = 0x08;
-  buf[3] = 0x06;
-  buf[4] = id_old;
+  unsigned char buf[7];  
+  buf[0] = id_old;
+  buf[1] = 0x00;
+  buf[2] = 0x03;
+  buf[3] = 0x00;
+  buf[4] = 0x01;
   buf[5] = 0x00;
-  buf[6] = 0x03;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = 0x00;
-  buf[10] = id_new;
-  buf[11] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=IdTxd(12,buf); 
+  buf[6] = id_new;
+ 
+  tRet=ubtMotorProtocol(0x0C,0x06,buf);
   
   return tRet;
 }
 
 unsigned char uKitId::getMotorId(){
   unsigned char tRet = 0;
-  unsigned char buf[10];
+  unsigned char buf[5];
   for(int testid=1;testid<=18;testid++){
-    buf[0] = 0xFB;//帧头
-    buf[1] = 0x03;//设备类型
-    buf[2] = 0x06;//长度
-    buf[3] = 0x05;//命令号
-    buf[4] = testid;//ID
-    buf[5] = 0x00;//参数
-    buf[6] = 0x09;
-    buf[7] = 0x00;
-    buf[8] = 0x05;
-    buf[9] = crc8_itu(&buf[1], buf[2]+2);
 
-    tRet=IdTxd(10,buf);
+    buf[0] = testid;//ID
+    buf[1] = 0x00;//参数
+    buf[2] = 0x09;
+    buf[3] = 0x00;
+    buf[4] = 0x05; 
+    tRet=ubtMotorProtocol(0x0A,0x05,buf);
     delay(5);
     if(tRet==testid){
       return tRet;
     }
-    delay(5);
+    
   
   }
    return 0;
 }
 unsigned char uKitId::getMotorId(char id){
   unsigned char tRet = 0;
-  unsigned char buf[10];
-    buf[0] = 0xFB;//帧头
-    buf[1] = 0x03;//设备类型
-    buf[2] = 0x06;//长度
-    buf[3] = 0x05;//命令号
-    buf[4] = id;//ID
-    buf[5] = 0x00;//参数
-    buf[6] = 0x09;
-    buf[7] = 0x00;
-    buf[8] = 0x05;
-    buf[9] = crc8_itu(&buf[1], buf[2]+2);
-    tRet=IdTxd(10,buf); 
-    delay(5);  
-    return tRet; 
+  unsigned char buf[5];
+  buf[0] = id;//ID
+  buf[1] = 0x00;//参数
+  buf[2] = 0x09;
+  buf[3] = 0x00;
+  buf[4] = 0x05; 
+  tRet=ubtMotorProtocol(0x0A,0x05,buf);
+  delay(3);
+  return tRet;
 }
 unsigned char uKitId::setInfraredId(char oldid,char newid){
   unsigned char tRet = 0;
@@ -329,7 +277,7 @@ unsigned char uKitId::setUltrasonicId(char oldid,char newid){
   unsigned char buf[2];
   buf[0]=oldid;
   buf[1]=newid;
-  tRet=TXD(0xF5,1,2,0x06,buf);
+  tRet=ubtUltrasonicProtocol(0xF5,0x07,0x06,buf);
   delay(5);
   return tRet;
  
@@ -339,12 +287,12 @@ unsigned char uKitId::getUltrasonicId(){
   unsigned char buf[1];
   for(int testid=1;testid<=10;testid++){
     buf[0]=testid;
-    tRet=TXD(0xF5,1,1,0x07,buf);
+    tRet=tRet=ubtUltrasonicProtocol(0xF5,0x06,0x07,buf);
     delay(5);
     if(tRet==testid){
       return tRet;
     }
-    delay(5);
+    
   }
   return 0;
 
@@ -353,8 +301,8 @@ unsigned char uKitId::getUltrasonicId(char id){
   unsigned char tRet = 0;
   unsigned char buf[1];
   buf[0]=id;
-  tRet=TXD(0xF5,1,1,0x07,buf);
-  delay(5);
+  tRet=ubtUltrasonicProtocol(0xF5,0x06,0x07,buf);
+  delay(3);
   return tRet;
 
 }
@@ -399,7 +347,8 @@ unsigned char uKitId::setServoId(char oldid,char newid){
   unsigned char buf[2];
   buf[0]=0x00;
   buf[1]=newid;
-  tRet=TXD(0xFA,oldid,4,0xCD,buf);
+  tRet=ubtServoProtocol(0xFA,oldid,0xCD,buf);
+  //tRet=TXD(0xFA,oldid,4,0xCD,buf);
   delay(5);
   return tRet;
  
@@ -413,7 +362,7 @@ unsigned char uKitId::getServoId(){
     buf[1]=0x00;
     buf[2]=0x00;
     buf[3]=0x00;
-    tRet=TXD(0xFC,testid,4,0x01,buf);
+    tRet=ubtServoProtocol(0xFC,testid,0x01,buf);
     delay(5);
     if(tRet==testid){
       return tRet;
@@ -429,8 +378,9 @@ unsigned char uKitId::getServoId(char id){
     buf[1]=0x00;
     buf[2]=0x00;
     buf[3]=0x00;
-    tRet=TXD(0xFC,id,4,0x01,buf);
-    delay(5);
+    //tRet=TXD(0xFC,id,4,0x01,buf);
+    tRet=ubtServoProtocol(0xFC,id,0x01,buf);
+    delay(3);
     return tRet;
 }
 void uKitId::setAllDeciveId(unsigned char decive,unsigned char oldid,unsigned char newid){

@@ -39,22 +39,19 @@ unsigned short  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
 
 
 
-unsigned short int uKitSensor::readSoundValue(char id){
-  int tRet = 0,tRet2=0;
-  unsigned char buf[10];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x10;//设备类型
-  buf[2] = 0x06;//长度
-  buf[3] = 0x05;//命令号
-  buf[4] = id;//id
-  buf[5] = 0x10;//参数
-  buf[6] = 0x00;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=(TXD(10,buf)-2048);
-  tRet2=tRet/2;
-  delay(15);
+unsigned short uKitSensor::readSoundValue(char id){
+  unsigned short tRet = 0,tRet2=0;
+  unsigned char buf[5];
+
+
+  buf[0] = id;//id
+  buf[1] = 0x10;//参数
+  buf[2] = 0x00;
+  buf[3] = 0x00;
+  buf[4] = 0x01;
+  tRet=ubtSoundProtocol(0x0A,0x05,buf)-2048;
+  tRet2=tRet/2; 
+
   if(tRet==0 || tRet<0){
     tRet2=0;
   }
@@ -62,24 +59,20 @@ unsigned short int uKitSensor::readSoundValue(char id){
   else if(tRet2>=1023){
     tRet2=1023;
   }
-    
+  
   return tRet2;
 }
 unsigned short int uKitSensor::readLightValue(char id){
   unsigned short int tRet = 0;
-  unsigned char buf[10];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x06;//设备类型
-  buf[2] = 0x06;//长度
-  buf[3] = 0x05;//命令号
-  buf[4] = id;//id
-  buf[5] = 0x10;//参数
-  buf[6] = 0x00;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(10,buf);
-  delay(10);
+  unsigned char buf[5];
+
+  buf[0] = id;//id
+  buf[1] = 0x10;//参数
+  buf[2] = 0x00;
+  buf[3] = 0x00;
+  buf[4] = 0x01;
+  tRet=ubtLightProtocol(0x0A,0x05,buf);
+  delay(5);
   if(tRet>4000){
     tRet=4000;    
   }
@@ -304,18 +297,15 @@ void uKitSensor::setEyelightOff(char id){
  } 
 signed char uKitSensor::readHumitureValue(char id, char choice){
   signed char tRet = 0;
-  unsigned char buf[10];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x05;//设备类型
-  buf[2] = 0x06;//长度
-  buf[3] = 0x05;//命令号
-  buf[4] = id;//id
-  buf[5] = 0x10;//参数
-  buf[6] = 0x00;
-  buf[7] = 0x00;
-  buf[8] = 0x02;
-  buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(10,choice,buf);
+  unsigned char buf[6];
+
+  buf[0] = id;//id
+  buf[1] = 0x10;//参数
+  buf[2] = 0x00;
+  buf[3] = 0x00;
+  buf[4] = 0x02;
+  buf[5] = crc8_itu(&buf[1], buf[2]+2);
+  tRet=ubtHumitureProtocol(0x0A,0x05,choice,buf);
   delay(10);
   return tRet;
 }
@@ -472,19 +462,66 @@ unsigned char uKitSensor::readButtonValue(char id){
   delay(2);
 }
 
-int uKitSensor::readUltrasonicDistance(char id){
-  unsigned char tData[1];
-  volatile int State=0;
-  int distance=0;
-  tData[0]=id;
-  if(State==0){
-    State=TXD(0xF5,1,1,0x02,tData);
-    delay(5);
-  }
-   distance+=TXD(0xF5,1,1,4,tData);
-   distance/=10;
-    return distance; 
-  delay(5);
+unsigned short uKitSensor::readUltrasonicDistance(char id){
+  unsigned char buf[1] ;
+  unsigned short tRet=0;
+  static unsigned char UltrasonicState=1;
+  buf[0]=id;
+  if(UltrasonicState==1){
+    ubtUltrasonicProtocol(0xF5,0x06,0x02,buf);
+    UltrasonicState=0;
+    
+  }  
+  
+  tRet=ubtUltrasonicProtocol(0xF5,0x06,0x04,buf);
+  if(tRet==238){
+    ubtUltrasonicProtocol(0xF5,0x06,0x02,buf);
+} 
+   
+    tRet/=10;
+    if(tRet!=0){
+      return tRet; 
+    }
+    
+ 
+}
+unsigned char uKitSensor::setUltrasonicRgbled(char id,unsigned char red,unsigned char green,unsigned char blue ){
+  unsigned char buf[8] ;
+  unsigned short tRet=0;
+
+  buf[0]=id;
+  buf[1]=red;
+  buf[2]=green;
+  buf[3]=blue;
+  buf[4]=0x01;
+  buf[5]=0x00;
+  buf[6] = (0xffff & 0xFF00) >> 8;
+  buf[7] = 0xffff & 0x00FF;
+
+  tRet=ubtUltrasonicProtocol(0xF5,0x0D,0x08,buf);
+ 
+  return tRet; 
+    
+    
+}
+unsigned char uKitSensor::setUltrasonicRgbledOff(char id){
+  unsigned char buf[8] ;
+  unsigned short tRet=0;
+
+  buf[0]=id;
+  buf[1]=0x00;
+  buf[2]=0x00;
+  buf[3]=0x00;
+  buf[4]=0x00;
+  buf[5]=0x00;
+  buf[6] = (0x0000 & 0xFF00) >> 8;
+  buf[7] = 0x0000 & 0x00FF;
+
+  tRet=ubtUltrasonicProtocol(0xF5,0x0D,0x08,buf);
+ 
+  return tRet; 
+    
+    
 }
 void uKitSensor::setNixieTubeFull(char id,uint8_t tpye,uint8_t method,uint8_t frequency,uint8_t times,uint8_t start,uint8_t ends){
   unsigned char tData[1]; 

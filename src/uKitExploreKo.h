@@ -40,6 +40,8 @@ Gyroscope gyro;
 #define playMotion(id,action,times) uKitServo.playMotion(id,action,times)//播放动作
 
 //uKitSensor_API
+#define setUltrasonicRgbled(id,r,g,b) uKitSensor.setUltrasonicRgbled(id,r,g,b)
+#define setUltrasonicRgbledOff(id) uKitSensor.setUltrasonicRgbledOff(id)
 #define setAllSensorOff() uKitSensor.setAllSensorOff()
 #define readLightValue(id) uKitSensor.readLightValue(id)
 #define readSoundValue(id) uKitSensor.readSoundValue(id)
@@ -151,7 +153,7 @@ void Initialization(){
   setAllSensorOff();
   setMotorStop(0xff);
   StopServo();
- 
+ setUltrasonicRgbledOff(0x00);
   Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
   getDeciveId();
   

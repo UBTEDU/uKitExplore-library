@@ -8,23 +8,27 @@ void setup() {
       item = 0;
     item2 = 0;
     item3 = 0;
-    
+     item = millis();
     Initialization();
-    item = millis();
+   
+    
+   
+   
+   
      
 }
 
 void loop() {
-item3=uKitId.setLedId(2,1);
-if(item3==170){
-    item2 = millis();
-Serial.println(item2-item);
-while(1);
-}
+ 
+   item2 = millis();   
+  Serial.println(item2-item);
+  while(1);
+  }
 
+ 
+  
 
+  
+ 
 
-    
-
-
-}
+  

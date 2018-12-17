@@ -361,8 +361,405 @@ Retry_Servo:
   return tRet;
 }
 
-unsigned char SemiduplexSerial::ubtServoProtocol(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data){
-  unsigned long tRet = 0;
+unsigned short SemiduplexSerial::ubtUltrasonicProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
+  unsigned short tRet=0;
+  unsigned char tCnt = 0;
+  unsigned long temp = 2; //2ms 发完
+  unsigned char buf[40];
+  unsigned char Usart3_Rx_Ack_Len=0;
+
+  
+  memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
+  memset((void *)buf,0,sizeof(buf));
+  Usart3_Rx_Ack_Len = 8; //应答消息长度 
+  buf[0] = Head;  //协议头
+  buf[1] = swab8(Head);
+  buf[2] = len;
+  buf[3] = CMD;
+  memcpy((void *)&buf[4],(void *)Data,len-5);
+  buf[len - 1] = Cheak_Sum( (len - 3),(u8*)&buf[2]);
+  buf[len] = 0xED;
+    
+Retry_Servo:
+  
+  temp = (Usart3_Rx_Ack_Len+12) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(buf,len + 1);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  if(CMD==0x06){
+    delay(10);
+  }  
+  
+  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len+1); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+  if(tRet == 0){ //没有接收到消息 
+    if( tCnt < 2){
+      tCnt ++;  //重试
+      goto  Retry_Servo;
+    }
+  }
+  else{ //接收到消息
+    if(Usart3_Rx_Buf[len+1]==0xF5 && Usart3_Rx_Buf[len+2]==0x5F && Usart3_Rx_Buf[len+5]-0xAA==Data[0]){
+      switch(CMD){      
+        case 0x01://重启传感器
+          tRet=0xAA;  //成功信息         
+          break;   
+        case 0x02://开启传感器传输功能
+          tRet=0xAA;  //成功信息             
+          break;     
+        case 0x03://关闭传感器传输功能
+          tRet=0xAA;  //成功信息         
+          break;    
+        case 0x04://读取传感器数据
+          tRet = (Usart3_Rx_Buf[len + 6] << 8) + Usart3_Rx_Buf[len + 7];       
+          break; 
+        case 0x06://修改ID
+          tRet=Usart3_Rx_Buf[len+5]-Data[0];  //成功信息                   
+          break;              
+        case 0x07://读取ID
+          tRet=Usart3_Rx_Buf[len+5]-0xAA;  //ID       
+          break;          
+        case 0x08://灯管
+          tRet=Usart3_Rx_Buf[len+5]-0xAA;  //ID       
+          break;     
+        case 0x0F://关灯
+          tRet=Usart3_Rx_Buf[len+5]-0xAA;  //ID       
+          break;                                    
+      }
+      
+    }
+
+    else if(Usart3_Rx_Buf[len+1]==0xF5 && Usart3_Rx_Buf[len+2]==0x5F || Usart3_Rx_Buf[len+5]-0xEE==Data[0]){
+      tRet=0xee;
+  
+    }
+
+    else{
+      tRet=0;  
+      
+    }
+  
+   
+  
+  }
+  return tRet;
+}
+
+
+unsigned short SemiduplexSerial::ubtSoundProtocol(unsigned char len,unsigned char CMD,unsigned char * Data){
+  unsigned short tRet=0;
+  unsigned char tCnt = 0;
+  unsigned long temp = 2; //2ms 发完
+  unsigned char buf[40];
+  unsigned char Usart3_Rx_Ack_Len=0;
+
+  
+  memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
+  memset((void *)buf,0,sizeof(buf));
+  Usart3_Rx_Ack_Len = 8; //应答消息长度 
+  
+  buf[0] = 0xFB;//帧头
+  buf[1] = 0x10;//设备类型
+  buf[2] = len-4;//长度
+  buf[3] = CMD;//命令号
+  memcpy((void *)&buf[4],(void *)Data,len-4);
+  buf[len-1] = crc8_itu(&buf[1], buf[2]+2);
+  
+    
+Retry_Servo:
+  
+  temp = (Usart3_Rx_Ack_Len+12) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(buf,len);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+  if(tRet == 0){ //没有接收到消息 
+    if( tCnt < 2){
+      tCnt ++;  //重试
+      goto  Retry_Servo;
+    }
+  }
+  else{ //接收到消息
+    
+    if(Usart3_Rx_Buf[len]==0xAC  && Usart3_Rx_Buf[len+5]==0){
+      switch(CMD){      
+        case 0x05:
+          tRet=(Usart3_Rx_Buf[len+6]<<8) |(Usart3_Rx_Buf[len+7] & 0xff);        
+          break;   
+        case 0x06:
+          tRet=0xAA;        
+          break;   
+       
+      }
+      
+    }
+
+    else if(Usart3_Rx_Buf[len]==0xAC  &&  Usart3_Rx_Buf[len+5]==1){
+      tRet=0xee;
+  
+    }
+
+    else{
+      tRet=0;  
+      
+    }
+  
+   
+  
+  }
+  return tRet;
+}
+
+
+unsigned short SemiduplexSerial::ubtHumitureProtocol(unsigned char len,unsigned char CMD,char choice,unsigned char * Data){
+  unsigned short tRet=0;
+  unsigned char tCnt = 0;
+  unsigned long temp = 2; //2ms 发完
+  unsigned char buf[10];
+  unsigned char Usart3_Rx_Ack_Len=0;
+
+  
+  memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
+  memset((void *)buf,0,sizeof(buf));
+  if(Data[2]==0x01 && Data[4]==0x05){
+    Usart3_Rx_Ack_Len = 8; //应答消息长度 
+  }
+  Usart3_Rx_Ack_Len = 10; //应答消息长度 
+  
+  buf[0] = 0xFB;//帧头
+  buf[1] = 0x05;//设备类型
+  buf[2] = len-4;//长度
+  buf[3] = CMD;//命令号
+  memcpy((void *)&buf[4],(void *)Data,len-4);
+  buf[len-1] = crc8_itu(&buf[1], buf[2]+2);
+  
+    
+Retry_Servo:
+  
+  temp = (Usart3_Rx_Ack_Len+5) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(buf,len);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+  if(tRet == 0){ //没有接收到消息 
+    if( tCnt < 2){
+      tCnt ++;  //重试
+      goto  Retry_Servo;
+    }
+  }
+  else{ //接收到消息
+   
+    if(Usart3_Rx_Buf[len]==0xAC  && Usart3_Rx_Buf[len+5]==0){
+      switch(CMD){      
+        case 0x05:
+          if(choice=='C'){
+            tRet=ceil(((Usart3_Rx_Buf[len+6]<<8) | (Usart3_Rx_Buf[len+7] & 0xff))/10.0); 
+          }
+          else if(choice=='F'){
+            tRet=ceil(((Usart3_Rx_Buf[len+6]<<8) | (Usart3_Rx_Buf[len+7] & 0xff))/10.0);
+            tRet*=1.8;
+            tRet+=32;
+          }       
+          else if(choice=='H'){
+            tRet=(Usart3_Rx_Buf[len+8]<<8)+Usart3_Rx_Buf[len+9];
+          }  
+          else{
+            tRet=((Usart3_Rx_Buf[len+6]<<8) | (Usart3_Rx_Buf[len+7] & 0xff));      
+          }
+          break;   
+        case 0x06:
+          tRet=0xAA;        
+          break;   
+       
+      }
+      
+    }
+
+    else if(Usart3_Rx_Buf[len]==0xAC  &&  Usart3_Rx_Buf[len+5]==1){
+      tRet=0xee;
+  
+    }
+
+    else{
+      tRet=0;  
+      
+    }
+  
+   
+  
+  }
+ 
+  
+  return tRet;
+}
+
+unsigned short SemiduplexSerial::ubtLightProtocol(unsigned char len,unsigned char CMD,unsigned char * Data){
+  unsigned short tRet=0;
+  unsigned char tCnt = 0;
+  unsigned long temp = 2; //2ms 发完
+  unsigned char buf[40];
+  unsigned char Usart3_Rx_Ack_Len=0;
+
+  
+  memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
+  memset((void *)buf,0,sizeof(buf));
+  Usart3_Rx_Ack_Len = 8; //应答消息长度 
+  
+  buf[0] = 0xFB;//帧头
+  buf[1] = 0x06;//设备类型
+  buf[2] = len-4;//长度
+  buf[3] = CMD;//命令号
+  memcpy((void *)&buf[4],(void *)Data,len-4);
+  buf[len-1] = crc8_itu(&buf[1], buf[2]+2);
+  
+    
+Retry_Servo:
+  
+  temp = (Usart3_Rx_Ack_Len+5) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(buf,len);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+  if(tRet == 0){ //没有接收到消息 
+    if( tCnt < 2){
+      tCnt ++;  //重试
+      goto  Retry_Servo;
+    }
+  }
+  else{ //接收到消息
+    
+    if(Usart3_Rx_Buf[len]==0xAC  && Usart3_Rx_Buf[len+5]==0){
+      switch(CMD){      
+        case 0x05:
+          tRet=(Usart3_Rx_Buf[len+6]<<8) |(Usart3_Rx_Buf[len+7] & 0xff);        
+          break;   
+        case 0x06:
+          tRet=0xAA;        
+          break;   
+       
+      }
+      
+    }
+
+    else if(Usart3_Rx_Buf[len]==0xAC  &&  Usart3_Rx_Buf[len+5]==1){
+      tRet=0xee;
+  
+    }
+
+    else{
+      tRet=0;  
+      
+    }
+  
+   
+  
+  }
+  return tRet;
+}
+
+unsigned short SemiduplexSerial::ubtMotorProtocol(unsigned char len,unsigned char CMD,unsigned char * Data){
+  unsigned short tRet=0;
+  unsigned char tCnt = 0;
+  unsigned long temp = 0; //2ms 发完
+  unsigned char buf[16];
+  unsigned char Usart3_Rx_Ack_Len=0;
+
+  
+  memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
+  memset((void *)buf,0,sizeof(buf));
+  if(Data[2]==0x07 && Data[4]==0x01){
+    Usart3_Rx_Ack_Len = 8; //应答消息长度 
+  }
+  else{
+    Usart3_Rx_Ack_Len = 5; //应答消息长度 
+  }
+  
+  
+  buf[0] = 0xFB;//帧头
+  buf[1] = 0x03;//设备类型
+  buf[2] = len-4;//长度
+  buf[3] = CMD;//命令号
+  memcpy((void *)&buf[4],(void *)Data,len-4);
+  buf[len-1] = crc8_itu(&buf[1], buf[2]+2);
+  
+    
+Retry_Servo:
+  
+  temp = (Usart3_Rx_Ack_Len+6) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(buf,len);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+ 
+  if(Usart3_Rx_Buf[len]==0x00){
+    Serial3.begin(114200);  //uart3
+    Serial3.setTimeout(temp*87*110/100/400);  //设置超时ms
+    Serial2.begin(114200);  //设置波特率
+    Serial2.write(buf,len);  //发送消息
+    Serial2.end();  //关闭串口2,否则会影响接收消息
+    Serial3.readBytes(Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
+    Serial3.end();  //关闭串口3,否则会影响接收消息
+  }
+ 
+  if(tRet == 0){ //没有接收到消息 
+    if( tCnt < 2){
+      tCnt ++;  //重试
+      goto  Retry_Servo;
+    }
+  }
+  else{ //接收到消息
+    
+    if(Usart3_Rx_Buf[len]==0xAC  && Usart3_Rx_Buf[len+5]==0){
+      switch(CMD){      
+        case 0x05:
+          if(Data[2]==0x09 && Data[4]==0x05){
+            tRet=Usart3_Rx_Buf[len+4];
+          }
+          else{
+            tRet=(Usart3_Rx_Buf[len+6]<<8) |(Usart3_Rx_Buf[len+7] & 0xff); 
+          }
+                 
+          break;   
+        case 0x06:
+          tRet=0xAA;        
+          break;   
+       
+      }
+      
+    }
+
+    else if(Usart3_Rx_Buf[len]==0xAC  &&  Usart3_Rx_Buf[len+5]==1){
+      tRet=0xee;
+  
+    }
+
+    else{
+      tRet=0;  
+      
+    }
+  
+   
+  
+  }
+  return tRet;
+}
+
+unsigned short SemiduplexSerial::ubtServoProtocol(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data){
+  unsigned short tRet = 0;
   unsigned char tCnt = 0;
   unsigned long temp = 2; //2ms 发完
   unsigned char buf[10];
@@ -378,16 +775,19 @@ unsigned char SemiduplexSerial::ubtServoProtocol(unsigned char Head,unsigned cha
   buf[len - 1] = Cheak_Sum( (len - 3),(u8*)&buf[2]);
   buf[len] = 0xED;
 
-  if(CMD == 0x01 ||CMD==0x04){    
+  if((CMD == 0x01&& Head!=0xFC) || CMD==0x04 ||CMD==0xCD ){    
     Usart3_Rx_Ack_Len = 1;  //1,4命令只应答一个字节
   }
-   
-  
-  
-    
+  else if(CMD == 0x02 && CMD==0x03){    
+    Usart3_Rx_Ack_Len = 9;  
+  }
+  else if((CMD == 0x01&& Head==0xFC)){
+    Usart3_Rx_Ack_Len = 4; 
+  }
+      
 Retry_Servo:
   
-  temp = (Usart3_Rx_Ack_Len + 5) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  temp = (Usart3_Rx_Ack_Len+ 5) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
   Serial3.begin(115200);  //uart3
   Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
   Serial2.begin(115200);  //设置波特率
@@ -410,9 +810,20 @@ Retry_Servo:
     tRet = 0;
     switch(CMD){
       case 0x01:
-        tRet=Usart3_Rx_Buf[len+1]-0xAA-ServoNO;
+        if(Head==0xFC){
+          tRet=Usart3_Rx_Buf[len+3]; 
+        }
+        else{
+          tRet=Usart3_Rx_Buf[len+1]-0xAA-ServoNO; 
+        }
+       
         break;
-
+      case 0x02:
+        tRet=(Usart3_Rx_Buf[len+7]<<8) |(Usart3_Rx_Buf[len+8] & 0xff); 
+        break;
+      case 0x03:
+        tRet=(Usart3_Rx_Buf[len+7]<<8) |(Usart3_Rx_Buf[len+8] & 0xff); 
+        break;    
       
     }
     
