@@ -6,6 +6,7 @@ unsigned short  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
  
   buf[0]=ID;
   tRet=ubtInfraredProtocol(0xf8,0x06,0x04,buf);
+  delay(5);
   if(tRet==238){
     ubtInfraredProtocol(0xf8,0x06,0x02,buf);
   }
@@ -306,7 +307,7 @@ signed char uKitSensor::readHumitureValue(char id, char choice){
   buf[4] = 0x02;
   buf[5] = crc8_itu(&buf[1], buf[2]+2);
   tRet=ubtHumitureProtocol(0x0A,0x05,choice,buf);
-  delay(10);
+  delay(15);
   return tRet;
 }
 int  *uKitSensor::Rgb2Hsb(unsigned char rgbR,unsigned char rgbG,unsigned char rgbB){
@@ -359,7 +360,7 @@ unsigned char *uKitSensor::readColorRgb(char id){
   unsigned  char tData[1];
   unsigned char *value1=NULL;  
   static unsigned char ColorState=1;
- 
+  tData[0]=id;
   if(ColorState==1){
     ubtColorProtocol(0xe8,0x06,0x02,tData); 
     ColorState=0;  
@@ -371,6 +372,7 @@ unsigned char *uKitSensor::readColorRgb(char id){
        
   }
   return value1;
+  delete [] value1;
         
           
  }
@@ -382,7 +384,7 @@ void uKitSensor::setColorOff(char id){
   delay(5);   
  }
 bool uKitSensor::readColor(char id,String color){
-    unsigned  char tData[1];  
+  unsigned  char tData[1];  
   tData[0]=id;
   unsigned char *ColorRgb=NULL;
   unsigned int *buf=NULL;
@@ -394,6 +396,7 @@ bool uKitSensor::readColor(char id,String color){
   buf=Rgb2Hsb(ColorRgb[0],ColorRgb[1],ColorRgb[2]);
   delay(5);
   getid=TXD(0xE8,1,1,2,tData);  
+  delay(5);
 if(getid==id){  
   if(color!="Black"&& (buf[1]>15 & buf[2]>25)){    
     if(color=="Red" && ((buf[0]>0 & buf[0]<=11)||(buf[0]>=340 & buf[0]<=360))){
@@ -479,9 +482,11 @@ unsigned short uKitSensor::readUltrasonicDistance(char id){
 } 
    
     tRet/=10;
-    if(tRet!=0){
-      return tRet; 
-    }
+    delay(30);
+
+    return tRet; 
+    
+
     
  
 }

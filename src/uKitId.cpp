@@ -102,6 +102,7 @@ unsigned char uKitId::getHumitureId(){
   buf[4] = 0x01;
   //tRet=TXD(10,buf);
   tRet=ubtHumitureProtocol(0x0A,0x05,0x00,buf);
+  delay(3);
   return tRet;
 }
 unsigned char uKitId::getHumitureId(char id){
@@ -114,6 +115,7 @@ unsigned char uKitId::getHumitureId(char id){
   buf[4] = 0x01;
   //tRet=TXD(10,buf);
   tRet=ubtHumitureProtocol(0x0A,0x05,0x00,buf);
+  delay(3);
   return tRet;
 }
 unsigned char uKitId::setMotorId(uint8_t id_old, uint8_t id_new){
@@ -338,7 +340,7 @@ unsigned char uKitId::getColorId(char id){
   unsigned char buf[1];
   buf[0]=id;
   tRet=ubtColorProtocol(0xe8,0x06,0x07,buf);;
-  delay(5);
+  delay(3);
   return tRet[0];
 }
 
@@ -1795,6 +1797,44 @@ void uKitId::getDeciveIdEn(){
   Serial.println("------------------------------ ");
  
 }
+}
+
+unsigned char uKitId::getAllDeciveId(unsigned char decive,unsigned char newid){
+  unsigned char getId=0;
+  switch(decive){
+    case 1://舵机
+      getId=getServoId(newid);
+      break;
+    case 2://电机
+      getId=getMotorId(newid);
+      break;
+    case 3://红外
+      getId=getInfraredId(newid);
+      break;
+    case 4://超声波
+      getId=getUltrasonicId(newid);
+      break;
+    case 5://眼灯
+      getId=getLedId(newid);
+      break;
+    case 6://触碰
+      getId=getButtonId(newid);
+      break;
+    case 7://亮度
+      getId=getLightId(newid);
+      break;
+    case 8://声音
+      getId=getSoundId(newid);
+      break;
+    case 9://温湿度
+      getId=getHumitureId(newid);
+      break;
+    case 10://颜色
+      getId=getColorId(newid);
+      break;          
+  }
+  return getId;
+    
 }
 void uKitId::getDeciveIdKo(){
  

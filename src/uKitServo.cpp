@@ -36,9 +36,12 @@ void uKitServo::setServoAngle(char id,int angle,int times){
   buf[1]=(times/20);
   buf[2]=((times/20) & 0xFF00) >> 8;
   buf[3]=(times/20) & 0x00FF;
+
   ubtServoProtocol(0xFA,id,0x01,buf);
   
 }
+
+
 void uKitServo::setServoStop(char id){
   unsigned char buf[4]={0xFF,0,0,0}; 
   ubtServoProtocol(0xFA,id,0x01,buf);
@@ -55,9 +58,19 @@ void uKitServo::setServoStiffness(char id,unsigned char stiffness){
 }
 
 int uKitServo::readServoAnglePD(char id){//单个舵机回读(掉电回读）
-  int tCmd=0;
+  int tCmd=0,tRet=0;
   unsigned char aa[4]={0,0,0,0};
-  tCmd=ubtServoProtocol(0xFA,id,0x02,aa)-120;
+  tRet=ubtServoProtocol(0xFA,id,0x02,aa);
+  if(tRet==0){
+    tCmd=0;
+  }
+  else if(tRet==1){
+    tCmd=-120;
+  }
+  else{
+    tCmd=tRet-120;
+  }
+  
   delay(5);
   if(tCmd>=-120 & tCmd<=120 )
     return tCmd;
@@ -101,11 +114,19 @@ void uKitServo::readServoAnglePD_M(char read_id[],char num)//舵机回读
 
 }
 int uKitServo::readServoAngleNPD(char id){//单个舵机回读(不掉电回读）
-  int tCmd=0;
+  int tCmd=0,tRet=0;
   unsigned char aa[4]={0,0,0,0};
-
-
-  tCmd=ubtServoProtocol(0xFA,id,0x03,aa)-120;
+  tRet=ubtServoProtocol(0xFA,id,0x03,aa);
+  if(tRet==0){
+    tCmd=0;
+  }
+  else if(tRet==1){
+    tCmd=-120;
+  }
+  else{
+    tCmd=tRet-120;
+  }
+ 
   delay(5);
   
   if(tCmd>=-120 & tCmd<=120)

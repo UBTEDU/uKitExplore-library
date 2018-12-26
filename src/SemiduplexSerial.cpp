@@ -32,6 +32,7 @@ unsigned char *SemiduplexSerial::ubtColorProtocol(unsigned char Head,unsigned ch
   memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
   memset((void *)buf,0,sizeof(buf));
  
+ 
   buf[0] = Head;  //协议头
   buf[1] = swab8(Head);
   buf[2] = len;
@@ -66,7 +67,7 @@ Retry_Servo:
     }
   }
   else{ //接收到消息
-   
+
     if(Usart3_Rx_Buf[len+1]==0xE8 && Usart3_Rx_Buf[len+2]==0x8E && Usart3_Rx_Buf[len+5]-0xAA==Data[0]){
       switch(CMD){      
         case 0x01://重启颜色传感器
@@ -88,6 +89,7 @@ Retry_Servo:
           rxBuf[0]=Usart3_Rx_Buf[len+6];//R   
           rxBuf[1]=Usart3_Rx_Buf[len+7];//G  
           rxBuf[2]=Usart3_Rx_Buf[len+8];//B  
+
           break; 
         case 0x06://修改ID
           rxBuf[0]=Usart3_Rx_Buf[len+5]-Data[0];  //成功信息 
@@ -120,6 +122,7 @@ Retry_Servo:
   
   }
   return rxBuf;
+  delete [] rxBuf;
 }
 
 unsigned char SemiduplexSerial::ubtButtonProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
@@ -778,8 +781,8 @@ unsigned short SemiduplexSerial::ubtServoProtocol(unsigned char Head,unsigned ch
   if((CMD == 0x01&& Head!=0xFC) || CMD==0x04 ||CMD==0xCD ){    
     Usart3_Rx_Ack_Len = 1;  //1,4命令只应答一个字节
   }
-  else if(CMD == 0x02 && CMD==0x03){    
-    Usart3_Rx_Ack_Len = 9;  
+  else if(CMD == 0x02 || CMD==0x03){    
+    Usart3_Rx_Ack_Len = 8;  
   }
   else if((CMD == 0x01&& Head==0xFC)){
     Usart3_Rx_Ack_Len = 4; 
@@ -806,6 +809,7 @@ Retry_Servo:
   }
   else  //接收到消息
   { 
+    
     Usart3_Rx_Buf_count = tRet;
     tRet = 0;
     switch(CMD){
