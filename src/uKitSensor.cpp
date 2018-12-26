@@ -1,53 +1,58 @@
 #include"uKitSensor.h" 
 
-unsigned char  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
-  unsigned char hData[1];
-  volatile int State=0;
-  unsigned int  inval=0;
-  hData[0]=ID;
-  if(State==0){
-    State=TXD(0xF8,1,1,0x02,hData);
-    delay(5);
-  }  
-  inval=TXD(0xF8,1,1,4,hData);
-  if(inval<=879)
-    inval=0;
-  else if(inval>879 &inval<=892)
-    inval=1;
-  else if(inval>892 &inval<=905)
-    inval=2;
-   else if(inval>905 &inval<=918)
-    inval=3;
-   else if(inval>918 &inval<=931)
-    inval=4;
-   else if(inval>918 &inval<=944)
-    inval=5;
-  else
-     inval=inval*20/2700;
-     
- return inval;  
-
+unsigned short  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
+  unsigned char buf[1];
+  unsigned short  tRet=0;
+ 
+  buf[0]=ID;
+  tRet=ubtInfraredProtocol(0xf8,0x06,0x04,buf);
   delay(5);
+  if(tRet==238){
+    ubtInfraredProtocol(0xf8,0x06,0x02,buf);
+  }
+  if(tRet<=850)
+    tRet=0;
+  else if(tRet>850 &tRet<=879)
+    tRet=1;
+  else if(tRet>879 &tRet<=905)
+    tRet=2;
+   else if(tRet>905 &tRet<=918)
+    tRet=3;
+   else if(tRet>918 &tRet<=931)
+    tRet=4;
+   else if(tRet>918 &tRet<=944)
+    tRet=5;
+   else if(tRet>944 &tRet<=970)
+    tRet=6;   
+    else if(tRet>970 &tRet<=986)
+    tRet=7;      
+  else
+     tRet=tRet*20/2173;
+
+   if(tRet>20){
+     tRet=20;
+   }
+     
+ return tRet; 
+
+
 }
 
 
 
-unsigned short int uKitSensor::readSoundValue(char id){
-  int tRet = 0,tRet2=0;
-  unsigned char buf[10];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x10;//设备类型
-  buf[2] = 0x06;//长度
-  buf[3] = 0x05;//命令号
-  buf[4] = id;//id
-  buf[5] = 0x10;//参数
-  buf[6] = 0x00;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=(TXD(10,buf)-2048);
-  tRet2=tRet/2;
-  delay(15);
+unsigned short uKitSensor::readSoundValue(char id){
+  unsigned short tRet = 0,tRet2=0;
+  unsigned char buf[5];
+
+
+  buf[0] = id;//id
+  buf[1] = 0x10;//参数
+  buf[2] = 0x00;
+  buf[3] = 0x00;
+  buf[4] = 0x01;
+  tRet=ubtSoundProtocol(0x0A,0x05,buf)-2048;
+  tRet2=tRet/2; 
+
   if(tRet==0 || tRet<0){
     tRet2=0;
   }
@@ -55,24 +60,20 @@ unsigned short int uKitSensor::readSoundValue(char id){
   else if(tRet2>=1023){
     tRet2=1023;
   }
-    
+  
   return tRet2;
 }
 unsigned short int uKitSensor::readLightValue(char id){
   unsigned short int tRet = 0;
-  unsigned char buf[10];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x06;//设备类型
-  buf[2] = 0x06;//长度
-  buf[3] = 0x05;//命令号
-  buf[4] = id;//id
-  buf[5] = 0x10;//参数
-  buf[6] = 0x00;
-  buf[7] = 0x00;
-  buf[8] = 0x01;
-  buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(10,buf);
-  delay(10);
+  unsigned char buf[5];
+
+  buf[0] = id;//id
+  buf[1] = 0x10;//参数
+  buf[2] = 0x00;
+  buf[3] = 0x00;
+  buf[4] = 0x01;
+  tRet=ubtLightProtocol(0x0A,0x05,buf);
+  delay(5);
   if(tRet>4000){
     tRet=4000;    
   }
@@ -80,14 +81,16 @@ unsigned short int uKitSensor::readLightValue(char id){
 }
 void uKitSensor::setEyelightLook(char id,char face,int times,int red,int green,int blue){
 
-  signed char tData2[1] ;
-  signed char tData[7];
+  unsigned char tData2[1] ;
+  unsigned char tData[7];
+  unsigned char tRet=0;
+  static unsigned char eyelightState=1;
   tData2[0]=id;
-  volatile int State=0;
-  if(State==0){
-    State=TXD(0xF4,1,1,0x2,tData2 );
-    delay(5);  
-  }
+  if(eyelightState==1){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+    eyelightState=0;
+    
+  }  
   tData[0]=id;  //ID
   tData[1]=face;//表情
   tData[2]=0x00;//
@@ -96,20 +99,25 @@ void uKitSensor::setEyelightLook(char id,char face,int times,int red,int green,i
   tData[5]=green;
   tData[6]=blue;
   
-  State=TXD(0xF4,1,7,0x0a,tData );
-  delay(10);
+  tRet=ubtEyelightProtocol(0xf4,0x0c,0x0a,tData);
+  if(tRet==238){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+} 
+
+  
 
  }
 void uKitSensor::setEyelightScene(char id,char scene,int times){
 
-  signed char tData2[1] ;
-  signed char tData[7];
-  tData2[0]=id;
-  volatile int State=0;
-  if(State==0){
-    State=TXD(0xF4,1,1,0x2,tData2 );
-    delay(5);  
-  }
+  unsigned char tData2[1] ;
+  unsigned char tData[7];
+  unsigned char tRet=0;
+  static unsigned char eyelightState=1;
+   tData2[0]=id;
+  if(eyelightState==1){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+    eyelightState=0;   
+  }  
   tData[0]=id;  //ID
   tData[1]=scene+12;//表情
   tData[2]=0x00;//
@@ -117,20 +125,24 @@ void uKitSensor::setEyelightScene(char id,char scene,int times){
   tData[4]=0;
   tData[5]=0;
   tData[6]=0;
-  State=TXD(0xF4,1,7,0x0a,tData );
-  delay(10);
+  tRet=ubtEyelightProtocol(0xf4,0x0c,0x0a,tData);
+  if(tRet==238){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+} 
+  
+
  }
 void uKitSensor::setEyelightAllPetals(char id,int red,int green,int blue){
 
   signed char tData2[1] ;
   signed char tData[8];
-  tData2[0]=id;
-  volatile int State=0;
-  if(State==0){
-    State=TXD(0xF4,1,1,0x2,tData2 );
-    delay(5); 
-    State=1; 
-  }
+  unsigned char tRet=0;
+  static unsigned char eyelightState=1;
+   tData2[0]=id;
+  if(eyelightState==1){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+    eyelightState=0;   
+  }  
   tData[0]=id;  //ID
   tData[1]=0xff;
   tData[2]=1;//
@@ -139,18 +151,22 @@ void uKitSensor::setEyelightAllPetals(char id,int red,int green,int blue){
   tData[5]=green;
   tData[6]=blue;
   tData[7]=8;
-  State=TXD(0xF4,1,8,0x0b,tData );
-  delay(10);
+    tRet=ubtEyelightProtocol(0xf4,0x0c,0x0b,tData);
+  if(tRet==238){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+  
  }
+}
 void uKitSensor::setEyelightPetal(char id,unsigned char petalsnum,unsigned char petals[8][4],unsigned char time){
   signed char tData2[1] ;
   signed char tData[35];
-  tData2[0]=id;
-  volatile int State=0;
-  if(State==0){
-    State=TXD(0xF4,1,1,0x2,tData2 );
-    delay(5);  
-  }
+  unsigned char tRet=0;
+  static unsigned char eyelightState=1;
+   tData2[0]=id;
+  if(eyelightState==1){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+    eyelightState=0;   
+  }  
   tData[0]=id;  //ID
   tData[1]=0xff;//持续时间
   tData[2]=petalsnum;//色块数量
@@ -194,8 +210,12 @@ void uKitSensor::setEyelightPetal(char id,unsigned char petalsnum,unsigned char 
   tData[32]=petals[7][1];
   tData[33]=petals[7][2];
   tData[34]=petals[7][3];  
-
-  State=TXD(0xF4,1,35,0x0b,tData );
+  tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
+  if(tRet==238){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+  
+ }
+  //State=TXD(0xF4,1,35,0x0b,tData );
   delay(time*1000);
   setEyelightOff(id);
   delay(5);
@@ -207,12 +227,14 @@ void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,String petals
   unsigned char tData[35];
   
   JsonObject& root = jsonBuffer.parseObject(petals);
-  tData2[0]=id;
-  volatile int State=0;
-  if(State==0){
-    State=TXD(0xF4,1,1,0x2,tData2 );
-    delay(5);  
-  }
+  unsigned char tRet=0;
+   tData2[0]=id;
+  static unsigned char eyelightState=1;
+  
+  if(eyelightState==1){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+    eyelightState=0;   
+  }  
   tData[0]=id;  //ID
   tData[1]=0xff;//持续时间
   tData[2]=petalsnum;//色块数量
@@ -257,8 +279,11 @@ void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,String petals
   tData[33]=int(root["data"][30]);
   tData[34]=int(root["data"][31]);  
 
-  State=TXD(0xF4,1,35,0x0b,tData );
-  delay(10);
+    tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
+  if(tRet==238){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2); 
+ }
+  
   
   
 }
@@ -273,19 +298,16 @@ void uKitSensor::setEyelightOff(char id){
  } 
 signed char uKitSensor::readHumitureValue(char id, char choice){
   signed char tRet = 0;
-  unsigned char buf[10];
-  buf[0] = 0xFB;//帧头
-  buf[1] = 0x05;//设备类型
-  buf[2] = 0x06;//长度
-  buf[3] = 0x05;//命令号
-  buf[4] = id;//id
-  buf[5] = 0x10;//参数
-  buf[6] = 0x00;
-  buf[7] = 0x00;
-  buf[8] = 0x02;
-  buf[9] = crc8_itu(&buf[1], buf[2]+2);
-  tRet=TXD(10,choice,buf);
-  delay(10);
+  unsigned char buf[6];
+
+  buf[0] = id;//id
+  buf[1] = 0x10;//参数
+  buf[2] = 0x00;
+  buf[3] = 0x00;
+  buf[4] = 0x02;
+  buf[5] = crc8_itu(&buf[1], buf[2]+2);
+  tRet=ubtHumitureProtocol(0x0A,0x05,choice,buf);
+  delay(15);
   return tRet;
 }
 int  *uKitSensor::Rgb2Hsb(unsigned char rgbR,unsigned char rgbG,unsigned char rgbB){
@@ -336,47 +358,33 @@ unsigned char uKitSensor::readColorRgb(char id,unsigned char RGB){
  
 unsigned char *uKitSensor::readColorRgb(char id){
   unsigned  char tData[1];
-  unsigned char *value=NULL;
-  
+  unsigned char *value1=NULL;  
+  static unsigned char ColorState=1;
   tData[0]=id;
-  unsigned char getid=0;
-  volatile int State=0;
-  if(State==0){
-    getid=TXD(0xE8,1,1,2,tData);  
-    delay(10); 
-    State=1;
-    
-    
-  }
- 
-    value=TXDRandom(0xE8,1,1,4,tData);  
-    delay(180);   
-    
-    if(getid!=id){
-      value[0]=0;
-      value[1]=0;
-      value[2]=0;
-      
+  if(ColorState==1){
+    ubtColorProtocol(0xe8,0x06,0x02,tData); 
+    ColorState=0;  
+  }  
+  value1=ubtColorProtocol(0xe8,0x06,0x04,tData);   
+  delay(80);
+  if(value1[0]==238){ //获取失败，开启颜色传感器
+       ubtColorProtocol(0xe8,0x06,0x02,tData); 
        
-    }
-    return value;
-
-   
-     
-    
-    
-    
+  }
+  return value1;
+  delete [] value1;
+        
           
  }
  
 void uKitSensor::setColorOff(char id){
   unsigned  char tData[1];
   tData[0]=id;
-  TXD(0xE8,1,1,3,tData); 
-    delay(5);   
+  ubtColorProtocol(0xe8,0x06,0x03,tData); 
+  delay(5);   
  }
 bool uKitSensor::readColor(char id,String color){
-    unsigned  char tData[1];  
+  unsigned  char tData[1];  
   tData[0]=id;
   unsigned char *ColorRgb=NULL;
   unsigned int *buf=NULL;
@@ -388,6 +396,7 @@ bool uKitSensor::readColor(char id,String color){
   buf=Rgb2Hsb(ColorRgb[0],ColorRgb[1],ColorRgb[2]);
   delay(5);
   getid=TXD(0xE8,1,1,2,tData);  
+  delay(5);
 if(getid==id){  
   if(color!="Black"&& (buf[1]>15 & buf[2]>25)){    
     if(color=="Red" && ((buf[0]>0 & buf[0]<=11)||(buf[0]>=340 & buf[0]<=360))){
@@ -444,31 +453,80 @@ void uKitSensor::setAllSensorOff(){
 }
 
 
-int uKitSensor::readButtonValue(char id){
+unsigned char uKitSensor::readButtonValue(char id){
   unsigned  char tData[1];
-  volatile int State=0;
-  tData[0]=id;
-  if(State==0){
-    State=TXD(0xF7,1,1,2,tData);  //开触碰
-    delay(5);
-  }   
-  return TXD(0xF7,1,1,4,tData)-(id-1)*256;  
-  delay(5);
+  unsigned char  tRet=0;
+  tData[0]=id; 
+  tRet=ubtButtonProtocol(0xf7,0x06,0x04,tData);
+  if(tRet==238){
+    ubtButtonProtocol(0xf7,0x06,0x02,tData);
+  }
+  return tRet;  
+  delay(2);
 }
 
-int uKitSensor::readUltrasonicDistance(char id){
-  unsigned char tData[1];
-  volatile int State=0;
-  int distance=0;
-  tData[0]=id;
-  if(State==0){
-    State=TXD(0xF5,1,1,0x02,tData);
-    delay(5);
-  }
-   distance+=TXD(0xF5,1,1,4,tData);
-   distance/=10;
-    return distance; 
-  delay(5);
+unsigned short uKitSensor::readUltrasonicDistance(char id){
+  unsigned char buf[1] ;
+  unsigned short tRet=0;
+  static unsigned char UltrasonicState=1;
+  buf[0]=id;
+  if(UltrasonicState==1){
+    ubtUltrasonicProtocol(0xF5,0x06,0x02,buf);
+    UltrasonicState=0;
+    
+  }  
+  
+  tRet=ubtUltrasonicProtocol(0xF5,0x06,0x04,buf);
+  if(tRet==238){
+    ubtUltrasonicProtocol(0xF5,0x06,0x02,buf);
+} 
+   
+    tRet/=10;
+    delay(30);
+
+    return tRet; 
+    
+
+    
+ 
+}
+unsigned char uKitSensor::setUltrasonicRgbled(char id,unsigned char red,unsigned char green,unsigned char blue ){
+  unsigned char buf[8] ;
+  unsigned short tRet=0;
+
+  buf[0]=id;
+  buf[1]=red;
+  buf[2]=green;
+  buf[3]=blue;
+  buf[4]=0x01;
+  buf[5]=0x00;
+  buf[6] = (0xffff & 0xFF00) >> 8;
+  buf[7] = 0xffff & 0x00FF;
+
+  tRet=ubtUltrasonicProtocol(0xF5,0x0D,0x08,buf);
+ 
+  return tRet; 
+    
+    
+}
+unsigned char uKitSensor::setUltrasonicRgbledOff(char id){
+  unsigned char buf[8] ;
+  unsigned short tRet=0;
+
+  buf[0]=id;
+  buf[1]=0x00;
+  buf[2]=0x00;
+  buf[3]=0x00;
+  buf[4]=0x00;
+  buf[5]=0x00;
+  buf[6] = (0x0000 & 0xFF00) >> 8;
+  buf[7] = 0x0000 & 0x00FF;
+
+  tRet=ubtUltrasonicProtocol(0xF5,0x0D,0x08,buf);
+ 
+  return tRet; 
+    
+    
 }
 void uKitSensor::setNixieTubeFull(char id,uint8_t tpye,uint8_t method,uint8_t frequency,uint8_t times,uint8_t start,uint8_t ends){
   unsigned char tData[1]; 

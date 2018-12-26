@@ -50,6 +50,7 @@ public:
     
     void setDeciveId();
     void setAllDeciveId(unsigned char decive,unsigned char oldid,unsigned char newid);
+    unsigned char getAllDeciveId(unsigned char decive,unsigned char newid);
     void setDeciveIdEn();
     void setDeciveIdKo();
     void getDeciveId();
