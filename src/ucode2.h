@@ -108,8 +108,6 @@ Gyroscope gyro;
 #define num3 Sensor2.num3
 #define num4 Sensor2.num4
 #define num5 Sensor2.num5
-#define tone(frequency,duration) Sensor2.tone(frequency,duration)
-#define noTone(pin) Sensor2.noTone(pin)
 #define getGrayAllValue() Sensor2.getGrayAllValue()
 #define readGrayValue(num,grayval) Sensor2.readGrayValue(num,grayval)
 #define setRgbledColor(red,green,blue) Sensor2.setRgbledColor(red,green,blue)//板载RGB灯函数

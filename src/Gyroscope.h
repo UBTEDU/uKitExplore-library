@@ -2,9 +2,8 @@
 #define GYROSCOPE_H
 
 #include <Arduino.h>
-#include "Wire.h"
-#include "I2Cdev.h"
-#include "MPU6050.h"
+
+#include <MPU6050.h>
 
 class Gyroscope:MPU6050
 {

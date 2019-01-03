@@ -1,10 +1,9 @@
 #include"Gyroscope.h"
 
 float *Gyroscope::getMpu6050Data(){
-   float *data =NULL;
+   float *data =new float[3];
   static int initFlog=0;
   if(initFlog==0){
-    Wire.begin();
     initialize();//初始化
     unsigned short times = 200;             //采样次数
     for(int i=0;i<times;i++){
@@ -115,11 +114,13 @@ float *Gyroscope::getMpu6050Data(){
     agz = agz + Kz * (aaz - agz); 
     Pz = (1 - Kz) * Pz;
 
+
     /* kalman end */
     data[0]=agx;
     data[1]=agy;
-    data[2]-agz;
+    data[2]=agz;
     return data;
+    delete [] data;
 //    Serial.print(agx);Serial.print(",");
 //    Serial.print(agy);Serial.print(",");
 //    Serial.print(agz);Serial.println();  

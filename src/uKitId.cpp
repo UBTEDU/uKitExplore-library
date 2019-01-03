@@ -78,17 +78,21 @@ unsigned char uKitId::getSoundId(char id){
 }
 
 unsigned char uKitId::setHumitureId(char oldid,char newid){
-  unsigned char tRet = 0;
-  unsigned char buf[7];
-
-  buf[0] = oldid;//id
-  buf[1] = 0x00;//参数
-  buf[2] = 0x06;
-  buf[3] = 0x00;
-  buf[4] = 0x01;
-  buf[5] = (newid & 0xFF00) >> 8;//new id
-  buf[6] = newid & 0x00FF;//new id
-  tRet=ubtHumitureProtocol(0x0C,0x06,0x00,buf);
+ unsigned short int tRet = 0;
+  unsigned char buf[11];
+  buf[0] = 0xFB;//帧头
+  buf[1] = 0x05;//设备类型
+  buf[2] = 0x08;//长度
+  buf[3] = 0x06;//命令号
+  buf[4] = oldid;//id
+  buf[5] = 0x00;//参数
+  buf[6] = 0x06;
+  buf[7] = 0x00;
+  buf[8] = 0x01;
+  buf[9] = (newid & 0xFF00) >> 8;//new id
+  buf[10] = newid & 0x00FF;//new id
+  buf[11] = crc8_itu(&buf[1], buf[2]+2);
+  tRet=TXD(12,buf);
   return tRet;
 }
 
@@ -413,6 +417,7 @@ void uKitId::setAllDeciveId(unsigned char decive,unsigned char oldid,unsigned ch
       break;
     case 9://温湿度
       setHumitureId(oldid,newid);
+      
       break;
     case 10://颜色
       setColorId(oldid,newid);
@@ -1588,7 +1593,7 @@ void uKitId::getDeciveId(){
     drivers.add(9);//温湿度传感器
     for(int i=1;i<=decivenum[8];i++){
       tah.add(deciveid[i+96]);
-      Serial.print(deciveid[i+96]);
+      
     }
   }
   if(decivenum[9]!=0){      
