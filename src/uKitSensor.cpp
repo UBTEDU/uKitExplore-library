@@ -392,15 +392,16 @@ bool uKitSensor::readColor(char id,String color){
   unsigned char getid=0;
   ColorRgb=readColorRgb(id);//ColorRgb[0]为R,ColorRgb[1]为G,ColorRgb[2]为B
   delay(5);
-
   buf=Rgb2Hsb(ColorRgb[0],ColorRgb[1],ColorRgb[2]);
   delay(5);
+ 
   getid=TXD(0xE8,1,1,2,tData);  
   delay(5);
 if(getid==id){  
   if(color!="Black"&& (buf[1]>15 & buf[2]>25)){    
     if(color=="Red" && ((buf[0]>0 & buf[0]<=11)||(buf[0]>=340 & buf[0]<=360))){
       state=true;
+      
     } 
    else if(color=="Orange" && ((buf[0]>=18 & buf[0]<=39))){
     state=true;
@@ -421,7 +422,6 @@ if(getid==id){
      state=true;
    }
 
-  
  }
   else if(color=="White" && buf[0]<20 && (buf[1]<=7) &&buf[2]>=80){
     state=true;
@@ -442,6 +442,7 @@ if(getid==id){
   }
     delete [] ColorRgb;
     delete [] buf;
+    delay(100);
     return state;
    
   
