@@ -203,3 +203,9 @@ long Sensor2::readHcsr04Distance(unsigned char jp){
   // X秒=（ 2*Y米）/344 ==》X秒=0.0058*Y米 ==》厘米=微秒/58
   return distance;
  }
+
+void Sensor2::printInf(){
+    Serial.print("{\"device\":\"v2\"}");
+    Serial.print('\n');
+  
+}

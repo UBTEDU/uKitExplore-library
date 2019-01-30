@@ -12,6 +12,7 @@ unsigned char uKitId::setLightId(char oldid,char newid){
   buf[5] = (newid & 0xFF00) >> 8;//new id
   buf[6] = newid & 0x00FF;//new id
   tRet=ubtLightProtocol(0x0C,0x06,buf);
+  delay(2);
   return tRet;
 }
 
@@ -24,6 +25,7 @@ unsigned char uKitId::getLightId(){
   buf[3] = 0x00;
   buf[4] = 0x01;
   tRet=ubtLightProtocol(0x0A,0x05,buf);
+  delay(2);
   return tRet;
 }
 unsigned char uKitId::getLightId(char id){
@@ -35,6 +37,7 @@ unsigned char uKitId::getLightId(char id){
   buf[3] = 0x00;
   buf[4] = 0x01;
   tRet=ubtLightProtocol(0x0A,0x05,buf);
+  delay(2);
   return tRet;
 }
 unsigned char uKitId::setSoundId(char oldid,char newid){
@@ -49,6 +52,7 @@ unsigned char uKitId::setSoundId(char oldid,char newid){
   buf[5] = (newid & 0xFF00) >> 8;//new id
   buf[6] = newid & 0x00FF;//new id
   tRet=ubtSoundProtocol(0x0C,0x06,buf);
+  delay(2);
   return tRet;
 }
 
@@ -62,6 +66,7 @@ unsigned char uKitId::getSoundId(){
   buf[3] = 0x00;
   buf[4] = 0x01;
   tRet=ubtSoundProtocol(0x0A,0x05,buf);
+  delay(2);
   return tRet;
 }
 unsigned char uKitId::getSoundId(char id){
@@ -74,6 +79,7 @@ unsigned char uKitId::getSoundId(char id){
   buf[3] = 0x00;
   buf[4] = 0x01;
   tRet=ubtSoundProtocol(0x0A,0x05,buf);
+  delay(2);
   return tRet;
 }
 
@@ -93,6 +99,7 @@ unsigned char uKitId::setHumitureId(char oldid,char newid){
   buf[10] = newid & 0x00FF;//new id
   buf[11] = crc8_itu(&buf[1], buf[2]+2);
   tRet=TXD(12,buf);
+  delay(2);
   return tRet;
 }
 
@@ -134,7 +141,7 @@ unsigned char uKitId::setMotorId(uint8_t id_old, uint8_t id_new){
   buf[6] = id_new;
  
   tRet=ubtMotorProtocol(0x0C,0x06,buf);
-  
+  delay(2);
   return tRet;
 }
 
@@ -177,7 +184,7 @@ unsigned char uKitId::setInfraredId(char oldid,char newid){
   buf[1]=newid;
   //tRet=TXD(0xF8,1,2,0x06,buf);
   tRet=ubtInfraredProtocol(0xf8,0x07,0x06,buf);
-  delay(5);
+  delay(2);
   return tRet;
  
 }
@@ -259,7 +266,7 @@ unsigned char uKitId::getButtonId(){
     buf[0]=testid;
     //tRet=TXD(0xF7,1,1,0x07,buf);  
     tRet=ubtButtonProtocol(0xf7,0x06,0x07,buf);
-    delay(2);
+    delay(5);
     if(tRet==testid){
       return tRet;
     }
@@ -321,6 +328,7 @@ unsigned char uKitId::setColorId(char oldid,char newid){
   tRet=ubtColorProtocol(0xe8,0x07,0x06,buf);
   delay(5);  
   return tRet[0];
+  delete [] tRet;
  
 }
 
@@ -346,6 +354,7 @@ unsigned char uKitId::getColorId(char id){
   tRet=ubtColorProtocol(0xe8,0x06,0x07,buf);;
   delay(3);
   return tRet[0];
+  delete [] tRet;
 }
 
 unsigned char uKitId::setServoId(char oldid,char newid){
@@ -1452,7 +1461,7 @@ void uKitId::getDeciveId(){
   unsigned char idbuf[116]={0};
   unsigned char decivenum[10]={0};
   unsigned char deciveid[116]={0};
-  StaticJsonBuffer<200> jsonBuffer;
+  StaticJsonBuffer<800> jsonBuffer;
   JsonObject& root = jsonBuffer.createObject();
   JsonArray& drivers = root.createNestedArray("drivers");   
 

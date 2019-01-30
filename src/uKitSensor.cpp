@@ -449,7 +449,8 @@ if(getid==id){
 }
  
 void uKitSensor::setAllSensorOff(){
-  setEyelightOff(0);
+  //setEyelightOff(0);
+  setEyelightAllPetals(0,0,0,0);
   setColorOff(0);
 }
 

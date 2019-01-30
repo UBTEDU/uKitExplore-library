@@ -127,7 +127,7 @@ Gyroscope gyro;
 #define GrayscaleNum5 Sensor2.GrayscaleNum5
 #define IR_S Sensor2.IR_S
 #define buzzer_pin Sensor2.buzzer_pin
-
+#define printInf() Sensor2.printInf()
 
 
 
@@ -162,9 +162,8 @@ ClickButton button1(Button_pin, HIGH, CLICKBTN_PULLUP);//设置按键
   setMotorStop(0xff);
   StopServo();
   setUltrasonicRgbledOff(0x00);
-  Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
-  
-  
+  Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）  
+  printInf();
   getDeciveId();
  
   

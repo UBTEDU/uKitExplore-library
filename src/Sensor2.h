@@ -15,6 +15,7 @@ public:
   void tone(uint16_t frequency, uint32_t duration = 0);
   void noTone(int pin);
   void noTone();
+  void printInf();
   //IR红外发射
   void IR_Send38KHZ(char pin,int x,int y);
   void IR_Sendcode(char pin,uint8_t x);

@@ -31,7 +31,7 @@ public:
   float *getMpu6050Data();
   float readBatteryVoltage();
   long readHcsr04Distance(unsigned char jp); //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
-
+  void printInf();
 
   
  
