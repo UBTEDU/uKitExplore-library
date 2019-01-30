@@ -22,9 +22,8 @@ Arduino Library for uKit Explore Modules
 
 ### Update
 #### V1.1.3更新说明
-1. xx
-2. xx
-3. xx
+1. 加入开机获取设备信息
+
 
 #### V1.1.2更新说明
 1. 修复了初次打开串口时，读取设备信息提示有时缺少的问题
