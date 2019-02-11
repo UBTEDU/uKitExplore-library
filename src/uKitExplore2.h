@@ -14,6 +14,8 @@
 #include"uKitId.h"
 #include"Gyroscope.h"
 
+
+
 Sensor2 Sensor2;
 TransforRobot TransforRobot;
 uKitMotor uKitMotor;

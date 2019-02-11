@@ -1,5 +1,17 @@
 #include"uKitId.h" 
 #include "ArduinoJson/ArduinoJson.h"
+#include "avr/boot.h"
+void uKitId::printUUID(){
+     Serial.print("{\"UUID\":\"");
+  for (int i = 14; i < 14 + 10; i++){
+    Serial.print(boot_signature_byte_get(i), HEX);
+    if(i<23){
+      Serial.print(",");
+    }
+  }
+  Serial.print("\"}");
+  Serial.print('\n');
+}
 unsigned char uKitId::setLightId(char oldid,char newid){
   unsigned short int tRet = 0;
   unsigned char buf[7];

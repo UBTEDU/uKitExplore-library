@@ -7,7 +7,7 @@
 class uKitId : public SemiduplexSerial
 {
 public:
-	
+	  void printUUID();
     unsigned char setLightId(char oldid,char newid);
     unsigned char getLightId();
     unsigned char getLightId(char id);
