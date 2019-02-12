@@ -596,6 +596,7 @@ void protocol(){
   if(timeTimes>=3){
     protocolRunState=false;
     FlexiTimer2::stop();
+    timeTimes=0;
   }
 
 }
