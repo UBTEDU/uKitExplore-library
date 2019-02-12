@@ -7,8 +7,7 @@ void setup() {
 
 void loop() {
   protocol();
-  if(protocolRunState==false){
-    
+  if(protocolRunState==false){    
       //放烧录程序
   }
   
