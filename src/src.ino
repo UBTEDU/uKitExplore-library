@@ -9,8 +9,8 @@ void loop() {
   protocol();
   if(protocolRunState==false){    
   
-  consoleLog(1,"Hello");
-delay(800);
+  consoleLog(1,String("检测到电池电压：")+String(readBatteryVoltage()));
+  delay(800);
 
     
   }

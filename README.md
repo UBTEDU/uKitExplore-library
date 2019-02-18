@@ -24,6 +24,9 @@ Arduino Library for uKit Explore Modules
 #### V1.1.3更新说明
 1. 加入开机获取设备信息
 2. 加入通讯烧录二合一框架
+3. 加入ucode支持
+4. 加入日志模式，新增consoleLog函数
+5. 加入获取芯片UUID功能
 
 
 #### V1.1.2更新说明

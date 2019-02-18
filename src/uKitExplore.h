@@ -156,7 +156,7 @@ void Initialization(){
   StopServo();
   setUltrasonicRgbledOff(0x00);
   Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
-  printInf();
+  
   getDeciveId();
   
   
