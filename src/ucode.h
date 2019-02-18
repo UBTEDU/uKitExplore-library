@@ -590,7 +590,7 @@ void protocol(){
   }
 
 }
-void printLog(unsigned char level, const String msg){
+void consoleLog(unsigned char level, const String msg){
   Serial.print("{\"level\":");
   Serial.print(level);
   Serial.print(",\"msg\":\"");
@@ -599,7 +599,7 @@ void printLog(unsigned char level, const String msg){
   Serial.print('\n');
   
 }
-void printLog(unsigned char level, const char msg){
+void consoleLog(unsigned char level, const char msg){
   Serial.print("{\"level\":");
   Serial.print(level);
   Serial.print(",\"msg\":");
@@ -608,7 +608,7 @@ void printLog(unsigned char level, const char msg){
   Serial.print('\n');
   
 }
-void printLog(unsigned char level, const int msg){
+void consoleLog(unsigned char level, const int msg){
   Serial.print("{\"level\":");
   Serial.print(level);
   Serial.print(",\"msg\":");
@@ -617,7 +617,7 @@ void printLog(unsigned char level, const int msg){
   Serial.print('\n');
   
 }
-void printLog(unsigned char level,const double msg){
+void consoleLog(unsigned char level,const double msg){
   Serial.print("{\"level\":");
   Serial.print(level);
   Serial.print(",\"msg\":");
