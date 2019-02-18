@@ -8,7 +8,14 @@ void setup() {
 void loop() {
   protocol();
   if(protocolRunState==false){    
-      //放烧录程序
+  
+//  printLog(1,"Hello");
+//  delay(800);
+//  printLog(1,'s');
+//  delay(800);
+//  printLog(1,2.3);
+//  delay(800);
+    
   }
   
 

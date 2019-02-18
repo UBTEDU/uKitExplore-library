@@ -590,6 +590,41 @@ void protocol(){
   }
 
 }
+void printLog(unsigned char level, const String msg){
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":\"");
+  Serial.print(msg);
+  Serial.print("\"}");
+  Serial.print('\n');
+  
+}
+void printLog(unsigned char level, const char msg){
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":");
+  Serial.print(msg);
+  Serial.print("}");
+  Serial.print('\n');
+  
+}
+void printLog(unsigned char level, const int msg){
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":");
+  Serial.print(msg);
+  Serial.print("}");
+  Serial.print('\n');
+  
+}
+void printLog(unsigned char level,const double msg){
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":");
+  Serial.print(msg);
+  Serial.print("}");
+  Serial.print('\n');  
+}
 void serialEvent(){
   while (Serial.available()) {  
     incomingByte = Serial.read();              //一个字节一个字节地读，下一句是读到的放入字符串数组中组成一个完成的数据包
@@ -601,5 +636,6 @@ void serialEvent(){
     }
   }
 }
+
 
 #endif

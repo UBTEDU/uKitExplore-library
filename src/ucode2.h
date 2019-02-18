@@ -196,7 +196,7 @@ void flexiTimer2_func() {
   Serial.print(versionNumber);
   Serial.print("\",\"v2\"]}");
   Serial.print('\n');
-  FlexiTimer2::set(800, flexiTimer2_func);
+  FlexiTimer2::set(800,flexiTimer2_func);
   FlexiTimer2::start();
   //getDeciveId();
  
@@ -599,6 +599,41 @@ void protocol(){
     timeTimes=0;
   }
 
+}
+void printLog(unsigned char level, const String msg){
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":\"");
+  Serial.print(msg);
+  Serial.print("\"}");
+  Serial.print('\n');
+  
+}
+void printLog(unsigned char level, const char msg){
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":");
+  Serial.print(msg);
+  Serial.print("}");
+  Serial.print('\n');
+  
+}
+void printLog(unsigned char level, const int msg){
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":");
+  Serial.print(msg);
+  Serial.print("}");
+  Serial.print('\n');
+  
+}
+void printLog(unsigned char level,const double msg){
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":");
+  Serial.print(msg);
+  Serial.print("}");
+  Serial.print('\n');  
 }
 void serialEvent(){
   while (Serial.available()) {  
