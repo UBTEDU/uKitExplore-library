@@ -53,11 +53,13 @@ public:
     unsigned char getAllDeciveId(unsigned char decive,unsigned char newid);
     void setDeciveIdEn();
     void setDeciveIdKo();
+    void setDeciveIdTh();
     void getDeciveId();
     void getDeciveIdJs();
    
     void getDeciveIdEn();
      void getDeciveIdKo();
+     void getDeciveIdTh();
 
  };
  #endif
