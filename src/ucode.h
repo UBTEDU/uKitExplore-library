@@ -535,7 +535,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
             data.add(1);
            }
            data.add(versionNumber);
-           data.add("v2");
+           data.add("v1");
            bstate=true;
            bstate1=true;
            bstate2=10.00;
