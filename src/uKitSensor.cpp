@@ -102,6 +102,7 @@ void uKitSensor::setEyelightLook(char id,char face,int times,int red,int green,i
   tRet=ubtEyelightProtocol(0xf4,0x0c,0x0a,tData);
   if(tRet==238){
     ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+    tRet=ubtEyelightProtocol(0xf4,0x0c,0x0a,tData);
 } 
 
   
@@ -128,6 +129,7 @@ void uKitSensor::setEyelightScene(char id,char scene,int times){
   tRet=ubtEyelightProtocol(0xf4,0x0c,0x0a,tData);
   if(tRet==238){
     ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+    tRet=ubtEyelightProtocol(0xf4,0x0c,0x0a,tData);
 } 
   
 
@@ -154,6 +156,7 @@ void uKitSensor::setEyelightAllPetals(char id,int red,int green,int blue){
     tRet=ubtEyelightProtocol(0xf4,0x0c,0x0b,tData);
   if(tRet==238){
     ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+    tRet=ubtEyelightProtocol(0xf4,0x0c,0x0b,tData);
   
  }
 }
@@ -213,6 +216,7 @@ void uKitSensor::setEyelightPetal(char id,unsigned char petalsnum,unsigned char 
   tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
   if(tRet==238){
     ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+    tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
   
  }
   //State=TXD(0xF4,1,35,0x0b,tData );
@@ -282,6 +286,7 @@ void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,String petals
     tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
   if(tRet==238){
     ubtEyelightProtocol(0xf4,0x06,0x02,tData2); 
+    tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
  }
   
   

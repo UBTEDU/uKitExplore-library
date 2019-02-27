@@ -19,7 +19,7 @@ public:
   int  readServoAngleNPD(char id);//单个舵机回读，返回舵机角度值(不掉电回读）
   void  readServoAngleNPD_M(char read_id[],char num);//多个舵机回读，返回舵机角度值(不掉电回读）
   void ServoRead();
-  void motion(unsigned char id[],signed char action[][sizeof(id)/sizeof(id[0])],signed char time[],int times);
+  
   void playMotion(signed char *id,signed char **action,int *times);
   int read_num=1;
 };

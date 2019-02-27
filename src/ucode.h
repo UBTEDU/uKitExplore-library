@@ -599,6 +599,24 @@ void consoleLog(unsigned char level, const String msg){
   Serial.print('\n');
   
 }
+void consoleLog(unsigned char level, const bool msg){
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":\"");
+  Serial.print(msg);
+  Serial.print("\"}");
+  Serial.print('\n');
+  
+}
+void consoleLog(unsigned char level, const long msg){
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":\"");
+  Serial.print(msg);
+  Serial.print("\"}");
+  Serial.print('\n');
+  
+}
 void consoleLog(unsigned char level, const char msg){
   Serial.print("{\"level\":");
   Serial.print(level);
@@ -616,6 +634,14 @@ void consoleLog(unsigned char level, const int msg){
   Serial.print("}");
   Serial.print('\n');
   
+}
+void consoleLog(unsigned char level, const uint16_t msg){
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":");
+  Serial.print(msg);
+  Serial.print("}");
+  Serial.print('\n'); 
 }
 void consoleLog(unsigned char level,const double msg){
   Serial.print("{\"level\":");

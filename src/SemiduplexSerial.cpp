@@ -707,6 +707,7 @@ Retry_Servo:
   Serial2.end();  //关闭串口2,否则会影响接收消息
   tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
   Serial3.end();  //关闭串口3,否则会影响接收消息
+  delay(2);
  
   if(Usart3_Rx_Buf[len]==0x00){
     Serial3.begin(114200);  //uart3
@@ -717,6 +718,8 @@ Retry_Servo:
     Serial3.readBytes(Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
     Serial3.end();  //关闭串口3,否则会影响接收消息
   }
+delay(3);
+    
  
   if(tRet == 0){ //没有接收到消息 
     if( tCnt < 2){

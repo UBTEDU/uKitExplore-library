@@ -11,6 +11,7 @@ public:
     unsigned char setMotorTurnAdj(uint8_t id, uint16_t speed, uint16_t time);
     uint16_t readMotorSpeed(uint8_t id);
     int setMotorStop(uint8_t id);
+    void clearMotorInf(unsigned char id);
     void StopServo();
     
 

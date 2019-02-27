@@ -86,6 +86,18 @@ int uKitMotor::setMotorStop(uint8_t id)
   tRet=ubtMotorProtocol(0x0C,0x06,buf);
   return tRet;
 }
+void uKitMotor::clearMotorInf(unsigned char id){
+  unsigned char buf[7];  
+  buf[0] = id;
+  buf[1] = 0x00;
+  buf[2] = 0x0F;
+  buf[3] = 0x00;
+  buf[4] = 0x01;
+  buf[5] = 0xff;
+  buf[6] = 0xff;
+  ubtMotorProtocol(0x0C,0x06,buf);
+ 
+}
 /**@brief EN:Set motor module ID/CN:设置电机ID号.
  *
  * @param[in] id_old EN:Old target motor module id/CN:旧的舵机号.
