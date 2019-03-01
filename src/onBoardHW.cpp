@@ -1,7 +1,6 @@
 
-#include"Sensor2.h" 
-
-void Sensor2::tone(int pin, uint16_t frequency, uint32_t duration) 
+#include"onBoardHW.h" 
+void OnBoardHW::tone(int pin, uint16_t frequency, uint32_t duration) 
 {
   
   int period = 1000000L / frequency;
@@ -16,14 +15,11 @@ void Sensor2::tone(int pin, uint16_t frequency, uint32_t duration)
     
   }
 }
-void Sensor2::tone(uint16_t frequency, uint32_t duration)
+void OnBoardHW::tone(uint16_t frequency, uint32_t duration)
 {
   int period = 1000000L / frequency;
   int pulse = period / 2;
   pinMode(buzzer_pin, OUTPUT);
-  if(duration==0)
-    tone(buzzer_pin,frequency,0);
-    else{
   for (long i = 0; i < duration * 1000L; i += period) 
   {
     digitalWrite(buzzer_pin, HIGH);
@@ -32,19 +28,18 @@ void Sensor2::tone(uint16_t frequency, uint32_t duration)
     delayMicroseconds(pulse);
    
   }
-    }
 }
-void Sensor2::noTone(int pin)
+void OnBoardHW::noTone(int pin)
 {
   pinMode(pin, OUTPUT);
   digitalWrite(buzzer_pin, LOW);
 }
-void Sensor2::noTone()
+void OnBoardHW::noTone()
 {
   pinMode(buzzer_pin, OUTPUT);
   digitalWrite(buzzer_pin, LOW);
 }
-void Sensor2::IR_Send38KHZ(char pin,int x,int y){
+void OnBoardHW::IR_Send38KHZ(char pin,int x,int y){
   for(int i=0;i<x;i++){ //15=386US
     if(y==1){
       digitalWrite(pin,1);
@@ -58,7 +53,7 @@ void Sensor2::IR_Send38KHZ(char pin,int x,int y){
       }            
     } 
 }
-void Sensor2::IR_Sendcode(char pin,uint8_t x){
+void OnBoardHW::IR_Sendcode(char pin,uint8_t x){
   for(int i=0;i<8;i++){
     if((x&0x01)==0x01){
       IR_Send38KHZ(pin,23,1);
@@ -71,7 +66,7 @@ void Sensor2::IR_Sendcode(char pin,uint8_t x){
       x=x>>1;
   }  
 }
-void Sensor2::IR_Sendcode16(char pin,uint16_t x){
+void OnBoardHW::IR_Sendcode16(char pin,uint16_t x){
   for(int i=0;i<16;i++)
   {
     if((x&0x000001)==0x000001)
@@ -87,7 +82,7 @@ void Sensor2::IR_Sendcode16(char pin,uint16_t x){
     x=x>>1;
   }    
 }
-void Sensor2::IR_Send(char pin,uint8_t code){
+void OnBoardHW::IR_Send(char pin,uint8_t code){
   IR_Send38KHZ(pin,280,1);//发送9ms的起始码
   IR_Send38KHZ(pin,140,0);//发送4.5ms的结果码
   
@@ -100,14 +95,14 @@ void Sensor2::IR_Send(char pin,uint8_t code){
 }
 
 
-void Sensor2::getGrayAllValue(){
+void OnBoardHW::getGrayAllValue(){
   num1 = digitalRead(GrayscaleNum1);
   num2 = digitalRead(GrayscaleNum2);
   num3 = digitalRead(GrayscaleNum3);
   num4 = digitalRead(GrayscaleNum4);
   num5 = digitalRead(GrayscaleNum5);
 }
-int Sensor2::readGrayValue(char num,char grayval){//0深，1浅
+int OnBoardHW::readGrayValue(char num,char grayval){//0深，1浅
   int GrayscaleVal=0;
   if(num==1)
     GrayscaleVal=digitalRead(GrayscaleNum1);
@@ -134,19 +129,17 @@ int Sensor2::readGrayValue(char num,char grayval){//0深，1浅
  * @param[in] blue EN:blue value/CN:蓝色值.
  *
  */
-void Sensor2::setRgbledColor(int red, int green, int blue){
+void OnBoardHW::setRgbledColor(int red, int green, int blue){
   analogWrite(redPin,constrain((255-red),0,255));
   analogWrite(greenPin,constrain((255-green),0,255));
   analogWrite(bluePin,constrain((255-blue),0,255));
 }
-
-
 /**@brief EN:The presupposed color function of board RGB LED/CN:板载RGB灯预设颜色函数.
  *
  * @param[in] color EN:color selection/CN:颜色选择.
  *
  */
-void Sensor2::setcolor(int color){
+void OnBoardHW::setcolor(int color){
   switch (color) {
     case 1://红
       analogWrite(redPin,0);
@@ -176,23 +169,22 @@ void Sensor2::setcolor(int color){
   }
 }
 
-float Sensor2::readBatteryVoltage(){
+float OnBoardHW::readBatteryVoltage(){
   float voltage;
-  voltage=(analogRead(A14)*5.0/1024.0)*151.0/51.0;
- 
+  voltage=(analogRead(battery_pin)*5.0/1024.0)*151.0/51.0;
   return voltage;
  }
 
 
-long Sensor2::readHcsr04Distance(unsigned char jp){
-  long distance=0;
+long OnBoardHW::readHcsr04Distance(unsigned char jp){
+  float distance=0;
   if(jp==1){
-    Trig=40;
-    Echo=41;
+    Trig=A0;
+    Echo=A1;
   }
   else{
-    Trig=42;
-    Echo=43;
+    Trig=A2;
+    Echo=A3;
   }
   pinMode(Echo, INPUT);    // 定义超声波输入脚
   pinMode(Trig, OUTPUT);   // 定义超声波输出脚 
@@ -207,9 +199,68 @@ long Sensor2::readHcsr04Distance(unsigned char jp){
   // X秒=（ 2*Y米）/344 ==》X秒=0.0058*Y米 ==》厘米=微秒/58
   return distance;
  }
-
-void Sensor2::printInf(){
+ void OnBoardHW::printInf(){
     Serial.print("{\"device\":\"v2\"}");
     Serial.print('\n');
+  
+}
+void OnBoardHW::checkVersion(){
+  bool readInf[6]={0};
+  pinMode(44,INPUT);
+  pinMode(45,INPUT);
+  pinMode(38,INPUT);
+
+  pinMode(22,INPUT);
+  pinMode(24,INPUT);
+  pinMode(41,INPUT);
+  delay(3);
+  readInf[0]=digitalRead(44);
+  readInf[1]=digitalRead(45);
+  readInf[2]=digitalRead(38);
+  readInf[3]=digitalRead(22);
+  readInf[4]=digitalRead(24);
+  readInf[5]=digitalRead(41);
+
+  if(readInf[0]==1 & readInf[1]==1& readInf[2]==0){//V2
+    IR_S=3;
+    //Button_pin
+    Button_pin=36;
+    
+    //Buzzer_pin 
+    buzzer_pin=38;
+    
+    //Grayscale_Sensor2_pin 
+    GrayscaleNum1=29;
+    GrayscaleNum2=28;
+    GrayscaleNum3=27;
+    GrayscaleNum4=26;//26
+    GrayscaleNum5=25;//25
+    
+    //RGB_LED_pin 
+    redPin = 44;
+    greenPin = 45;
+    bluePin = 46;
+    battery_pin=A14;
+    Version="v2";
+  }
+  else if(readInf[3]==1 & readInf[4]==1& readInf[5]==0){//V1
+    IR_S=37;
+    
+    Button_pin=41;
+    buzzer_pin=43;
+    
+    GrayscaleNum1=31;
+    GrayscaleNum2=29;
+    GrayscaleNum3=27;
+    GrayscaleNum4=25;
+    GrayscaleNum5=23;
+    
+    redPin = 24;
+    greenPin = 26;
+    bluePin = 22; 
+    battery_pin=A4; 
+    Version="v1";  
+  }
+ 
   
 }

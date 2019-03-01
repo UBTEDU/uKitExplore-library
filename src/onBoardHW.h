@@ -1,60 +1,70 @@
 
 
-#ifndef Sensor2_h
-#define Sensor2_h
+#ifndef ONBOARDHW_H
+#define ONBOARDHW_H
 
 #include <Arduino.h>
 #include"uKitId.h"
 #include"uKitSensor.h"
 #include"uKitMotor.h"
 
-class Sensor2:uKitId,uKitSensor,uKitMotor
+
+
+class OnBoardHW :uKitId,uKitSensor,uKitMotor
 {
 public:
   void tone(int pin, uint16_t frequency, uint32_t duration);
   void tone(uint16_t frequency, uint32_t duration = 0);
   void noTone(int pin);
   void noTone();
-  void printInf();
   //IR红外发射
   void IR_Send38KHZ(char pin,int x,int y);
   void IR_Sendcode(char pin,uint8_t x);
   void IR_Sendcode16(char pin,uint16_t x);
   void IR_Send(char pin,uint8_t code);
  
-  int num1=0,num2=0,num3=0,num4=0,num5=0;
+  int num1,num2,num3,num4,num5=0;
   void getGrayAllValue();
   int readGrayValue(char num,char grayval);
   void setRgbledColor(int red, int green, int blue);//板载RGB灯函数
   void setcolor(int color);
+  float *getMpu6050Data();
   float readBatteryVoltage();
   long readHcsr04Distance(unsigned char jp); //超声波函数。返回cm,JP是位置，超声波若接在JP1,那么JP为1。
-
-
-  const char IR_S=3;
+  void printInf();
+  
+  void checkVersion();
+  
+ 
+  char IR_S;
   //Button_pin
-  const char Button_pin=36;
+  char Button_pin;
   
   //Buzzer_pin 
-  const char buzzer_pin=38;
+  char buzzer_pin;
  
- //Grayscale_Sensor2_pin 
-  const char GrayscaleNum1=29;
-  const char GrayscaleNum2=28;
-  const char GrayscaleNum3=27;
-  const char GrayscaleNum4=26;//26
-  const char GrayscaleNum5=25;//25
+ //Grayscale_Sensor_pin 
+   char GrayscaleNum1;
+   char GrayscaleNum2;
+   char GrayscaleNum3;
+   char GrayscaleNum4;
+   char GrayscaleNum5;
   
   //RGB_LED_pin 
-  const char redPin = 44;
-  const char greenPin = 45;
-  const char bluePin = 46;
+   char redPin;
+   char greenPin;
+   char bluePin;
+
+ //电池电压pin
+ int battery_pin;
 
   //HC-SR04
   unsigned char Trig;
   unsigned char Echo;
+  String Version="";
   
-
+  
+  
 };
 
 
