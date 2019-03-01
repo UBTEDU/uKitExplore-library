@@ -194,8 +194,10 @@ void Initialization(){
   
   
 }
-void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int *buf){
-  StaticJsonBuffer<200> jsonBuffer;
+void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int *buf,const String uuid){
+  const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5);
+  //StaticJsonBuffer<capacity> jsonBuffer;
+  DynamicJsonBuffer jsonBuffer(capacity);
   JsonObject& root = jsonBuffer.createObject();
   JsonArray& data = root.createNestedArray("data"); 
   switch(device){
@@ -207,6 +209,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            root["mode"]=127;
            root["id"]=id;
            root["code"]=0;
+           
            break;
         case 128: //角模式      
            setServoAngle(id,buf[0],buf[1]);
@@ -554,6 +557,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
       root["code"]=1;
       break;
   }
+  root["uuid"]=uuid;
   if(device!=11 || mode!=128){
       root.printTo(Serial);
       Serial.print('\n');
@@ -567,7 +571,9 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
 void protocol(){ 
       
     if (newLineReceived) {    
-    StaticJsonBuffer<200> jsonBuffer;     
+    const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5) + 70;
+   // StaticJsonBuffer<capacity> jsonBuffer;     
+    DynamicJsonBuffer jsonBuffer(capacity); 
     JsonObject& root = jsonBuffer.parseObject(inputString);
     int buf[5]={0}; 
     unsigned char device = root["device"];
@@ -577,9 +583,11 @@ void protocol(){
     buf[1]  = root["data"][1];
     buf[2]  = root["data"][2];
     buf[3]  = root["data"][3];
-    buf[4]  = root["data"][4];    
-    ProtocolParser(device,mode,id,buf);
+    buf[4]  = root["data"][4];   
+    const String uuid = root["uuid"]; 
+    ProtocolParser(device,mode,id,buf,uuid);
     inputString = "";   // clear the string   
+    uuid="";
     newLineReceived = false;   
     protocolRunState=true;   
   }

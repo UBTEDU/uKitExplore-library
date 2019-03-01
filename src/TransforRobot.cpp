@@ -104,25 +104,46 @@ void TransforRobot::one_step(int speed,int time)
   
 }
 void TransforRobot::motion_case(int cases,char times){
-  if(cases==0)
+  if(cases==0){
     motion_getup(times);
-  else if(cases==1)
+    
+  }
+  else if(cases==1){
     motion_forward(times);
-  else if(cases==2)
+   
+  }  
+  else if(cases==2){
     motion_back(times);   
-  else if(cases==3)
+
+  }  
+  else if(cases==3){
     motion_omotion(times);  
-  else if(cases==4)
+  
+  }
+    
+  else if(cases==4){
     motion_car(times);
-  else if(cases==5)
-    motion_button(times);   
-  else if(cases==6)
-    motion_lift(times);      
-  else if(cases==7)
+  
+  }
+  else if(cases==5){
+    motion_button(times);
+  
+  }    
+  else if(cases==6){
+    motion_lift(times);   
+  
+  }      
+  else if(cases==7){
     motion_lift_hand(times);
-  else if(cases==8)
+    
+  }  
+  else if(cases==8){
     motion_head(times);   
+   
+  }
+    
   else if(cases==9){
+   
     for(int c=0;c<times;c++){
       forward(110);
       delay(300);
@@ -130,6 +151,7 @@ void TransforRobot::motion_case(int cases,char times){
     }
   }
   else if(cases==10){
+    
      for(int c=0;c<times;c++){
       back(110);
       delay(300);
@@ -137,6 +159,7 @@ void TransforRobot::motion_case(int cases,char times){
     }
    }
   else if(cases==11){
+    
      for(int c=0;c<times;c++){
       turnL(110);
       delay(300);
@@ -144,6 +167,7 @@ void TransforRobot::motion_case(int cases,char times){
     }
    } 
   else if(cases==12){
+   
      for(int c=0;c<times;c++){
       turnR(110);
       delay(300);
@@ -152,9 +176,11 @@ void TransforRobot::motion_case(int cases,char times){
   }
     else if(cases==13){
       motion_sitdown(times); 
+      
     } 
     else{
       motion_zero(times);
+      
     }   
 }
 
@@ -171,6 +197,7 @@ void TransforRobot::motion_forward(char times){
       delay(forward_times[i]);
     }
   }   
+  delay(400);
 }
 
 /**@brief EN:Car shape/CN:机器人车形态.
@@ -186,6 +213,7 @@ void TransforRobot::motion_car(char times){
       delay(omotion_times[i]);
       }
   }
+  delay(400);
 }
 /**@brief EN:Robot vehicle shape deformed humanoid/CN:机器人车型变人形.
  *
@@ -200,6 +228,7 @@ void TransforRobot::motion_getup(char times){
       delay(get_up_times[i]);
     }
   }
+  delay(900);
 }
 /**@brief EN:Robot humanoid deformed vehicle shape/CN:机器人人形变车型.
  *
@@ -214,6 +243,7 @@ void TransforRobot::motion_sitdown(char times){
       delay(sitdown_times[i]);
     }
   }
+  delay(900);
 }
 /**@brief EN:Robot humanoid back action/CN:机器人人形h后退动作.
  *
@@ -228,6 +258,7 @@ void TransforRobot::motion_back(char times){
       delay(back_times[i]);
     }
   }
+  
 }
 /**@brief EN:Robot humanoid left shift action/CN:机器人人形左移动作.
  *
@@ -369,5 +400,3 @@ void TransforRobot::motion_zero(char times){
     }
   }
 }
-
-
