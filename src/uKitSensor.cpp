@@ -374,6 +374,7 @@ unsigned char *uKitSensor::readColorRgb(char id){
   delay(80);
   if(value1[0]==238){ //获取失败，开启颜色传感器
        ubtColorProtocol(0xe8,0x06,0x02,tData); 
+       value1=ubtColorProtocol(0xe8,0x06,0x04,tData); 
        
   }
   return value1;

@@ -49,7 +49,7 @@ unsigned char *SemiduplexSerial::ubtColorProtocol(unsigned char Head,unsigned ch
     
 Retry_Servo:
   
-  temp = (Usart3_Rx_Ack_Len + 5) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  temp = (Usart3_Rx_Ack_Len + 12) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
   Serial3.begin(115200);  //uart3
   Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
   Serial2.begin(115200);  //设置波特率
@@ -544,7 +544,7 @@ unsigned short SemiduplexSerial::ubtHumitureProtocol(unsigned char len,unsigned 
     
 Retry_Servo:
   
-  temp = (Usart3_Rx_Ack_Len+5) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  temp = (Usart3_Rx_Ack_Len+12) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
   Serial3.begin(115200);  //uart3
   Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
   Serial2.begin(115200);  //设置波特率
@@ -552,6 +552,7 @@ Retry_Servo:
   Serial2.end();  //关闭串口2,否则会影响接收消息
   tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
   Serial3.end();  //关闭串口3,否则会影响接收消息
+  delay(1);
   if(tRet == 0){ //没有接收到消息 
     if( tCnt < 2){
       tCnt ++;  //重试
@@ -563,19 +564,21 @@ Retry_Servo:
     if(Usart3_Rx_Buf[len]==0xAC  && Usart3_Rx_Buf[len+5]==0){
       switch(CMD){      
         case 0x05:
-          if(choice=='C'){
-            tRet=ceil(((Usart3_Rx_Buf[len+6]<<8) | (Usart3_Rx_Buf[len+7] & 0xff))/10.0); 
-          }
-          else if(choice=='F'){
-            tRet=ceil(((Usart3_Rx_Buf[len+6]<<8) | (Usart3_Rx_Buf[len+7] & 0xff))/10.0);
-            tRet*=1.8;
-            tRet+=32;
-          }       
-          else if(choice=='H'){
-            tRet=(Usart3_Rx_Buf[len+8]<<8)+Usart3_Rx_Buf[len+9];
-          }  
-          else{
-            tRet=((Usart3_Rx_Buf[len+6]<<8) | (Usart3_Rx_Buf[len+7] & 0xff));      
+          switch(choice){
+            case 'C':
+              tRet=ceil(((Usart3_Rx_Buf[len+6]<<8) | (Usart3_Rx_Buf[len+7] & 0xff))/10.0); 
+              break;
+            case 'F':
+              tRet=ceil(((Usart3_Rx_Buf[len+6]<<8) | (Usart3_Rx_Buf[len+7] & 0xff))/10.0);
+              tRet*=1.8;
+              tRet+=32;
+              break;
+            case 'H':
+              tRet=(Usart3_Rx_Buf[len+8]<<8)+Usart3_Rx_Buf[len+9];
+              break;
+            default:
+              tRet=((Usart3_Rx_Buf[len+6]<<8) | (Usart3_Rx_Buf[len+7] & 0xff));
+              break;          
           }
           break;   
         case 0x06:

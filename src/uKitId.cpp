@@ -1728,16 +1728,16 @@ void uKitId::getDeciveId(){
  
 }
 }
- void uKitId::getDeciveIdJs(){
+ void uKitId::getDeciveIdJs(const String uuid){
   
   
   unsigned char idbuf[116]={0};
   unsigned char decivenum[10]={0};
   unsigned char deciveid[116]={0};
-  StaticJsonBuffer<800> jsonBuffer;
+  StaticJsonBuffer<900> jsonBuffer;
   JsonObject& root = jsonBuffer.createObject();
   JsonArray& drivers = root.createNestedArray("drivers");   
-
+  root["uuid"]=uuid;
  if (Serial) {
   
   for(int i=1;i<=18;i++){

@@ -55,7 +55,7 @@ public:
     void setDeciveIdKo();
     void setDeciveIdTh();
     void getDeciveId();
-    void getDeciveIdJs();
+    void getDeciveIdJs(const String uuid);
    
     void getDeciveIdEn();
      void getDeciveIdKo();

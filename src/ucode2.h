@@ -16,7 +16,7 @@
 #include"Gyroscope.h"
 String versionNumber="v1.0.6";
 
-int incomingByte = 0;          // 接收到的 data byte
+uint32_t incomingByte = 0;          // 接收到的 data byte
 String inputString = "";         // 用来储存接收到的内容
 boolean newLineReceived = false; // 前一次数据结束标志
 float *values=NULL;
@@ -205,9 +205,10 @@ void flexiTimer2_func() {
   
 }
 
-void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int *buf,const char* uuid){
-  
-  StaticJsonBuffer<200> jsonBuffer;
+void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int *buf,const String uuid){
+  const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5);
+  //StaticJsonBuffer<capacity> jsonBuffer;
+  DynamicJsonBuffer jsonBuffer(capacity);
   JsonObject& root = jsonBuffer.createObject();
   JsonArray& data = root.createNestedArray("data"); 
   switch(device){
@@ -404,10 +405,10 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
               data.add(readColor(id,"White")); 
               break;
             case 9:
-              data.add(readColor(id,"Gray")); 
-              root["uuid"]=uuid;
+              data.add(readColor(id,"Gray"));     
               break;                                                   
-           }            
+           }
+           root["uuid"]=uuid;            
            break;  
         case 134: //颜色RGB模式           
            rgbValue=readColorRgb(id);
@@ -560,10 +561,10 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            root["uuid"]=uuid;
            break;
         case 128: //获取ID   
-           uKitId.getDeciveIdJs();
+           uKitId.getDeciveIdJs(uuid);
            root["code"]=0;
            root["mode"]=128;
-           root["uuid"]=uuid;
+          
            break;    
       case 129: //检测固件  
            root["mode"]=129;
@@ -616,24 +617,29 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
 void protocol(){ 
       
     if (newLineReceived) { 
-    
-    StaticJsonBuffer<200> jsonBuffer;     
+    const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5) + 70;
+   // StaticJsonBuffer<capacity> jsonBuffer;     
+    DynamicJsonBuffer jsonBuffer(capacity);
     JsonObject& root = jsonBuffer.parseObject(inputString);
     
     int buf[5]={0}; 
     unsigned char device = root["device"];
     unsigned char mode = root["mode"];
     unsigned char id = root["id"];
-    const char* uuid = root["uuid"];
+    
     buf[0]  = root["data"][0];
     buf[1]  = root["data"][1];
     buf[2]  = root["data"][2];
     buf[3]  = root["data"][3];
     buf[4]  = root["data"][4];    
+    const String uuid = root["uuid"];
     ProtocolParser(device,mode,id,buf,uuid);
     inputString = "";   // clear the string       
-    newLineReceived = false;   
+    newLineReceived = false; 
+   
+    uuid="";
     protocolRunState=true;   
+    
   }
   if(timeTimes>=3){
     protocolRunState=false;
@@ -715,6 +721,23 @@ void serialEvent(){
   }
 }
 
-
+void tone2(uint16_t frequency, uint32_t duration)
+{
+  int period = 1000000L / frequency;
+  int pulse = period / 2;
+  pinMode(buzzer_pin, OUTPUT);
+  if(duration==0)
+    tone(buzzer_pin,frequency,0);
+    else{
+  for (long i = 0; i < duration * 1000L; i += period) 
+  {
+    digitalWrite(buzzer_pin, HIGH);
+    delayMicroseconds(pulse);
+    digitalWrite(buzzer_pin, LOW);
+    delayMicroseconds(pulse);
+   
+  }
+    }
+}
 
 #endif
