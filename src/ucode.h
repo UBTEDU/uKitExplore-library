@@ -20,10 +20,8 @@ uint32_t incomingByte = 0;          // 接收到的 data byte
 String inputString = "";         // 用来储存接收到的内容
 boolean newLineReceived = false; // 前一次数据结束标志
 float *values=NULL;
-int buttonstate=0;
-bool bstate=true;
-bool bstate1=true;
-double bstate2=10.00;
+
+
 unsigned char *rgbValue=NULL;
 
 bool protocolRunState=true;
@@ -573,23 +571,9 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
       case 129: //检测固件  
            root["mode"]=129;
            root["code"]=0; 
-           for(int i=0;i<20;i++){
-            bstate=digitalRead(Button_pin);
-            bstate1=digitalRead(buzzer_pin); 
-            bstate2=readBatteryVoltage();
-            delay(25);
-           }       
-           if(bstate==false && bstate1==false && (bstate2>3.8&& bstate2<8.4  || bstate2==0.00)){
-            data.add(0);   
-           }
-           else{
-            data.add(1);
-           }
-           data.add("v1.0.6");
+           data.add(0);   
+           data.add(versionNumber);
            data.add(Sensor.Version);
-           bstate=true;
-           bstate1=true;
-           bstate2=10.00;
           root["uuid"]=uuid;
           break;   
  
