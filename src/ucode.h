@@ -207,7 +207,7 @@ void flexiTimer2_func() {
   
 }
 
-void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int *buf,const String uuid){
+void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int *buf,String uuid){
   const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5);
   //StaticJsonBuffer<capacity> jsonBuffer;
   DynamicJsonBuffer jsonBuffer(capacity);
@@ -620,7 +620,7 @@ void protocol(){
     buf[2]  = root["data"][2];
     buf[3]  = root["data"][3];
     buf[4]  = root["data"][4];    
-    const String uuid = root["uuid"];
+    String uuid = root["uuid"];
     ProtocolParser(device,mode,id,buf,uuid);
     inputString = "";   // clear the string       
     newLineReceived = false; 
@@ -709,7 +709,7 @@ void serialEvent(){
   }
 }
 
-void tone2(uint16_t frequency, uint32_t duration)
+void tone2(uint16_t frequency, long duration)
 {
   int period = 1000000L / frequency;
   int pulse = period / 2;
