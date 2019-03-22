@@ -1,5 +1,6 @@
 #include "ucode.h"
 
+unsigned char *rgbValue1=NULL;
 
 void setup() {
     Initialization();
@@ -9,10 +10,7 @@ void setup() {
 void loop() {
     protocol();
     if (protocolRunState == false) {
-      setServoAngle(1,1,2);
+ 
  
     }
-}
-void forward(){
-  ;
 }

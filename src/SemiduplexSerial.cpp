@@ -49,7 +49,7 @@ unsigned char *SemiduplexSerial::ubtColorProtocol(unsigned char Head,unsigned ch
     
 Retry_Servo:
   
-  temp = (Usart3_Rx_Ack_Len + 12) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  temp = (Usart3_Rx_Ack_Len + 16) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
   Serial3.begin(115200);  //uart3
   Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
   Serial2.begin(115200);  //设置波特率
@@ -479,7 +479,7 @@ Retry_Servo:
   Serial2.begin(115200);  //设置波特率
   Serial2.write(buf,len);  //发送消息
   Serial2.end();  //关闭串口2,否则会影响接收消息
-  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
+  tRet = Serial3.readBytes(Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
   Serial3.end();  //关闭串口3,否则会影响接收消息
   if(tRet == 0){ //没有接收到消息 
     if( tCnt < 2){
@@ -673,9 +673,8 @@ Retry_Servo:
   }
   return tRet;
 }
-
-unsigned short SemiduplexSerial::ubtMotorProtocol(unsigned char len,unsigned char CMD,unsigned char * Data){
-  unsigned short tRet=0;
+short SemiduplexSerial::ubtMotorProtocol(unsigned char len,unsigned char CMD,unsigned char * Data){
+  short tRet=0;
   unsigned char tCnt = 0;
   unsigned long temp = 0; //2ms 发完
   unsigned char buf[16];
@@ -764,6 +763,7 @@ delay(3);
    
   
   }
+
   return tRet;
 }
 

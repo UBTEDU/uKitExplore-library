@@ -553,7 +553,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
         case 127: //修改ID               
            root["mode"]=127;
            uKitId.setAllDeciveId(buf[0],buf[1],buf[2]);
-           delay(80);                
+           delay(120);                
            if(buf[2]==uKitId.getAllDeciveId(buf[0],buf[2])){
             root["code"]=0;
            }
@@ -645,15 +645,7 @@ void consoleLog(unsigned char level, const String msg){
   Serial.print('\n');
   
 }
-void consoleLog(unsigned char level, const bool msg){
-  Serial.print("{\"level\":");
-  Serial.print(level);
-  Serial.print(",\"msg\":\"");
-  Serial.print(msg);
-  Serial.print("\"}");
-  Serial.print('\n');
-  
-}
+
 void consoleLog(unsigned char level, const long msg){
   Serial.print("{\"level\":");
   Serial.print(level);

@@ -50,8 +50,8 @@ unsigned char uKitMotor::setMotorTurnAdj(uint8_t id, uint16_t speed, uint16_t ti
  *
  * @returns pSpeed EN:Motor speed/EN:电机速度..
  */
-uint16_t uKitMotor::readMotorSpeed(uint8_t id){
-  uint16_t tRet = 0;
+short uKitMotor::readMotorSpeed(uint8_t id){
+  short tRet = 0;
   unsigned char buf[5];
 
   buf[0] = id;

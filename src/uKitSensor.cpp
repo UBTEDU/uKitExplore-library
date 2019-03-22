@@ -41,7 +41,7 @@ unsigned short  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
 
 
 unsigned short uKitSensor::readSoundValue(char id){
-  unsigned short tRet = 0,tRet2=0;
+  unsigned short tRet = 0,tRet2=0,tRet3=0;
   unsigned char buf[5];
 
 
@@ -50,10 +50,11 @@ unsigned short uKitSensor::readSoundValue(char id){
   buf[2] = 0x00;
   buf[3] = 0x00;
   buf[4] = 0x01;
-  tRet=ubtSoundProtocol(0x0A,0x05,buf)-2048;
+  tRet3=ubtSoundProtocol(0x0A,0x05,buf);
+  tRet=tRet3-2048;
   tRet2=tRet/2; 
 
-  if(tRet==0 || tRet<0){
+  if(tRet==0 || tRet3<=0){
     tRet2=0;
   }
 
