@@ -194,10 +194,10 @@ void flexiTimer2_func() {
   Serial.print(Sensor.Version);
   Serial.print("\"]}");
   Serial.print('\n');
-  FlexiTimer2::set(800,flexiTimer2_func);
+  FlexiTimer2::set(30,flexiTimer2_func);
   FlexiTimer2::start();
   //getDeciveId();
-  delay(100);
+  delay(150);
   serialEvent();
   protocol();
  

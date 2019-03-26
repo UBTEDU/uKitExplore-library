@@ -2,6 +2,11 @@
 
 void setup() {
     Initialization();
+    if (protocolRunState == false) {
+
+
+
+    }
 }
 
 void loop() {
@@ -9,6 +14,6 @@ void loop() {
     if (protocolRunState == false) {
 
 
+
     }
 }
-
