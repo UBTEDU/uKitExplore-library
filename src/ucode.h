@@ -16,7 +16,7 @@
 #include"Gyroscope.h"
 String versionNumber="v1.0.7";
 
-uint32_t incomingByte = 0;          // 接收到的 data byte
+uint64_t incomingByte = 0;          // 接收到的 data byte
 String inputString = "";         // 用来储存接收到的内容
 boolean newLineReceived = false; // 前一次数据结束标志
 float *values=NULL;
@@ -138,8 +138,8 @@ Gyroscope gyro;
 #define IR_S Sensor.IR_S
 #define buzzer_pin Sensor.buzzer_pin
 
-
-
+void protocol();
+void serialEvent();
 
 
 //ClickButton_API
@@ -178,17 +178,12 @@ void flexiTimer2_func() {
   pinMode(GrayscaleNum4, INPUT);  //右2的循迹传感器
   pinMode(GrayscaleNum5, INPUT);  //右1的循迹传感器
   pinMode(IR_S,OUTPUT);
-  pinMode(43, INPUT);    // 定义超声波输入脚
-  pinMode(42, OUTPUT);   // 定义超声波输出脚 
-  pinMode(41, INPUT);    // 定义超声波输入脚
-  pinMode(40, OUTPUT);   // 定义超声波输出脚 
   pinMode(buzzer_pin,OUTPUT);
   delay(5);  //开机延时
   //check_servo();  //获取舵机个数,列表
   Wire.begin();
   setAllSensorOff();
   setMotorStop(0xff);
-  uKitMotor.clearMotorInf(3);
   StopServo();
   setUltrasonicRgbledOff(0x00);
   Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
@@ -202,13 +197,16 @@ void flexiTimer2_func() {
   FlexiTimer2::set(800,flexiTimer2_func);
   FlexiTimer2::start();
   //getDeciveId();
+  delay(100);
+  serialEvent();
+  protocol();
  
   
   
 }
 
 void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int *buf,String uuid){
-  const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5);
+  const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5)+40;
   //StaticJsonBuffer<capacity> jsonBuffer;
   DynamicJsonBuffer jsonBuffer(capacity);
   JsonObject& root = jsonBuffer.createObject();
@@ -293,7 +291,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            root["mode"]=127;
            root["id"]=id;
            root["code"]=0;
-           root["uuid"]=uuid;
+           //root["uuid"]=uuid;
            break;
         case 128: //眼灯表情     
            setEyelightLook(id,buf[0],buf[4],buf[1],buf[2],buf[3]);
@@ -602,10 +600,20 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
 
   
 }
-void protocol(){ 
-      
+void serialEvent(){
+  while (Serial.available()) {  
+    incomingByte = Serial.read();              //一个字节一个字节地读，下一句是读到的放入字符串数组中组成一个完成的数据包
+    inputString += (char) incomingByte;     // 全双工串口可以不用在下面加延时，半双工则要加的//
+    delay(2);   
+    if (incomingByte == '\n') {    
+      newLineReceived = true;
+
+    }
+  }
+}
+void protocol(){      
     if (newLineReceived) { 
-    const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5) + 70;
+    const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5) + 40;
    // StaticJsonBuffer<capacity> jsonBuffer;     
     DynamicJsonBuffer jsonBuffer(capacity);
     JsonObject& root = jsonBuffer.parseObject(inputString);
@@ -624,7 +632,8 @@ void protocol(){
     ProtocolParser(device,mode,id,buf,uuid);
     inputString = "";   // clear the string       
     newLineReceived = false; 
-   
+    timeTimes=0;
+    FlexiTimer2::stop();
     uuid="";
     protocolRunState=true;   
     
@@ -633,6 +642,7 @@ void protocol(){
     protocolRunState=false;
     FlexiTimer2::stop();
     timeTimes=0;
+
   }
 
 }
@@ -689,17 +699,7 @@ void consoleLog(unsigned char level,const double msg){
   Serial.print("}");
   Serial.print('\n');  
 }
-void serialEvent(){
-  while (Serial.available()) {  
-    incomingByte = Serial.read();              //一个字节一个字节地读，下一句是读到的放入字符串数组中组成一个完成的数据包
-    inputString += (char) incomingByte;     // 全双工串口可以不用在下面加延时，半双工则要加的//
-    delay(2);   
-    if (incomingByte == '\n') {    
-      newLineReceived = true;
 
-    }
-  }
-}
 
 void tone2(uint16_t frequency, long duration)
 {

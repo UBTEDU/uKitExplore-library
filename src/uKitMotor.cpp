@@ -3,6 +3,8 @@
 
 
 unsigned char uKitMotor::setMotorTurn(uint8_t id, uint16_t pwmDuty){
+  clearMotorInf(id);
+
   unsigned char tRet = 0;
   unsigned char buf[7];
   uint16_t speeds;
@@ -28,6 +30,7 @@ unsigned char uKitMotor::setMotorTurn(uint8_t id, uint16_t pwmDuty){
  * @returns ret EN:0 means motor module acks correct, <0 means no ack or ack error/CN:返回0表示功能正常.
  */
 unsigned char uKitMotor::setMotorTurnAdj(uint8_t id, uint16_t speed, uint16_t time){
+  clearMotorInf(id);
   unsigned char tRet = 0;
   unsigned char buf[11];  
   buf[0] = id;
@@ -93,8 +96,8 @@ void uKitMotor::clearMotorInf(unsigned char id){
   buf[2] = 0x0F;
   buf[3] = 0x00;
   buf[4] = 0x01;
-  buf[5] = 0xff;
-  buf[6] = 0xff;
+  buf[5] = 0x00;
+  buf[6] = 0x80;
   ubtMotorProtocol(0x0C,0x06,buf);
  
 }
