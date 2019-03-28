@@ -54,12 +54,14 @@ public:
     void setDeciveIdEn();
     void setDeciveIdKo();
     void setDeciveIdTh();
+    void setDeciveIdRu();
     void getDeciveId();
     void getDeciveIdJs(const String uuid);
    
     void getDeciveIdEn();
      void getDeciveIdKo();
      void getDeciveIdTh();
+      void getDeciveIdRu();
 
  };
  #endif

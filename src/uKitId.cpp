@@ -437,8 +437,7 @@ void uKitId::setAllDeciveId(unsigned char decive,unsigned char oldid,unsigned ch
       setSoundId(oldid,newid);
       break;
     case 9://温湿度
-      setHumitureId(oldid,newid);
-      
+      setHumitureId(oldid,newid);    
       break;
     case 10://颜色
       setColorId(oldid,newid);
@@ -708,6 +707,268 @@ void uKitId::setDeciveId(){
  
   
 }
+void uKitId::setDeciveIdRu(){
+  unsigned char buf[20]={0};
+  unsigned char zeronum=0,num=0,numlength=0,decive=0;
+  String single="",ten="";
+  int id_1=0,id_2=0,id=0;
+  static int i=0;
+  String comdata="";
+   if(i==0){
+    delay(10);
+    Serial.println("  Пожалуйста введите номер, чтобы изменить ID устройства"); 
+    Serial.println("  * Пожалуйста убедитесь, что только ОДНО устройство подсоединено и плата находится в включеном состоянии.");    
+    delay(300); 
+    i=1;
+  }  
+    while (Serial.available() > 0){
+        comdata += char(Serial.read());
+        delay(2);//为了防止数据丢失,在此设置短暂延时delay(2)         
+    }
+      if(comdata.length() !=0){
+        ten=comdata[comdata.length()-2];
+        id_1=ten.toInt()*10;
+        single=comdata[comdata.length()-1];
+        id_2=single.toInt();
+        id=id_1+id_2;    
+        numlength=comdata.length();
+        delay(20);
+          buf[0]=getSoundId();
+          delay(10);
+          buf[1]=getLightId();
+          delay(10);
+          buf[2]=getHumitureId();
+          delay(10);
+          buf[3]=getInfraredId();
+          delay(10);
+          buf[4]=getLedId();
+          delay(10);
+          buf[5]=getButtonId();
+          delay(10);
+          buf[6]=getUltrasonicId();
+          delay(10);
+          buf[7]=getColorId();
+          delay(10);
+          buf[8]=getMotorId();
+          delay(10);
+          buf[9]=getServoId();
+          delay(10);
+        
+          for(int i=0;i<=9;i++){
+            if(buf[i]==0){
+              zeronum+=1;
+            }
+            else if(buf[i]!=0){
+              num+=1;
+              if(num==1){
+                decive=i; 
+              }
+
+            }
+          }
+               
+        if((id==0 | id>18 | numlength>2) & decive>=8 ){
+          Serial.println("  Пожалуйста введите положительное число от 1 до 18");
+          comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加
+        }
+        else if(id!=0 & id<=18 & numlength<=2){
+        if(id<=10){
+          if(decive==0 & zeronum==9){
+            delay(20);
+            if(id!=0)
+              setSoundId(buf[0],id);
+            delay(100);
+            buf[10]=getSoundId();
+            delay(30);
+            Serial.print("  Изминение успешно завершено! ");
+            Serial.print("【Сенсор звука】ID-");
+            Serial.print(buf[0]);
+            Serial.print(" было заменено на ");
+            Serial.println(buf[10]); 
+            Serial.println("  * Если вы хотите изменить ID другого устройства, пожалуйста замените устройство и нажмите кнопку перезагрузки на плате"); 
+            
+          }
+          else if(decive==1 & zeronum==9){
+            delay(20);
+            if(id!=0)
+              setLightId(buf[1],id);
+            delay(100);
+            buf[11]=getLightId();
+            delay(30);
+            Serial.print("  Изминение успешно завершено! ");
+            Serial.print("【Сенсор света】ID-");
+            Serial.print(buf[1]);
+            Serial.print(" было заменено на ");
+            Serial.println(buf[11]); 
+            Serial.println("  * Если вы хотите изменить ID другого устройства, пожалуйста замените устройство и нажмите кнопку перезагрузки на плате"); 
+          }
+          else if(decive==2 & zeronum==9){
+            delay(20);
+            if(id!=0)
+              setHumitureId(buf[2],id);
+            delay(100);
+            buf[12]=getHumitureId();
+            delay(30);
+            Serial.print("  Изминение успешно завершено! ");
+            Serial.print("【Сенсор температуры и влажности】ID-");
+            Serial.print(buf[2]);
+            Serial.print(" было заменено на ");
+            Serial.println(buf[12]); 
+            Serial.println("  * Если вы хотите изменить ID другого устройства, пожалуйста замените устройство и нажмите кнопку перезагрузки на плате"); 
+          }
+          else if(decive==3 & zeronum==9){
+            delay(20);
+            if(id!=0)
+              setInfraredId(buf[3],id);
+            delay(100);
+            buf[13]=getInfraredId();
+            delay(30);
+            Serial.print("  Изминение успешно завершено! ");
+            Serial.print("【ИК сенсор】ID-");
+            Serial.print(buf[3]);
+            Serial.print(" было заменено на ");
+            Serial.println(buf[13]); 
+            Serial.println("  * Если вы хотите изменить ID другого устройства, пожалуйста замените устройство и нажмите кнопку перезагрузки на плате"); 
+          }
+           else if(decive==4 & zeronum==9){
+            delay(20);
+            if(id!=0)
+              setLedId(buf[4],id);
+            delay(100);
+            buf[14]=getLedId();
+            delay(30);
+            Serial.print("  Изминение успешно завершено! ");
+            Serial.print("【Глазная лампа】ID-");
+            Serial.print(buf[4]);
+            Serial.print(" было заменено на ");
+            Serial.println(buf[14]); 
+            Serial.println("  * Если вы хотите изменить ID другого устройства, пожалуйста замените устройство и нажмите кнопку перезагрузки на плате"); 
+          }         
+           else if(decive==5 & zeronum==9){
+            delay(20);
+            if(id!=0)
+              setButtonId(buf[5],id);
+            delay(100);
+            buf[15]=getButtonId();
+            delay(30);
+            Serial.print("  Изминение успешно завершено! ");
+            Serial.print("【Сенсор касаний】 ID-");
+            Serial.print(buf[5]);
+            Serial.print(" было заменено на ");
+            Serial.println(buf[15]); 
+            Serial.println("  * Если вы хотите изменить ID другого устройства, пожалуйста замените устройство и нажмите кнопку перезагрузки на плате"); 
+          } 
+          else if(decive==6 & zeronum==9){
+            delay(20);
+            if(id!=0)
+              setUltrasonicId(buf[6],id);
+            delay(100);
+            buf[16]=getUltrasonicId();
+            delay(30);
+            Serial.print("  Изминение успешно завершено! ");
+            Serial.print("【Ультразвуковой сенсор】ID-");
+            Serial.print(buf[6]);
+            Serial.print(" было заменено на ");
+            Serial.println(buf[16]); 
+            Serial.println("  * Если вы хотите изменить ID другого устройства, пожалуйста замените устройство и нажмите кнопку перезагрузки на плате"); 
+          }    
+          else if(decive==7 & zeronum==9){
+            delay(20);
+            if(id!=0)
+              setColorId(buf[7],id);
+            delay(100);
+            buf[17]=getColorId();
+            delay(30);
+            Serial.print("  Изминение успешно завершено! ");
+            Serial.print("【Сенсор цвета】ID-");
+            Serial.print(buf[7]);
+            Serial.print(" было заменено на ");
+            Serial.println(buf[17]); 
+            Serial.println("  * Если вы хотите изменить ID другого устройства, пожалуйста замените устройство и нажмите кнопку перезагрузки на плате"); 
+          }    
+          
+          if(decive==8 & zeronum==9){
+            delay(20);
+            if(id!=0)
+              setMotorId(buf[8],id);
+            delay(100);
+            buf[18]=getMotorId();
+            delay(30);
+            Serial.print("  Изминение успешно завершено! ");
+            Serial.print("【Мотор】ID-");
+            Serial.print(buf[8]);
+            Serial.print(" было заменено на ");
+            Serial.println(buf[18]); 
+            Serial.println("  * Если вы хотите изменить ID другого устройства, пожалуйста замените устройство и нажмите кнопку перезагрузки на плате"); 
+          }                   
+          else if(decive==9 & zeronum==9){
+            delay(20);
+            if(id!=0)
+              setServoId(buf[9],id);
+            delay(100);
+            buf[19]=getServoId();
+            delay(30);
+            Serial.print("  Изминение успешно завершено! ");
+            Serial.print("【Сервопривод】ID-");
+            Serial.print(buf[9]);
+            Serial.print(" было заменено на ");
+            Serial.println(buf[19]); 
+            Serial.println("  * Если вы хотите изменить ID другого устройства, пожалуйста замените устройство и нажмите кнопку перезагрузки на плате"); 
+          }  
+        }
+        else if(id>10 & id<=18 & decive>=8){
+        if(decive==8 & zeronum==9){
+            delay(20);
+            if(id!=0)
+              setMotorId(buf[8],id);
+            delay(100);
+            buf[18]=getMotorId();
+            delay(30);
+            Serial.print("  Изминение успешно завершено! ");
+            Serial.print("【Мотор】ID-");
+            Serial.print(buf[8]);
+            Serial.print(" было заменено на ");
+            Serial.println(buf[18]); 
+            Serial.println("  * Если вы хотите изменить ID другого устройства, пожалуйста замените устройство и нажмите кнопку перезагрузки на плате"); 
+          }                   
+          else if(decive==9 & zeronum==9){
+            delay(20);
+            if(id!=0)
+              setServoId(buf[9],id);
+            delay(100);
+            buf[19]=getServoId();
+            delay(30);
+            Serial.print("  Изминение успешно завершено! ");
+            Serial.print("【Сервопривод】ID-");
+            Serial.print(buf[9]);
+            Serial.print(" было заменено на ");
+            Serial.println(buf[19]); 
+            Serial.println("  * Если вы хотите изменить ID другого устройства, пожалуйста замените устройство и нажмите кнопку перезагрузки на плате"); 
+          }                         
+        }
+        else if(id==0 | numlength>2 | id>10 && decive<9 ){
+          Serial.println("  Пожлуйста введите положительное число от 1 до 10");
+        }
+        }
+
+                else if(zeronum==10){
+            Serial.println("  *Устройство не обнаружено.");
+          }   
+          else if(id==0 | numlength>2 | id>10 && decive<9 ){
+          Serial.println("  Пожлуйста введите положительное число от 1 до 10");
+        } 
+        else {
+            Serial.println("   *Пожалуйста не подключайте несколько устройств");   
+        }
+    }
+   comdata = "";//  必须在此把comdata设为空字符,否则会导致前后字符串叠加
+   zeronum=0;
+   decive=0;
+  
+ 
+  
+}
+
 void uKitId::setDeciveIdEn(){
   unsigned char buf[20]={0};
   unsigned char zeronum=0,num=0,numlength=0,decive=0;
@@ -1707,6 +1968,209 @@ void uKitId::getDeciveId(){
   }
   if(decivenum[9]!=0){      
     Serial.print(" 【颜色传感器】");
+    for(int i=1;i<=decivenum[9];i++){
+      Serial.print("ID-"); 
+//      if(deciveid[i+106]==254){
+//        Serial.print(i+1);
+//        Serial.print("重复");  
+//      }
+//      else{
+      
+      Serial.print(deciveid[i+106]); 
+    //  }  
+       
+      if(i!=decivenum[9]){
+        Serial.print("、");
+      }   
+    }
+    Serial.println("");
+  }
+  Serial.println("------------------------ ");
+ 
+}
+}
+void uKitId::getDeciveIdRu(){
+  
+  
+  unsigned char idbuf[116]={0};
+  unsigned char decivenum[10]={0};
+  unsigned char deciveid[116]={0};
+  
+ if (Serial) {
+  Serial.println(">-----Следующие устройства подсоединены к плате:-----< ");
+  for(int i=1;i<=18;i++){
+    if(i<=10){
+      idbuf[i]=getServoId(i);
+      idbuf[i+18]=getMotorId(i); 
+      idbuf[i+36]=getInfraredId(i);
+      idbuf[i+46]=getUltrasonicId(i);
+      idbuf[i+56]=getLedId(i);
+      idbuf[i+66]=getButtonId(i);
+      idbuf[i+76]=getLightId(i);
+      idbuf[i+86]=getSoundId(i);           
+      idbuf[i+96]=getHumitureId(i);              
+      idbuf[i+106]=getColorId(i);  
+
+                      
+      if(idbuf[i]!=0 && idbuf[i]<19){
+        ++decivenum[0];
+        deciveid[decivenum[0]]=idbuf[i];
+      }  
+      if(idbuf[i+18]!=0 && idbuf[i+18]<19){
+        ++decivenum[1];
+        deciveid[decivenum[1]+18]=idbuf[i+18];
+      } 
+      if(idbuf[i+36]!=0 && idbuf[i+36]<11){
+        ++decivenum[2];
+        deciveid[decivenum[2]+36]=idbuf[i+36];
+      } 
+      if(idbuf[i+46]!=0 && idbuf[i+46]<11){
+        ++decivenum[3];
+        deciveid[decivenum[3]+46]=idbuf[i+46];
+      } 
+      if(idbuf[i+56]!=0 && idbuf[i+56]<11){
+        ++decivenum[4];
+        deciveid[decivenum[4]+56]=idbuf[i+56];
+      } 
+      if(idbuf[i+66]!=0 && idbuf[i+66]<11){
+        ++decivenum[5];
+        deciveid[decivenum[5]+66]=idbuf[i+66];
+      } 
+      if(idbuf[i+76]!=0 && idbuf[i+76]<11){
+        ++decivenum[6];
+        deciveid[decivenum[6]+76]=idbuf[i+76];
+      } 
+      if(idbuf[i+86]!=0 && idbuf[i+86]<11){
+        ++decivenum[7];
+        deciveid[decivenum[7]+86]=idbuf[i+86];
+      } 
+      if(idbuf[i+96]!=0 && idbuf[i+96]<11){
+        ++decivenum[8];
+        deciveid[decivenum[8]+96]=idbuf[i+96];
+      } 
+      if(idbuf[i+106]!=0 && idbuf[i+106]<11){
+        ++decivenum[9]; 
+        deciveid[decivenum[9]+106]=idbuf[i+106];
+        
+
+      } 
+  }
+  else{
+      idbuf[i]=getServoId(i);
+      idbuf[i+18]=getMotorId(i);
+      if(idbuf[i]!=0 && idbuf[i]<19){
+        ++decivenum[0];
+        deciveid[decivenum[0]]=idbuf[i];
+      } 
+      if(idbuf[i+18]!=0 && idbuf[i+18]<19){
+        ++decivenum[1];
+        deciveid[decivenum[1]+18]=idbuf[i+18];
+      } 
+ 
+
+     }
+  }
+  if(decivenum[0]!=0){      
+    Serial.print(" 【Сервопривод】");
+    for(int i=1;i<=decivenum[0];i++){
+      Serial.print("ID-");
+      Serial.print(deciveid[i]);
+      if(i!=decivenum[0]){
+        Serial.print("、");
+      }   
+    }
+    Serial.println("");
+  }
+  if(decivenum[1]!=0){      
+    Serial.print(" 【Мотор】");
+    for(int i=1;i<=decivenum[1];i++){
+      Serial.print("ID-");
+      Serial.print(deciveid[i+18]);
+      if(i!=decivenum[1]){
+        Serial.print("、");
+      }   
+    }
+    Serial.println("");
+  }
+  if(decivenum[2]!=0){      
+    Serial.print(" 【ИК сенсор】");
+    for(int i=1;i<=decivenum[2];i++){
+      Serial.print("ID-");
+      Serial.print(deciveid[i+36]);
+      if(i!=decivenum[2]){
+        Serial.print("、");
+      }   
+    }
+    Serial.println("");
+  }
+  if(decivenum[3]!=0){      
+    Serial.print(" 【Ультразвуковой сенсор】");
+    for(int i=1;i<=decivenum[3];i++){
+      Serial.print("ID-");
+      Serial.print(deciveid[i+46]);
+      if(i!=decivenum[3]){
+        Serial.print("、");
+      }   
+    }
+    Serial.println("");
+  }
+  if(decivenum[4]!=0){      
+    Serial.print(" 【Глазная лампа】");
+    for(int i=1;i<=decivenum[4];i++){
+      Serial.print("ID-");
+      Serial.print(deciveid[i+56]);
+      if(i!=decivenum[4]){
+        Serial.print("、");
+      }   
+    }
+    Serial.println("");
+  }
+  if(decivenum[5]!=0){      
+    Serial.print(" 【Сенсор касаний】");
+    for(int i=1;i<=decivenum[5];i++){
+      Serial.print("ID-");
+      Serial.print(deciveid[i+66]);
+      if(i!=decivenum[5]){
+        Serial.print("、");
+      }   
+    }
+    Serial.println("");
+  }
+  if(decivenum[6]!=0){      
+    Serial.print(" 【Сенсор света】");
+    for(int i=1;i<=decivenum[6];i++){
+      Serial.print("ID-");
+      Serial.print(deciveid[i+76]);
+      if(i!=decivenum[6]){
+        Serial.print("、");
+      }   
+    }
+    Serial.println("");
+  }
+  if(decivenum[7]!=0){      
+    Serial.print(" 【Сенсор звука】");
+    for(int i=1;i<=decivenum[7];i++){
+      Serial.print("ID-");
+      Serial.print(deciveid[i+86]);
+      if(i!=decivenum[7]){
+        Serial.print("、");
+      }   
+    }
+    Serial.println("");
+  }
+  if(decivenum[8]!=0){      
+    Serial.print(" 【Сенсор температуры и влажности】");
+    for(int i=1;i<=decivenum[8];i++){
+      Serial.print("ID-");
+      Serial.print(deciveid[i+96]);
+      if(i!=decivenum[8]){
+        Serial.print("、");
+      }   
+    }
+    Serial.println("");
+  }
+  if(decivenum[9]!=0){      
+    Serial.print(" 【Сенсор цвета】");
     for(int i=1;i<=decivenum[9];i++){
       Serial.print("ID-"); 
 //      if(deciveid[i+106]==254){

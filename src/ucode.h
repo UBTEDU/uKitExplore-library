@@ -14,7 +14,7 @@
 #include "ClickButton.h"
 #include"uKitId.h"
 #include"Gyroscope.h"
-String versionNumber="v1.0.7";
+String versionNumber="v1.0.8";
 
 uint64_t incomingByte = 0;          // 接收到的 data byte
 String inputString = "";         // 用来储存接收到的内容
