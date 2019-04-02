@@ -291,7 +291,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            root["mode"]=127;
            root["id"]=id;
            root["code"]=0;
-           //root["uuid"]=uuid;
+           root["uuid"]=uuid;
            break;
         case 128: //眼灯表情     
            setEyelightLook(id,buf[0],buf[4],buf[1],buf[2],buf[3]);

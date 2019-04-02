@@ -24,7 +24,7 @@ const signed char Zeros[3][4]={{1,0,-1,-1},{-27,27,26,-20},{2,-2,-3,-3}};
 const int  Zero_time[3]={1000,600,700};
 // Custom name 3, [action frame number] = {motion duration between frames}; 
 
-
+void Zero(char times);
 void setup() 
 {
    Initialization();
@@ -57,4 +57,3 @@ void Zero(char times)//void Custom name 1
           }
     }
 }
-
