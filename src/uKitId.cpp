@@ -97,7 +97,7 @@ unsigned char uKitId::getSoundId(char id){
 
 unsigned char uKitId::setHumitureId(char oldid,char newid){
  unsigned short int tRet = 0;
-  unsigned char buf[11];
+  unsigned char buf[12];
   buf[0] = 0xFB;//帧头
   buf[1] = 0x05;//设备类型
   buf[2] = 0x08;//长度
