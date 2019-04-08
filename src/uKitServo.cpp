@@ -201,3 +201,112 @@ void uKitServo::playMotion(unsigned char *id,signed char **action,int *times){
     }
   
 }
+
+
+
+
+void uKitServo::setServoTurn1M(unsigned char id,int dir, int speed){
+  unsigned char buf[4];
+  int speeds=0;
+  speeds=map(speed,0,255,0,1000);
+ 
+     
+    if(dir==0){
+        buf[0]=0xFD;
+        buf[1]=0x00;
+        buf[2]=(speeds &0xFF00) >> 8;
+        buf[3] = speeds & 0x00FF;          
+    }     
+    else if(dir==1){
+        buf[0]=0xFE;
+        buf[1]=0x00;
+        buf[2]=(speeds &0xFF00) >> 8;
+        buf[3] = speeds & 0x00FF;             
+    }
+        
+  ubtServoProtocol1M(0xFA,id,0x01,buf);
+  //TXD(0xFA,id,4,0x01,buf); 
+  
+}
+
+
+
+//id表示舵机号，angle表示角度（角度范围-118°~118°），time表示旋转所需时间（时间范围：300~5000）
+void uKitServo::setServoAngle1M(unsigned char id,int angle,int times){
+  unsigned char buf[4];
+  buf[0]=angle+120;
+  buf[1]=(times/20);
+  buf[2]=((times/20) & 0xFF00) >> 8;
+  buf[3]=(times/20) & 0x00FF;
+
+  ubtServoProtocol1M(0xFA,id,0x01,buf);
+  
+}
+
+
+void uKitServo::setServoStop1M(unsigned char id){
+  unsigned char buf[4]={0xFF,0,0,0}; 
+  ubtServoProtocol1M(0xFA,id,0x01,buf);
+}
+
+void uKitServo::setServoStiffness1M(unsigned char id,unsigned char stiffness){
+  unsigned char tData[4];
+  tData[0]=stiffness;
+  tData[1]=0;
+  tData[2]=0;
+  tData[3]=0;
+  
+  TXD(0xFA,id,8,0x01,tData );
+}
+
+int uKitServo::readServoAnglePD1M(unsigned char id){//单个舵机回读(掉电回读）
+  int tCmd=0,tRet=0;
+  unsigned char aa[4]={0,0,0,0};
+  tRet=ubtServoProtocol1M(0xFA,id,0x02,aa);
+  if(tRet==0){
+    tCmd=0;
+  }
+  else if(tRet==1){
+    tCmd=-120;
+  }
+  else{
+    tCmd=tRet-120;
+  }
+  
+  delay(5);
+
+    return tCmd;
+
+}
+
+
+int uKitServo::readServoAngleNPD1M(unsigned char id){//单个舵机回读(不掉电回读）
+  int tCmd=0,tRet=0;
+  unsigned char aa[4]={0,0,0,0};
+  tRet=ubtServoProtocol1M(0xFA,id,0x03,aa);
+  if(tRet==0){
+    tCmd=0;
+  }
+  else if(tRet==1){
+    tCmd=-120;
+  }
+  else{
+    tCmd=tRet-120;
+  }
+ 
+  delay(5);
+  return tCmd;
+ 
+}
+
+
+
+void uKitServo::playMotion1M(unsigned char *id,signed char **action,int *times){
+  for(int i=0;i<sizeof(action)/sizeof(action[0]);i++){
+    for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
+      setServoAngle1M(id[t],action[i][t],500);
+    }  
+      delay(times[i]);
+    }
+  
+}

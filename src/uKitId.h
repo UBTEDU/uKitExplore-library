@@ -23,6 +23,7 @@ public:
     unsigned char setMotorId(uint8_t id_old, uint8_t id_new);
     unsigned char getMotorId();
     unsigned char getMotorId(char id);
+
     
     unsigned char setInfraredId(char oldid,char newid);
     unsigned char getInfraredId();
@@ -47,16 +48,25 @@ public:
     unsigned char setServoId(char oldid,char newid);
     unsigned char getServoId();   
     unsigned char getServoId(char id);  
+
+
+    unsigned char setServoId1M(char oldid,char newid);
+    unsigned char getServoId1M();   
+    unsigned char getServoId1M(char id);  
     
     void setDeciveId();
     void setAllDeciveId(unsigned char decive,unsigned char oldid,unsigned char newid);
     unsigned char getAllDeciveId(unsigned char decive,unsigned char newid);
+
+    void setAllDeciveId1M(unsigned char decive,unsigned char oldid,unsigned char newid);
+    unsigned char getAllDeciveId1M(unsigned char decive,unsigned char newid);
     void setDeciveIdEn();
     void setDeciveIdKo();
     void setDeciveIdTh();
     void setDeciveIdRu();
     void getDeciveId();
     void getDeciveIdJs(const String uuid);
+    void getDeciveIdJs1M(const String uuid);
    
     void getDeciveIdEn();
      void getDeciveIdKo();
