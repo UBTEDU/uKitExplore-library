@@ -3,6 +3,7 @@
 void setup() {
     Initialization();
     if (protocolRunState == false) {
+      
 
 
 
@@ -11,7 +12,8 @@ void setup() {
 
 void loop() {
     protocol();
-    if (protocolRunState == false) {
+    if (protocolRunState == false){
        //test
+       
     }
 }

@@ -1798,7 +1798,9 @@ void uKitId::getDeciveId(){
   for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getServoId(i);
+      delay(2);
       idbuf[i+18]=getMotorId(i); 
+      delay(2);
       idbuf[i+36]=getInfraredId(i);
       idbuf[i+46]=getUltrasonicId(i);
       idbuf[i+56]=getLedId(i);
@@ -2001,7 +2003,9 @@ void uKitId::getDeciveIdRu(){
   for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getServoId(i);
+      delay(2);
       idbuf[i+18]=getMotorId(i); 
+      delay(2);
       idbuf[i+36]=getInfraredId(i);
       idbuf[i+46]=getUltrasonicId(i);
       idbuf[i+56]=getLedId(i);
@@ -2367,7 +2371,9 @@ void uKitId::getDeciveIdEn(){
   for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getServoId(i);
+      delay(2);
       idbuf[i+18]=getMotorId(i); 
+      delay(2);
       idbuf[i+36]=getInfraredId(i);
       idbuf[i+46]=getUltrasonicId(i);
       idbuf[i+56]=getLedId(i);
@@ -2561,7 +2567,9 @@ void uKitId::getDeciveIdTh(){
   for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getServoId(i);
+      delay(2);
       idbuf[i+18]=getMotorId(i); 
+      delay(2);
       idbuf[i+36]=getInfraredId(i);
       idbuf[i+46]=getUltrasonicId(i);
       idbuf[i+56]=getLedId(i);
@@ -2793,7 +2801,9 @@ void uKitId::getDeciveIdKo(){
   for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getServoId(i);
+      delay(2);
       idbuf[i+18]=getMotorId(i); 
+      delay(2);
       idbuf[i+36]=getInfraredId(i);
       idbuf[i+46]=getUltrasonicId(i);
       idbuf[i+56]=getLedId(i);
@@ -2873,7 +2883,7 @@ void uKitId::getDeciveIdKo(){
     Serial.println("");
   }
   if(decivenum[1]!=0){      
-    Serial.print(" 【서보】");
+    Serial.print(" 【모터】");
     for(int i=1;i<=decivenum[1];i++){
       Serial.print("ID-");
       Serial.print(deciveid[i+18]);
