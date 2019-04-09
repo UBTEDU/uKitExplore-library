@@ -165,6 +165,9 @@ void flexiTimer2_func() {
   Sensor.checkVersion();
   delay(5);
   button1.ClickButtons(Button_pin, HIGH, CLICKBTN_PULLUP);
+  button1.debounceTime   = 20;   // Debounce timer in ms
+  button1.multiclickTime = 250;  // Time limit for multi clicks
+  button1.longClickTime  = 1000; // time until "held-down clicks" register
   pinMode(redPin, OUTPUT); //EN:Main board RGB lamp, R interface set to output/CN:主板RGB灯，R接口设置为输出.
   pinMode(greenPin, OUTPUT);//EN:Main board RGB lamp, G interface set to output/CN:主板RGB灯，G接口设置为输出.
   pinMode(bluePin, OUTPUT);//EN:Main board RGB lamp, B interface set to output/CN:主板RGB灯，B接口设置为输出.
@@ -527,11 +530,22 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
       root["mode"]=0;
       root["code"]=1;         
       if(mode==127){
-        button1.Update();    
+      unsigned char t=0,s=0;
+      while(t==0){
+        button1.Update();
+         s=s+1;
+        if(button1.clicks!=0 || s>=30){
+          t=1;  
+           
+       }
+       delay(2);  
+       
+      }
+    
         root["mode"]=127;
         root["code"]=0;  
         data.add(button1.clicks);   
-        button1.clicks=0;
+        button1.Update();
                              
       }  
       root["uuid"]=uuid;                                   
