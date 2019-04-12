@@ -165,9 +165,6 @@ void flexiTimer2_func() {
   Sensor.checkVersion();
   delay(5);
   button1.ClickButtons(Button_pin, HIGH, CLICKBTN_PULLUP);
-  button1.debounceTime   = 20;   // Debounce timer in ms
-  button1.multiclickTime = 250;  // Time limit for multi clicks
-  button1.longClickTime  = 1000; // time until "held-down clicks" register
   pinMode(redPin, OUTPUT); //EN:Main board RGB lamp, R interface set to output/CN:主板RGB灯，R接口设置为输出.
   pinMode(greenPin, OUTPUT);//EN:Main board RGB lamp, G interface set to output/CN:主板RGB灯，G接口设置为输出.
   pinMode(bluePin, OUTPUT);//EN:Main board RGB lamp, B interface set to output/CN:主板RGB灯，B接口设置为输出.
@@ -182,6 +179,7 @@ void flexiTimer2_func() {
   pinMode(GrayscaleNum5, INPUT);  //右1的循迹传感器
   pinMode(IR_S,OUTPUT);
   pinMode(buzzer_pin,OUTPUT);
+
   delay(5);  //开机延时
   //check_servo();  //获取舵机个数,列表
   Wire.begin();
@@ -698,6 +696,14 @@ void consoleLog(unsigned char level, const int msg){
   
 }
 void consoleLog(unsigned char level, const uint16_t msg){
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":");
+  Serial.print(msg);
+  Serial.print("}");
+  Serial.print('\n'); 
+}
+void consoleLog(unsigned char level, const uint32_t msg){
   Serial.print("{\"level\":");
   Serial.print(level);
   Serial.print(",\"msg\":");

@@ -102,7 +102,7 @@ ClickButton::ClickButton(uint8_t buttonPin, boolean activeType, boolean internal
   _lastBounceTime= 0;
   debounceTime   = 20;            // Debounce timer in ms
   multiclickTime = 250;           // Time limit for multi clicks
-  longClickTime  = 1000;          // time until "long" click register
+  longClickTime  = 800;          // time until "long" click register
   pinMode(_pin, INPUT);
   // Turn on internal pullup resistor if applicable
   if (_activeHigh == LOW && internalPullup == CLICKBTN_PULLUP) digitalWrite(_pin,HIGH);
@@ -120,7 +120,7 @@ void ClickButton::ClickButtons(uint8_t buttonPin, boolean activeType, boolean in
   _lastBounceTime= 0;
   debounceTime   = 20;            // Debounce timer in ms
   multiclickTime = 250;           // Time limit for multi clicks
-  longClickTime  = 1000;          // time until "long" click register
+  longClickTime  = 800;          // time until "long" click register
   pinMode(_pin, INPUT);
   // Turn on internal pullup resistor if applicable
   if (_activeHigh == LOW && internalPullup == CLICKBTN_PULLUP) digitalWrite(_pin,HIGH);
@@ -129,6 +129,8 @@ void ClickButton::ClickButtons(uint8_t buttonPin, boolean activeType, boolean in
 
 void ClickButton::Update()
 {
+  
+  clicks=0;
   long now = (long)millis();      // get current time
   _btnState = digitalRead(_pin);  // current appearant button state
 

@@ -544,7 +544,7 @@ unsigned short SemiduplexSerial::ubtHumitureProtocol(unsigned char len,unsigned 
     
 Retry_Servo:
   
-  temp = (Usart3_Rx_Ack_Len+12) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  temp = (Usart3_Rx_Ack_Len+16) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
   Serial3.begin(115200);  //uart3
   Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
   Serial2.begin(115200);  //设置波特率
