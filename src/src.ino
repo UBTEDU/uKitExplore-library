@@ -1,6 +1,5 @@
 #include "ucode.h"
-double i=1;
-bool t=1;
+
 void setup() {
     Initialization();
     if (protocolRunState == false) {
@@ -10,7 +9,13 @@ void setup() {
 void loop() {
     protocol();
     if (protocolRunState == false) {
+        button1.Update();
+        if (button1.clicks == 1) {
+          tone2(100,300);
+            delay(1000);
+             
 
+        }
 
 
     }

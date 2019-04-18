@@ -2,7 +2,7 @@
 #define UKITSENSOR_h
 #include"SemiduplexSerial.h" 
 #include <Arduino.h>
-#include "ArduinoJson.h"
+#include "ArduinoJson/ArduinoJson.h"
 
 class uKitSensor : public SemiduplexSerial
 {

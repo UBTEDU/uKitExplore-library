@@ -5,7 +5,7 @@
 
 // Supported Modules drive needs to be iddded here
 #include "FlexiTimer2.h"
-#include "ArduinoJson.h"
+#include "ArduinoJson/ArduinoJson.h"
 #include"onBoardHW.h"
 #include"TransforRobot.h"
 #include"uKitMotor.h"
@@ -181,7 +181,7 @@ void flexiTimer2_func() {
   pinMode(buzzer_pin,OUTPUT);
 
   delay(5);  //开机延时
- 
+  //check_servo();  //获取舵机个数,列表
   Wire.begin();
   setAllSensorOff();
   setMotorStop(0xff);
@@ -189,12 +189,11 @@ void flexiTimer2_func() {
   setUltrasonicRgbledOff(0x00);
   Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
   delay(2);
-  const size_t capacity = JSON_ARRAY_SIZE(2) + JSON_OBJECT_SIZE(1);
-  DynamicJsonDocument doc(capacity);
-  JsonArray data = doc.createNestedArray("data");
-  data.add(versionNumber);
-  data.add(Sensor.Version);
-  serializeMsgPack(doc, Serial);
+  Serial.print("{\"data\":[\"");
+  Serial.print(versionNumber);
+  Serial.print("\",\"");
+  Serial.print(Sensor.Version);
+  Serial.print("\"]}");
   Serial.print('\n');
   FlexiTimer2::set(30,flexiTimer2_func);
   FlexiTimer2::start();
@@ -208,9 +207,11 @@ void flexiTimer2_func() {
 }
 
 void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int *buf,String uuid){
-  const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5)+40; 
-  DynamicJsonDocument root(capacity);
-  JsonArray data = root.createNestedArray("data");
+  const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5)+40;
+  //StaticJsonBuffer<capacity> jsonBuffer;
+  DynamicJsonBuffer jsonBuffer(capacity);
+  JsonObject& root = jsonBuffer.createObject();
+  JsonArray& data = root.createNestedArray("data"); 
   switch(device){
     case 1:    //舵机
       root["device"]=1;    
@@ -601,7 +602,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
       break;
   }
   if(device!=11 || mode!=128){
-      serializeMsgPack(root,Serial);
+      root.printTo(Serial);
       Serial.print('\n');
       uuid="";
   }
@@ -624,13 +625,16 @@ void serialEvent(){
 }
 void protocol(){      
     if (newLineReceived) { 
-    const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5) + 40;  
-    DynamicJsonDocument root(capacity);  
-    deserializeMsgPack(root,inputString);     
+    const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5) + 40;
+   // StaticJsonBuffer<capacity> jsonBuffer;     
+    DynamicJsonBuffer jsonBuffer(capacity);
+    JsonObject& root = jsonBuffer.parseObject(inputString);
+    
     int buf[5]={0}; 
     unsigned char device = root["device"];
     unsigned char mode = root["mode"];
-    unsigned char id = root["id"];   
+    unsigned char id = root["id"];
+    
     buf[0]  = root["data"][0];
     buf[1]  = root["data"][1];
     buf[2]  = root["data"][2];
@@ -655,58 +659,65 @@ void protocol(){
 
 }
 void consoleLog(unsigned char level, const String msg){
-  const size_t capacity = JSON_OBJECT_SIZE(2);
-  DynamicJsonDocument doc(capacity);
-  doc["level"] = level;
-  doc["msg"] = msg;
-  serializeMsgPack(doc, Serial);
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":\"");
+  Serial.print(msg);
+  Serial.print("\"}");
+  Serial.print('\n');
   
 }
 
 void consoleLog(unsigned char level, const long msg){
-  const size_t capacity = JSON_OBJECT_SIZE(2);
-  DynamicJsonDocument doc(capacity);
-  doc["level"] = level;
-  doc["msg"] = msg;
-  serializeMsgPack(doc, Serial);
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":\"");
+  Serial.print(msg);
+  Serial.print("\"}");
+  Serial.print('\n');
   
 }
 void consoleLog(unsigned char level, const char msg){
-  const size_t capacity = JSON_OBJECT_SIZE(2);
-  DynamicJsonDocument doc(capacity);
-  doc["level"] = level;
-  doc["msg"] = msg;
-  serializeMsgPack(doc, Serial);
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":");
+  Serial.print(msg);
+  Serial.print("}");
+  Serial.print('\n');
   
 }
 void consoleLog(unsigned char level, const int msg){
-  const size_t capacity = JSON_OBJECT_SIZE(2);
-  DynamicJsonDocument doc(capacity);
-  doc["level"] = level;
-  doc["msg"] = msg;
-  serializeMsgPack(doc, Serial);
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":");
+  Serial.print(msg);
+  Serial.print("}");
+  Serial.print('\n');
   
 }
 void consoleLog(unsigned char level, const uint16_t msg){
-  const size_t capacity = JSON_OBJECT_SIZE(2);
-  DynamicJsonDocument doc(capacity);
-  doc["level"] = level;
-  doc["msg"] = msg;
-  serializeMsgPack(doc, Serial);
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":");
+  Serial.print(msg);
+  Serial.print("}");
+  Serial.print('\n'); 
 }
 void consoleLog(unsigned char level, const uint32_t msg){
-  const size_t capacity = JSON_OBJECT_SIZE(2);
-  DynamicJsonDocument doc(capacity);
-  doc["level"] = level;
-  doc["msg"] = msg;
-  serializeMsgPack(doc, Serial);
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":");
+  Serial.print(msg);
+  Serial.print("}");
+  Serial.print('\n'); 
 }
 void consoleLog(unsigned char level,const double msg){
-  const size_t capacity = JSON_OBJECT_SIZE(2);
-  DynamicJsonDocument doc(capacity);
-  doc["level"] = level;
-  doc["msg"] = msg;
-  serializeMsgPack(doc, Serial);
+  Serial.print("{\"level\":");
+  Serial.print(level);
+  Serial.print(",\"msg\":");
+  Serial.print(msg);
+  Serial.print("}");
+  Serial.print('\n');  
 }
 
 
