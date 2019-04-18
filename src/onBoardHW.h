@@ -61,7 +61,7 @@ public:
   //HC-SR04
   unsigned char Trig;
   unsigned char Echo;
-  String Version="";
+  const char* Version="";
   
   
   

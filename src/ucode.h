@@ -14,7 +14,7 @@
 #include "ClickButton.h"
 #include"uKitId.h"
 #include"Gyroscope.h"
-String versionNumber="v1.1.0";
+const char* versionNumber="v1.1.0";
 
 uint64_t incomingByte = 0;          // 接收到的 data byte
 String inputString = "";         // 用来储存接收到的内容
@@ -207,160 +207,107 @@ void flexiTimer2_func() {
   
 }
 
-void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int *buf,String uuid){
-  const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5)+40; 
+
+
+void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int *buf,const char* uuid){
+  const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5)+40;
   DynamicJsonDocument root(capacity);
+  root["device"]=device;
+  root["mode"]=mode;
+  root["id"]=id;
+  root["code"]=1;
   JsonArray data = root.createNestedArray("data");
+  root["uuid"]=uuid;
+
   switch(device){
     case 1:    //舵机
-      root["device"]=1;    
       switch(mode){
         case 127: //轮模式  
            setServoTurn(id,buf[0],buf[1]);     
-           root["mode"]=127;
-           root["id"]=id;
            root["code"]=0;
-           root["uuid"]=uuid;
            break;
         case 128: //角模式      
            setServoAngle(id,buf[0],buf[1]);
-           root["mode"]=128;
-           root["id"]=id;
            root["code"]=0;
-           root["uuid"]=uuid;
            break;    
         case 129://读取角度           
-           root["mode"]=129;
-           root["id"]=id;
            root["code"]=0; 
            if(buf[0]==0){
             data.add(readServoAnglePD(id));  
            }
            else{
             data.add(readServoAngleNPD(id));
-           } 
-           root["uuid"]=uuid;       
+           }  
            break;
         case 130: //停止舵机       
            setServoStop(id);
-           root["mode"]=130;
-           root["id"]=id;
            root["code"]=0;
-           root["uuid"]=uuid;
            break;                                      
       }
       break;
-    case 2:    //电机
-      root["device"]=2;    
+    case 2:    //电机 
       switch(mode){
         case 127: //恒速转动  
            setMotorTurnAdj(id,buf[0],0xffff);     
-           root["mode"]=127;
-           root["id"]=id;
            root["code"]=0;
-           root["uuid"]=uuid;
            break;
         case 128: //pwm转动     
            setMotorTurn(id,buf[0]);
-           root["mode"]=128;
-           root["id"]=id;
            root["code"]=0;
-           root["uuid"]=uuid;
            break;    
-        case 129://读取速度           
-           root["mode"]=129;
-           root["id"]=id;
-           root["code"]=0; 
+        case 129://读取速度                    
            data.add(readMotorSpeed(id));  
-           root["uuid"]=uuid;      
+           root["code"]=0; 
            break;
         case 130: //停止电机   
            setMotorStop(id);
-           root["mode"]=130;
-           root["id"]=id;
            root["code"]=0;
-           root["uuid"]=uuid;
            break;                                      
       }
       break;
-    case 3:    //眼灯
-      root["device"]=3;    
+    case 3:    //眼灯   
       switch(mode){
         case 127: //亮起眼灯
            setEyelightAllPetals(id,buf[0],buf[1],buf[2]);    
-           root["mode"]=127;
-           root["id"]=id;
            root["code"]=0;
-           root["uuid"]=uuid;
            break;
         case 128: //眼灯表情     
            setEyelightLook(id,buf[0],buf[4],buf[1],buf[2],buf[3]);
-           root["mode"]=128;
-           root["id"]=id;
            root["code"]=0;
-           root["uuid"]=uuid;
            break;    
         case 129://情景灯
            setEyelightScene(id,buf[0],buf[1]);
-           root["mode"]=129;
-           root["id"]=id;
            root["code"]=0;   
-           root["uuid"]=uuid;   
            break;
         case 130: //关闭眼灯  
            setEyelightOff(id);
-           root["mode"]=130;
-           root["id"]=id;
            root["code"]=0;
-           root["uuid"]=uuid;
            break;                                      
       }
       break;        
-    case 4:    //传感器
-      root["device"]=4; 
-      root["mode"]=0;
-      root["id"]=id;
-      root["code"]=1;            
+    case 4:    //传感器         
       switch(mode){
-        case 127: //超声波                      
-           root["mode"]=127;
-           root["id"]=id;
-           root["code"]=0; 
+        case 127: //超声波                           
            data.add(readUltrasonicDistance(id)); 
-           root["uuid"]=uuid; 
+           root["code"]=0; 
            break;
         case 128: //红外     
-           root["mode"]=128;
-           root["id"]=id;
-           root["code"]=0; 
            data.add(readInfraredDistance(id)); 
-           root["uuid"]=uuid;
+           root["code"]=0; 
            break;    
         case 129://按压
-           root["mode"]=129;
-           root["id"]=id;
-           root["code"]=0; 
            data.add(readButtonValue(id));
-           root["uuid"]=uuid;     
+           root["code"]=0; 
            break;
         case 130: //亮度  
-           root["mode"]=130;
-           root["id"]=id;
-           root["code"]=0; 
            data.add(readLightValue(id));   
-           root["uuid"]=uuid;
+           root["code"]=0; 
            break;
          case 131: //声音     
-           root["mode"]=131;
-           root["id"]=id;
-           root["code"]=0; 
            data.add(readSoundValue(id)); 
-           root["uuid"]=uuid;
+           root["code"]=0; 
            break;    
         case 132://温湿度
-           root["mode"]=132;
-           root["id"]=id;
-           root["code"]=0; 
            if(buf[0]==0){
             data.add(readHumitureValue(id,'C'));
            }
@@ -370,12 +317,9 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            else if(buf[0]==2){
             data.add(readHumitureValue(id,'H'));
            }        
-           root["uuid"]=uuid;        
+           root["code"]=0;       
            break;
         case 133: //颜色识别模式 
-           root["mode"]=133;
-           root["id"]=id;
-           root["code"]=0; 
            switch(buf[0]){
             case 0:
               data.add(readColor(id,"Red"));
@@ -408,124 +352,82 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
               data.add(readColor(id,"Gray"));     
               break;                                                   
            }
-           root["uuid"]=uuid;            
+           root["code"]=0;            
            break;  
         case 134: //颜色RGB模式           
            rgbValue=readColorRgb(id);
-           root["mode"]=134;
-           root["id"]=id;
-           root["code"]=0; 
            data.add(rgbValue[0]);
            data.add(rgbValue[1]);
            data.add(rgbValue[2]);
            delete [] rgbValue;   
-           root["uuid"]=uuid;                     
+           root["code"]=0;                     
            break;    
         case 135: //ukit超声波灯光       
            setUltrasonicRgbled(id,buf[0],buf[1],buf[2]);
-           root["mode"]=135;
-           root["id"]=id;
-           root["code"]=0;       
-           root["uuid"]=uuid;               
+           root["code"]=0;                     
            break;  
         case 136: //关闭ukit超声波灯光 
            setUltrasonicRgbledOff(id);
-           root["mode"]=136;
-           root["id"]=id;
-           root["code"]=0;     
-           root["uuid"]=uuid;                    
+           root["code"]=0;                      
            break;                                                                  
       }
       break;    
-     case 5:    //板载蜂鸣器
-      root["device"]=5; 
-      root["mode"]=0;
-      root["id"]=id;
-      root["code"]=1;       
+     case 5:    //板载蜂鸣器      
       switch(mode){
         case 127: //播放音调                      
-           root["mode"]=127;
-           root["code"]=0; 
            tone(buzzer_pin,buf[0],0);
-           root["uuid"]=uuid;
+           root["code"]=0; 
            break;
         case 128: //播放频率   
-           root["mode"]=128;         
-           root["code"]=0; 
            tone(buzzer_pin,buf[0],0); 
-           root["uuid"]=uuid;
+           root["code"]=0; 
            break;    
         case 129://结束声音
-           root["mode"]=129;
-           root["code"]=0; 
            noTone(buzzer_pin);     
-           root["uuid"]=uuid;
+           root["code"]=0; 
            break;                                           
       }
       break; 
-     case 6:    //板载RGB
-      root["device"]=6; 
-      root["mode"]=0;
-      root["id"]=id;
-      root["code"]=1;       
+     case 6:    //板载RGB    
       switch(mode){
         case 127: //RGB                     
-           root["mode"]=127;
-           root["code"]=0; 
            setRgbledColor(buf[0],buf[1],buf[2]);
-           root["uuid"]=uuid;
-           
+           root["code"]=0; 
            break;
         case 128: //播放频率   
-           root["mode"]=128;         
-           root["code"]=0; 
            setRgbledColor(0,0,0);
-           root["uuid"]=uuid;
+           root["code"]=0; 
            break;                                            
       }
       break;   
-     case 7: //电池电压
-      root["device"]=7; 
-      root["mode"]=0;
-      root["code"]=1;         
+     case 7: //电池电压     
       if(mode==127){
-        root["mode"]=127;
-        root["code"]=0;      
-        data.add(readBatteryVoltage());                   
-      }       
-      root["uuid"]=uuid;                                
+        root["mode"]=127;      
+        data.add(readBatteryVoltage());  
+        root["code"]=0;                  
+      }                                  
       break;    
-    case 8: //巡线传感器
-      root["device"]=8; 
-      root["mode"]=0;
-      root["code"]=1;         
+    case 8: //巡线传感器        
       if(mode==127){
         root["mode"]=127;
-        root["id"]=id;
-        root["code"]=0;        
-        data.add(readGrayValue(id,buf[0]));                   
+        root["id"]=id;         
+        data.add(readGrayValue(id,buf[0]));   
+        root["code"]=0;                
       }   
       root["uuid"]=uuid;                                    
       break;  
-     case 9: //陀螺仪
-      root["device"]=9; 
-      root["mode"]=0;
-      root["code"]=1;         
+     case 9: //陀螺仪         
       if(mode==127){     
         values=getMpu6050Data();
-        root["mode"]=127;
-        root["code"]=0;       
+             
         data.add(values[0]);   
         data.add(values[1]);   
         data.add(values[2]);  
+        root["code"]=0;  
         delete [] values;             
-      }       
-      root["uuid"]=uuid;                              
+      }                            
       break;
-     case 10: //板载按键
-      root["device"]=10; 
-      root["mode"]=0;
-      root["code"]=1;         
+     case 10: //板载按键      
       if(mode==127){
       unsigned char t=0,s=0;
       while(t==0){
@@ -539,28 +441,19 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
        
       }
     
-        root["mode"]=127;
         root["code"]=0;  
         data.add(button1.clicks);   
         button1.Update();
                              
-      }  
-      root["uuid"]=uuid;                                   
+      }                                 
       break;
-     case 11:    //ID相关
-      root["device"]=11; 
-      root["mode"]=0;
-      root["id"]=id;
-      root["code"]=1;       
+     case 11:    //ID相关    
       switch(mode){
       case 130: //停止设备
-           root["mode"]=130;
            root["code"]=0; 
            stopDecives();
-           root["uuid"]=uuid;
            break;          
         case 127: //修改ID               
-           root["mode"]=127;
            uKitId.setAllDeciveId(buf[0],buf[1],buf[2]);
            delay(120);                
            if(buf[2]==uKitId.getAllDeciveId(buf[0],buf[2])){
@@ -569,28 +462,21 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            else{
             root["code"]=1;
            }
-           root["uuid"]=uuid;
            break;
         case 128: //获取ID   
            uKitId.getDeciveIdJs(uuid);
-           root["code"]=0;
-           root["mode"]=128;
-          
+           root["code"]=0;         
            break;    
       case 129: //检测固件  
-           root["mode"]=129;
            root["code"]=0; 
            data.add(0);   
            data.add(versionNumber);
            data.add(Sensor.Version);
-          root["uuid"]=uuid;
           break;   
  
     case 131: //停止设备
-      root["mode"]=130;
       root["code"]=0; 
       stopDecives();
-      root["uuid"]=uuid;
       break;                                           
       }
       break;                             
@@ -604,25 +490,23 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
       serializeMsgPack(root,Serial);
       Serial.print('\n');
       uuid="";
-  }
+  }  
 
   
-
-
   
 }
 void serialEvent(){
-  while (Serial.available()) {  
+  if (Serial.available()) {  
     incomingByte = Serial.read();              //一个字节一个字节地读，下一句是读到的放入字符串数组中组成一个完成的数据包
-    inputString += (char) incomingByte;     // 全双工串口可以不用在下面加延时，半双工则要加的//
-    delay(2);   
+    inputString += (char) incomingByte;     // 全双工串口可以不用在下面加延时，半双工则要加的//   
     if (incomingByte == '\n') {    
       newLineReceived = true;
 
     }
   }
+   
 }
-void protocol(){      
+void protocol(){  
     if (newLineReceived) { 
     const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5) + 40;  
     DynamicJsonDocument root(capacity);  
@@ -636,7 +520,7 @@ void protocol(){
     buf[2]  = root["data"][2];
     buf[3]  = root["data"][3];
     buf[4]  = root["data"][4];    
-    String uuid = root["uuid"];
+    const char* uuid = root["uuid"];
     ProtocolParser(device,mode,id,buf,uuid);
     inputString = "";   // clear the string       
     newLineReceived = false; 
