@@ -1,5 +1,5 @@
 #include"uKitId.h" 
-#include "ArduinoJson/ArduinoJson.h"
+#include "ArduinoJson.h"
 #include "avr/boot.h"
 void uKitId::printUUID(){
      Serial.print("{\"UUID\":\"");
@@ -2279,9 +2279,9 @@ void uKitId::getDeciveIdRu(){
   unsigned char idbuf[116]={0};
   unsigned char decivenum[10]={0};
   unsigned char deciveid[116]={0};
-  StaticJsonBuffer<900> jsonBuffer;
-  JsonObject& root = jsonBuffer.createObject();
-  JsonArray& drivers = root.createNestedArray("drivers");   
+  const size_t capacity = 8*JSON_ARRAY_SIZE(2) + JSON_ARRAY_SIZE(4) + JSON_ARRAY_SIZE(10) + JSON_ARRAY_SIZE(13) + JSON_OBJECT_SIZE(14);
+  DynamicJsonDocument root(capacity);
+  JsonArray drivers = root.createNestedArray("drivers");  
   root["uuid"]=uuid;
  if (Serial) {
   
@@ -2354,14 +2354,14 @@ void uKitId::getDeciveIdRu(){
      }
   }
   if(decivenum[0]!=0){    
-    JsonArray& servo = root.createNestedArray("servo");    
+    JsonArray servo = root.createNestedArray("servo");    
     drivers.add(1);//舵机
     for(int i=1;i<=decivenum[0];i++){
       servo.add(deciveid[i]);//舵机
     }
   }
   if(decivenum[1]!=0){     
-    JsonArray& motor = root.createNestedArray("motor"); 
+    JsonArray motor = root.createNestedArray("motor"); 
     drivers.add(2);//电机
     for(int i=1;i<=decivenum[1];i++){
       motor.add(deciveid[i+18]);
@@ -2369,14 +2369,14 @@ void uKitId::getDeciveIdRu(){
     }
   }
   if(decivenum[2]!=0){      
-    JsonArray& ir = root.createNestedArray("ir");
+    JsonArray ir = root.createNestedArray("ir");
     drivers.add(3);//红外
     for(int i=1;i<=decivenum[2];i++){
       ir.add(deciveid[i+36]); 
     }
   }
   if(decivenum[3]!=0){    
-     JsonArray& ultrasonic = root.createNestedArray("ultrasonic");
+     JsonArray ultrasonic = root.createNestedArray("ultrasonic");
     drivers.add(4);//超声波 
     for(int i=1;i<=decivenum[3];i++){
       ultrasonic.add(deciveid[i+46]); 
@@ -2384,14 +2384,14 @@ void uKitId::getDeciveIdRu(){
     }
   }
   if(decivenum[4]!=0){      
-    JsonArray& eyelamp = root.createNestedArray("eyelamp");
+    JsonArray eyelamp = root.createNestedArray("eyelamp");
     drivers.add(5);//led眼灯
     for(int i=1;i<=decivenum[4];i++){
       eyelamp.add(deciveid[i+56]);
     }
   }
   if(decivenum[5]!=0){      
-    JsonArray& touch = root.createNestedArray("touch");
+    JsonArray touch = root.createNestedArray("touch");
     drivers.add(6);//触碰传感器
     for(int i=1;i<=decivenum[5];i++){
       touch.add(deciveid[i+66]);
@@ -2399,7 +2399,7 @@ void uKitId::getDeciveIdRu(){
 
   }
   if(decivenum[6]!=0){      
-    JsonArray& light = root.createNestedArray("light");
+    JsonArray light = root.createNestedArray("light");
     drivers.add(7);//亮度
     for(int i=1;i<=decivenum[6];i++){
       light.add(deciveid[i+76]);
@@ -2407,7 +2407,7 @@ void uKitId::getDeciveIdRu(){
     }
   }
   if(decivenum[7]!=0){      
-    JsonArray& sound = root.createNestedArray("sound");
+    JsonArray sound = root.createNestedArray("sound");
     drivers.add(8);//声音
     for(int i=1;i<=decivenum[7];i++){
       sound.add(deciveid[i+86]);
@@ -2416,7 +2416,7 @@ void uKitId::getDeciveIdRu(){
 
   }
   if(decivenum[8]!=0){      
-    JsonArray& tah = root.createNestedArray("tah");
+    JsonArray tah = root.createNestedArray("tah");
     drivers.add(9);//温湿度传感器
     for(int i=1;i<=decivenum[8];i++){
       tah.add(deciveid[i+96]);
@@ -2424,7 +2424,7 @@ void uKitId::getDeciveIdRu(){
     }
   }
   if(decivenum[9]!=0){      
-    JsonArray& colors = root.createNestedArray("colors");
+    JsonArray colors = root.createNestedArray("colors");
     drivers.add(10);//颜色传感器
     for(int i=1;i<=decivenum[9];i++){
       colors.add(deciveid[i+106]);
@@ -2433,7 +2433,7 @@ void uKitId::getDeciveIdRu(){
   } 
  
 }
-  root.printTo(Serial);
+  serializeMsgPack(root,Serial);
   Serial.print('\n');
 } 
  void uKitId::getDeciveIdJs1M(const String uuid){
@@ -2442,9 +2442,9 @@ void uKitId::getDeciveIdRu(){
   unsigned char idbuf[116]={0};
   unsigned char decivenum[10]={0};
   unsigned char deciveid[116]={0};
-  StaticJsonBuffer<900> jsonBuffer;
-  JsonObject& root = jsonBuffer.createObject();
-  JsonArray& drivers = root.createNestedArray("drivers");   
+  const size_t capacity = 8*JSON_ARRAY_SIZE(2) + JSON_ARRAY_SIZE(4) + JSON_ARRAY_SIZE(10) + JSON_ARRAY_SIZE(13) + JSON_OBJECT_SIZE(14);
+  DynamicJsonDocument root(capacity);
+  JsonArray drivers = root.createNestedArray("drivers");
   root["uuid"]=uuid;
  if (Serial) {
   
@@ -2517,14 +2517,14 @@ void uKitId::getDeciveIdRu(){
      }
   }
   if(decivenum[0]!=0){    
-    JsonArray& servo = root.createNestedArray("servo");    
+    JsonArray servo = root.createNestedArray("servo");    
     drivers.add(1);//舵机
     for(int i=1;i<=decivenum[0];i++){
       servo.add(deciveid[i]);//舵机
     }
   }
   if(decivenum[1]!=0){     
-    JsonArray& motor = root.createNestedArray("motor"); 
+    JsonArray motor = root.createNestedArray("motor"); 
     drivers.add(2);//电机
     for(int i=1;i<=decivenum[1];i++){
       motor.add(deciveid[i+18]);
@@ -2532,14 +2532,14 @@ void uKitId::getDeciveIdRu(){
     }
   }
   if(decivenum[2]!=0){      
-    JsonArray& ir = root.createNestedArray("ir");
+    JsonArray ir = root.createNestedArray("ir");
     drivers.add(3);//红外
     for(int i=1;i<=decivenum[2];i++){
       ir.add(deciveid[i+36]); 
     }
   }
   if(decivenum[3]!=0){    
-     JsonArray& ultrasonic = root.createNestedArray("ultrasonic");
+     JsonArray ultrasonic = root.createNestedArray("ultrasonic");
     drivers.add(4);//超声波 
     for(int i=1;i<=decivenum[3];i++){
       ultrasonic.add(deciveid[i+46]); 
@@ -2547,14 +2547,14 @@ void uKitId::getDeciveIdRu(){
     }
   }
   if(decivenum[4]!=0){      
-    JsonArray& eyelamp = root.createNestedArray("eyelamp");
+    JsonArray eyelamp = root.createNestedArray("eyelamp");
     drivers.add(5);//led眼灯
     for(int i=1;i<=decivenum[4];i++){
       eyelamp.add(deciveid[i+56]);
     }
   }
   if(decivenum[5]!=0){      
-    JsonArray& touch = root.createNestedArray("touch");
+    JsonArray touch = root.createNestedArray("touch");
     drivers.add(6);//触碰传感器
     for(int i=1;i<=decivenum[5];i++){
       touch.add(deciveid[i+66]);
@@ -2562,7 +2562,7 @@ void uKitId::getDeciveIdRu(){
 
   }
   if(decivenum[6]!=0){      
-    JsonArray& light = root.createNestedArray("light");
+    JsonArray light = root.createNestedArray("light");
     drivers.add(7);//亮度
     for(int i=1;i<=decivenum[6];i++){
       light.add(deciveid[i+76]);
@@ -2570,7 +2570,7 @@ void uKitId::getDeciveIdRu(){
     }
   }
   if(decivenum[7]!=0){      
-    JsonArray& sound = root.createNestedArray("sound");
+    JsonArray sound = root.createNestedArray("sound");
     drivers.add(8);//声音
     for(int i=1;i<=decivenum[7];i++){
       sound.add(deciveid[i+86]);
@@ -2579,7 +2579,7 @@ void uKitId::getDeciveIdRu(){
 
   }
   if(decivenum[8]!=0){      
-    JsonArray& tah = root.createNestedArray("tah");
+    JsonArray tah = root.createNestedArray("tah");
     drivers.add(9);//温湿度传感器
     for(int i=1;i<=decivenum[8];i++){
       tah.add(deciveid[i+96]);
@@ -2587,7 +2587,7 @@ void uKitId::getDeciveIdRu(){
     }
   }
   if(decivenum[9]!=0){      
-    JsonArray& colors = root.createNestedArray("colors");
+    JsonArray colors = root.createNestedArray("colors");
     drivers.add(10);//颜色传感器
     for(int i=1;i<=decivenum[9];i++){
       colors.add(deciveid[i+106]);
@@ -2596,7 +2596,7 @@ void uKitId::getDeciveIdRu(){
   } 
  
 }
-  root.printTo(Serial);
+  serializeMsgPack(root, Serial);
   Serial.print('\n');
 } 
 void uKitId::getDeciveIdEn(){

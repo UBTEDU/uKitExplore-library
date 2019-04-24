@@ -227,11 +227,12 @@ void uKitSensor::setEyelightPetal(char id,unsigned char petalsnum,unsigned char 
   
 }
 void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,String petals){
-  DynamicJsonBuffer jsonBuffer;
+  const size_t capacity = JSON_ARRAY_SIZE(3) + JSON_OBJECT_SIZE(1) + 10;
+  DynamicJsonDocument root(capacity);
   signed char tData2[1] ;
   unsigned char tData[35];
   
-  JsonObject& root = jsonBuffer.parseObject(petals);
+  deserializeJson(root,petals);
   unsigned char tRet=0;
    tData2[0]=id;
   static unsigned char eyelightState=1;
@@ -239,7 +240,8 @@ void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,String petals
   if(eyelightState==1){
     ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
     eyelightState=0;   
-  }  
+  } 
+  JsonArray data = root["data"]; 
   tData[0]=id;  //ID
   tData[1]=0xff;//持续时间
   tData[2]=petalsnum;//色块数量
