@@ -3,6 +3,7 @@
 #include"SemiduplexSerial.h" 
 #include <Arduino.h>
 #include "ArduinoJson.h"
+#include"crc.h"
 
 class uKitSensor : public SemiduplexSerial
 {
@@ -29,6 +30,16 @@ public:
     void setColorOff(char id);
     signed char readHumitureValue(char id, char choice);
     unsigned char readButtonValue(char id);//返回0无操作，返回1是单击，返回2是双击
+    unsigned long getButtonVersion(char id);
+    unsigned long getSensorVersion(char id,unsigned char sensor);
+    unsigned char setButtonUpdate(char id);
+    unsigned char setSensorUpdate(char id,unsigned char sensor);
+    unsigned char setButtonUpdating(char id,unsigned int frame,unsigned int frameTotal,unsigned long data);
+    unsigned char setSensorUpdating(char id,unsigned int frame,unsigned int frameTotal,unsigned long data,unsigned char sensor);
+    
+    
+    unsigned char setButtonUpdated(char id,unsigned int frame);
+    unsigned char setSensorUpdated(char id,unsigned int frame,unsigned char sensor);
     unsigned short readUltrasonicDistance(char id);
     unsigned char setUltrasonicRgbled(char id,unsigned char red,unsigned char green,unsigned char blue );
     unsigned char setUltrasonicRgbledOff(char id);
@@ -38,6 +49,10 @@ public:
     //times:闪烁次数：0：不闪烁，>0：表示实际次数。
     void setNixieTubeFull(char id,uint8_t tpye,uint8_t method,uint8_t frequency,uint8_t times,uint8_t start,uint8_t ends);
     void setNixieTube(char id,float number);
+    uint32_t crc32=0; 
+
+    
+    
  
     
 };

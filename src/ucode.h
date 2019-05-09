@@ -14,7 +14,7 @@
 #include "ClickButton.h"
 #include"uKitId.h"
 #include"Gyroscope.h"
-const char* versionNumber="v1.1.1";
+const char* versionNumber="v1.1.2";
 
 uint64_t incomingByte = 0;          // 接收到的 data byte
 String inputString = "";         // 用来储存接收到的内容
@@ -401,25 +401,21 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
       }
       break;   
      case 7: //电池电压     
-      if(mode==127){
-        root["mode"]=127;      
+      if(mode==127){     
         data.add(readBatteryVoltage());  
         root["code"]=0;                  
       }                                  
       break;    
     case 8: //巡线传感器        
-      if(mode==127){
-        root["mode"]=127;
-        root["id"]=id;         
+      if(mode==127){            
         data.add(readGrayValue(id,buf[0]));   
         root["code"]=0;                
       }   
-      root["uuid"]=uuid;                                    
+                                     
       break;  
      case 9: //陀螺仪         
       if(mode==127){     
-        values=getMpu6050Data();
-             
+        values=getMpu6050Data();        
         data.add(values[0]);   
         data.add(values[1]);   
         data.add(values[2]);  
@@ -473,11 +469,27 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            data.add(versionNumber);
            data.add(Sensor.Version);
           break;   
- 
-    case 131: //停止设备
-      root["code"]=0; 
-      stopDecives();
-      break;                                           
+      case 131: //获取版本号
+        if(uKitSensor.getSensorVersion(id,buf[0])==170){
+          root["code"]=0; 
+        }            
+        break;           
+     case 132: //进入升级
+        if(uKitSensor.setSensorUpdate(id,buf[0])==170){
+          root["code"]=0; 
+        }    
+       
+        break;    
+     case 133: //正在升级
+        if(uKitSensor.setSensorUpdating(id,buf[1],buf[2],buf[3],buf[0])==170){
+           root["code"]=0; 
+        }      
+        break;        
+     case 134: //结束升级
+        if(uKitSensor.setSensorUpdated(id,buf[1],buf[0])==170){
+          root["code"]=0; 
+        }
+        break;     
       }
       break;                             
     default:

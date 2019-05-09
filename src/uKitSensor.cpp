@@ -476,6 +476,232 @@ unsigned char uKitSensor::readButtonValue(char id){
   delay(2);
 }
 
+unsigned long uKitSensor::getButtonVersion(char id){
+  unsigned long tRet = 0;
+  unsigned char buf[1];
+  buf[0]=id;
+  tRet=ubtButtonVersionProtocol(0xf7,0x06,0x07,buf);
+  delay(5);     
+  return tRet;
+
+}
+
+unsigned long uKitSensor::getSensorVersion(char id,unsigned char sensor){
+  unsigned long versions=0;
+  switch(sensor){
+    case 1://舵机
+      versions=0;
+      break;
+    case 2://电机
+      versions=0;
+      break;
+    case 3://红外
+      versions=0;
+      break;
+    case 4://超声波
+      versions=0;
+      break;
+    case 5://眼灯
+     versions=0;
+      break;
+    case 6://触碰
+      versions=getButtonVersion(id);
+      break;
+    case 7://亮度
+      versions=0;
+      break;
+    case 8://声音
+      versions=0;
+      break;
+    case 9://温湿度
+      versions=0;   
+      break;
+    case 10://颜色
+      versions=0;
+      break;          
+  }
+  return versions;
+    
+}
+unsigned char uKitSensor::setButtonUpdate(char id){
+  unsigned char tRet = 0;
+  unsigned char buf[1];
+  buf[0]=id;
+  tRet=ubtButtonProtocol(0xf7,0x06,0x10,buf);
+  delay(5);     
+  return tRet;
+
+}
+
+unsigned char uKitSensor::setSensorUpdate(char id,unsigned char sensor){
+  unsigned char tRet=0;
+  switch(sensor){
+    case 1://舵机
+      tRet=0;
+      break;
+    case 2://电机
+      tRet=0;
+      break;
+    case 3://红外
+      tRet=0;
+      break;
+    case 4://超声波
+      tRet=0;
+      break;
+    case 5://眼灯
+     tRet=0;
+      break;
+    case 6://触碰
+      tRet=setButtonUpdate(id);
+      break;
+    case 7://亮度
+      tRet=0;
+      break;
+    case 8://声音
+      tRet=0;
+      break;
+    case 9://温湿度
+      tRet=0;   
+      break;
+    case 10://颜色
+      tRet=0;
+      break;          
+  }
+  return tRet;
+    
+}
+unsigned char uKitSensor::setButtonUpdating(char id,unsigned int frame,unsigned int frameTotal,unsigned long data){
+  unsigned char tRet = 0,g=0;
+  unsigned char buf[200],crcdata[8];
+  
+  cm_t ubt_cm;
+  volatile p_cm_t spi_crc32;
+  spi_crc32 = &ubt_cm;
+  memset(spi_crc32, 0, sizeof(cm_t));
+  crc32_pack_init(spi_crc32);
+  buf[g++]=id;
+  buf[g++]=(uint8_t)(frame);
+  buf[g++]=(uint8_t)(frame>>8);
+  uint16_t val16[4];
+  val16[0] = (u16)(data&0xFFFF);
+  val16[1] =(u16)((data>>16)&0xFFFF);
+  val16[2] =(u16)((data>>32)&0xFFFF);
+  val16[3] =(u16)((data>>48)&0xFFFF);
+  crcdata[0]=buf[g++]=(uint8_t)val16[0];
+  crcdata[1]=buf[g++]=(uint8_t)(val16[0]>>8);
+  crcdata[2]=buf[g++]=(uint8_t)val16[1];
+  crcdata[3]=buf[g++]=(uint8_t)(val16[1]>>8);
+  crcdata[4]=buf[g++]=(uint8_t)val16[2];
+  crcdata[5]=buf[g++]=(uint8_t)(val16[2]>>8);
+  crcdata[6]=buf[g++]=(uint8_t)val16[3];
+  crcdata[7]=buf[g++]=(uint8_t)(val16[3]>>8);
+  crc32_pack(spi_crc32,crcdata,8);
+  
+  if(frame==frameTotal){
+    crc32 = crc32_pack_end(spi_crc32, 0, 0);
+  }
+  tRet=ubtButtonProtocol(0xf7,g+6,0x11,buf);
+  delay(5);     
+  return tRet; 
+  
+
+}
+
+unsigned char uKitSensor::setSensorUpdating(char id,unsigned int frame,unsigned int frameTotal,unsigned long data,unsigned char sensor){
+  unsigned char tRet=0;
+  switch(sensor){
+    case 1://舵机
+      tRet=0;
+      break;
+    case 2://电机
+      tRet=0;
+      break;
+    case 3://红外
+      tRet=0;
+      break;
+    case 4://超声波
+      tRet=0;
+      break;
+    case 5://眼灯
+     tRet=0;
+      break;
+    case 6://触碰
+      tRet=setButtonUpdating(id,frame,frameTotal,data);
+      break;
+    case 7://亮度
+      tRet=0;
+      break;
+    case 8://声音
+      tRet=0;
+      break;
+    case 9://温湿度
+      tRet=0;   
+      break;
+    case 10://颜色
+      tRet=0;
+      break;          
+  }
+  return tRet;
+    
+}
+unsigned char uKitSensor::setButtonUpdated(char id,unsigned int frame){
+  unsigned char tRet = 0,g=0;
+  unsigned char buf[4];
+ 
+  buf[g++]=id;  
+  buf[g++]=(uint8_t)(frame);
+  buf[g++]=(uint8_t)(frame>>8); 
+  buf[g++]=(uint8_t)crc32;
+  buf[g++]=(uint8_t)(crc32>>8);
+  buf[g++]=(uint8_t)(crc32>>16);
+  buf[g++]=(uint8_t)(crc32>>24);    
+  for(uint8_t i=4;i<8;i++){
+    buf[g++]=0;
+  } 
+  tRet=ubtButtonProtocol(0xf7,g+6,0x12,buf);
+  delay(5);     
+  return tRet;
+
+}
+
+unsigned char uKitSensor::setSensorUpdated(char id,unsigned int frame,unsigned char sensor){
+  unsigned char tRet=0;
+  switch(sensor){
+    case 1://舵机
+      tRet=0;
+      break;
+    case 2://电机
+      tRet=0;
+      break;
+    case 3://红外
+      tRet=0;
+      break;
+    case 4://超声波
+      tRet=0;
+      break;
+    case 5://眼灯
+     tRet=0;
+      break;
+    case 6://触碰
+      tRet=setButtonUpdated(id,frame);
+      break;
+    case 7://亮度
+      tRet=0;
+      break;
+    case 8://声音
+      tRet=0;
+      break;
+    case 9://温湿度
+      tRet=0;   
+      break;
+    case 10://颜色
+      tRet=0;
+      break;          
+  }
+  return tRet;
+    
+}
+
 unsigned short uKitSensor::readUltrasonicDistance(char id){
   unsigned char buf[1] ;
   unsigned short tRet=0;

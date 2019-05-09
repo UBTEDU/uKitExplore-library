@@ -1,4 +1,5 @@
 #include "ucode.h"
+
 void setup() {
     Initialization();
     if (protocolRunState == false) {
@@ -8,7 +9,6 @@ void setup() {
 void loop() {
     protocol();
     if (protocolRunState == false) {
-
 
 
     }

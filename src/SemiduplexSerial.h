@@ -11,6 +11,8 @@ public:
    
     unsigned char *ubtColorProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
     unsigned char ubtButtonProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+    unsigned long ubtButtonVersionProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+    unsigned char ubtButtonUpdataProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
     unsigned short ubtInfraredProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
     unsigned char ubtEyelightProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
     unsigned short ubtUltrasonicProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
