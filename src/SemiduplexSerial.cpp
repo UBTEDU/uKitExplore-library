@@ -223,6 +223,106 @@ Retry_Servo:
   }
   return tRet;
 }
+
+unsigned char SemiduplexSerial::ubtButtonUpdateProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
+  unsigned char tRet=0;
+  unsigned char tCnt = 0;
+  unsigned long temp = 2; //2ms 发完
+  unsigned char buf[90];
+  unsigned char Usart3_Rx_Ack_Len=0;
+
+  
+  memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
+  memset((void *)buf,0,sizeof(buf));
+  Usart3_Rx_Ack_Len = 12; //应答消息长度 
+  buf[0] = Head;  //协议头
+  buf[1] = swab8(Head);
+  buf[2] = len;
+  buf[3] = CMD;
+  memcpy((void *)&buf[4],(void *)Data,len-5);
+  buf[len - 1] = Cheak_Sum( (len - 3),(u8*)&buf[2]);
+  buf[len] = 0xED;
+    
+Retry_Servo:
+  
+  temp = (Usart3_Rx_Ack_Len + 10) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(buf,len + 1);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  if(CMD==0x06){
+    delay(20);
+  } 
+  else if(CMD==0x11){
+    delay(20);
+    
+  }
+  
+  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+  if(tRet == 0){ //没有接收到消息 
+    if( tCnt < 2){
+      tCnt ++;  //重试
+      goto  Retry_Servo;
+    }
+  }
+  else{ //接收到消息
+  
+    if(Usart3_Rx_Buf[len+1]==0xF7 && Usart3_Rx_Buf[len+2]==0x7F && Usart3_Rx_Buf[len+5]-0xAA==Data[0]){
+      switch(CMD){      
+        case 0x01://重启传感器
+          tRet=0xAA;  //成功信息         
+          break;   
+        case 0x02://开启传感器传输功能
+          tRet=0xAA;  //成功信息             
+          break;     
+        case 0x03://关闭传感器传输功能
+          tRet=0xAA;  //成功信息         
+          break;    
+        case 0x04://读取传感器数据
+          tRet=Usart3_Rx_Buf[len+6];  //成功信息   
+          break; 
+        case 0x06://修改ID
+          tRet=Usart3_Rx_Buf[len+5]-Data[0];  //成功信息                   
+          break;              
+        case 0x07://读取ID
+          tRet=Usart3_Rx_Buf[len+5]-0xAA;  //ID       
+          break;       
+        case 0x10://进入升级模式
+          tRet=0xAA;  //成功信息 
+          break;  
+        case 0x11://进入升级模式
+          tRet=0xAA;  //成功信息 
+          break;  
+        case 0x12://进入升级模式
+          tRet=0xAA;  //成功信息 
+          break;  
+        case 0x13://进入升级模式
+          tRet=0xAA;  //成功信息 
+          break;  
+          
+                                            
+      }
+      
+    }
+
+    else if(Usart3_Rx_Buf[len+1]==0xF7 && Usart3_Rx_Buf[len+2]==0x7F || Usart3_Rx_Buf[len+5]-0xEE==Data[0]){
+      tRet=0xee;
+  
+    }
+
+    else{
+      tRet=0;  
+      
+    }
+  
+   
+  
+  }
+  return tRet;
+}
+
 unsigned long SemiduplexSerial::ubtButtonVersionProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
   unsigned long tRet=0;
   unsigned char tCnt = 0;
@@ -367,7 +467,84 @@ Retry_Servo:
   }
   return tRet;
 }
+int SemiduplexSerial::ubtInfraredProtocols(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
+  int tRet=0;
+  unsigned char tCnt = 0;
+  unsigned long temp = 2; //2ms 发完
+  unsigned char buf[8];
+  unsigned char Usart3_Rx_Ack_Len=0;
 
+  
+  memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
+  memset((void *)buf,0,sizeof(buf));
+  Usart3_Rx_Ack_Len = 8; //应答消息长度 
+  buf[0] = Head;  //协议头
+  buf[1] = swab8(Head);
+  buf[2] = len;
+  buf[3] = CMD;
+  memcpy((void *)&buf[4],(void *)Data,len-5);
+  buf[len - 1] = Cheak_Sum( (len - 3),(u8*)&buf[2]);
+  buf[len] = 0xED;
+    
+Retry_Servo:
+  
+  temp = (Usart3_Rx_Ack_Len+12) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(buf,len + 1);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  if(CMD==0x06){
+    delay(25);
+  }  
+  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len+2); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+  if(tRet == 0){ //没有接收到消息 
+    if( tCnt < 2){
+      tCnt ++;  //重试
+      goto  Retry_Servo;
+    }
+  }
+  else{ //接收到消息
+    if(Usart3_Rx_Buf[len+1]==0xF8 && Usart3_Rx_Buf[len+2]==0x8F && Usart3_Rx_Buf[len+5]-0xAA==Data[0]){
+      switch(CMD){      
+        case 0x01://重启传感器
+          tRet=0xAA;  //成功信息         
+          break;   
+        case 0x02://开启传感器传输功能
+          tRet=0xAA;  //成功信息             
+          break;     
+        case 0x03://关闭传感器传输功能
+          tRet=0xAA;  //成功信息         
+          break;    
+        case 0x04://读取传感器数据
+          tRet = (Usart3_Rx_Buf[len + 6]<<8) | Usart3_Rx_Buf[len + 7];       
+          break; 
+        case 0x06://修改ID
+          tRet=Usart3_Rx_Buf[len+5]-Data[0];  //成功信息                   
+          break;              
+        case 0x07://读取ID
+          tRet=Usart3_Rx_Buf[len+5]-0xAA;  //ID       
+          break;                                         
+      }
+      
+    }
+
+    else if(Usart3_Rx_Buf[len+1]==0xF8 && Usart3_Rx_Buf[len+2]==0x8F || Usart3_Rx_Buf[len+5]-0xEE==Data[0]){
+      tRet=0xee;
+  
+    }
+
+    else{
+      tRet=0;  
+      
+    }
+  
+   
+  
+  }
+  return tRet;
+}
 unsigned char SemiduplexSerial::ubtEyelightProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
   unsigned char tRet=0;
   unsigned char tCnt = 0;

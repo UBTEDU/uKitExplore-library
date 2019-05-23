@@ -7,14 +7,8 @@
  */
 
 
-
-
 #include"uKitExplore.h"
-
-
-
- int i=1;
-
+int i=1;
 int buttomnum=0;
 int hongwainum=0;
 int jiguanbit=0;
@@ -23,17 +17,13 @@ int hongwaibit=0;
 const char jiguanid=1;
 const char doorLid=2;
 const char doorRid=3;
-void setup() 
-{ 
-     delay(200);
-     door(2);
-     delay(100);
+void setup() { 
+  delay(200);
+  door(2);
+  delay(100);
 } 
-void loop()
-{
+void loop(){
   maps(); 
-
-
 
 }
 void maps()
@@ -56,7 +46,7 @@ void maps()
           noTone(43);
         Serial.print("hongwai:");
        }
-        else if(tCmd == 0x101)  //按一下停
+        else if(tCmd == 1)  //按一下停
         {
           
           buttomnum++;
@@ -92,14 +82,14 @@ void ukit_bottom()
   
   tCmd = readButtonValue(1);
   delay(20);
-        if(tCmd == 0x101)  //按一下停
+        if(tCmd == 1)  //按一下停
         {
         //  door(1);
           //buttomnum++;
           Serial.print("buttom:");
           //Serial.println(buttomnum);
         }
-        if(tCmd == 0x102)  //按两下开
+        if(tCmd == 2)  //按两下开
       {
         Serial.print("STart:");
         Serial.print("\r\n");
@@ -139,8 +129,3 @@ void jiguan(char action)
     delay(300);
   }
 }
-
-
-
-
-

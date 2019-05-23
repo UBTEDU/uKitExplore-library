@@ -25,7 +25,7 @@ float *values=NULL;
 unsigned char *rgbValue=NULL;
 
 bool protocolRunState=true;
-int timeTimes=0;
+int timeTimes=0,timeFlag=0,buttonFlag=0;
 OnBoardHW Sensor;
 TransforRobot TransforRobot;
 uKitMotor uKitMotor;
@@ -158,7 +158,22 @@ void stopDecives(){
 }
 
 void flexiTimer2_func() {
-  timeTimes+=1;
+  if(timeFlag==0){
+     timeTimes+=1;
+  }
+  else{
+    button1.Update();
+    if(button1.clicks == 1){
+      buttonFlag=1;   
+    }
+    if(button1.clicks == 2){
+      buttonFlag=2;   
+    }
+    if(button1.clicks == -1){
+      buttonFlag=-1;   
+    }        
+  }
+ 
   
 }
  void Initialization(){
@@ -196,7 +211,7 @@ void flexiTimer2_func() {
   data.add(Sensor.Version);
   serializeMsgPack(doc, Serial);
   Serial.print('\n');
-  FlexiTimer2::set(30,flexiTimer2_func);
+  FlexiTimer2::set(20,flexiTimer2_func);
   FlexiTimer2::start();
   //getDeciveId();
   delay(150);
@@ -220,7 +235,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
   root["uuid"]=uuid;
 
   switch(device){
-    case 1:    //舵机
+    case 1: //舵机
       switch(mode){
         case 127: //轮模式  
            setServoTurn(id,buf[0],buf[1]);     
@@ -410,8 +425,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
       if(mode==127){            
         data.add(readGrayValue(id,buf[0]));   
         root["code"]=0;                
-      }   
-                                     
+      }                                  
       break;  
      case 9: //陀螺仪         
       if(mode==127){     
@@ -423,26 +437,15 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
         delete [] values;             
       }                            
       break;
-     case 10: //板载按键      
-      if(mode==127){
-      unsigned char t=0,s=0;
-      while(t==0){
-        button1.Update();
-         s=s+1;
-        if(button1.clicks!=0 || s>=30){
-          t=1;  
-           
-       }
-       delay(2);  
-       
-      }
-    
-        root["code"]=0;  
-        data.add(button1.clicks);   
-        button1.Update();
-                             
-      }                                 
-      break;
+     case 18: //板载按键      
+        if(mode==127){                
+          data.add(buttonFlag); 
+          delay(2); 
+          buttonFlag=0; 
+          root["code"]=0; 
+                               
+        }                                 
+        break;
      case 11:    //ID相关    
       switch(mode){
       case 130: //停止设备
@@ -519,6 +522,7 @@ void serialEvent(){
    
 }
 void protocol(){  
+  
     if (newLineReceived) { 
     const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5) + 40;  
     DynamicJsonDocument root(capacity);  
@@ -535,16 +539,18 @@ void protocol(){
     const char* uuid = root["uuid"];
     ProtocolParser(device,mode,id,buf,uuid);
     inputString = "";   // clear the string       
-    newLineReceived = false; 
+    newLineReceived = false;
+    timeFlag=1; 
     timeTimes=0;
-    FlexiTimer2::stop();
+    //FlexiTimer2::stop();
     uuid="";
     protocolRunState=true;   
     
   }
-  if(timeTimes>=3){
+  if(timeTimes>=5){
     protocolRunState=false;
-    FlexiTimer2::stop();
+    //FlexiTimer2::stop();
+    timeFlag=1;
     timeTimes=0;
 
   }

@@ -28,7 +28,7 @@ void loop()
   {
       while(1)
       {
-        straight(2);
+        straight(80);
       }    
     }
   }
@@ -147,5 +147,3 @@ void straight(int speed)
   
   }
 }
-
-

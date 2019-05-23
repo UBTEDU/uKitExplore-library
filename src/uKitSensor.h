@@ -34,8 +34,8 @@ public:
     unsigned long getSensorVersion(char id,unsigned char sensor);
     unsigned char setButtonUpdate(char id);
     unsigned char setSensorUpdate(char id,unsigned char sensor);
-    unsigned char setButtonUpdating(char id,unsigned int frame,unsigned int frameTotal,unsigned long data);
-    unsigned char setSensorUpdating(char id,unsigned int frame,unsigned int frameTotal,unsigned long data,unsigned char sensor);
+    unsigned char setButtonUpdating(char id,unsigned int frame,unsigned int frameTotal,unsigned char *data);
+    unsigned char setSensorUpdating(char id,unsigned int frame,unsigned int frameTotal,unsigned char *data,unsigned char sensor);
     
     
     unsigned char setButtonUpdated(char id,unsigned int frame);

@@ -2,38 +2,67 @@
 
 unsigned short  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
   unsigned char buf[1];
-  unsigned short  tRet=0;
- 
+  float  tRet=0;
+  static unsigned char InfraredState=1;
+  if(InfraredState==1){
+    ubtInfraredProtocol(0xf8,0x06,0x02,buf);
+    InfraredState=0;   
+  }  
   buf[0]=ID;
-  tRet=ubtInfraredProtocol(0xf8,0x06,0x04,buf);
+  tRet=ubtInfraredProtocols(0xf8,0x06,0x04,buf);
   delay(5);
   if(tRet==238){
     ubtInfraredProtocol(0xf8,0x06,0x02,buf);
+    tRet=ubtInfraredProtocols(0xf8,0x06,0x04,buf);
   }
-  if(tRet<=850)
-    tRet=0;
-  else if(tRet>850 &tRet<=879)
-    tRet=1;
-  else if(tRet>879 &tRet<=905)
-    tRet=2;
-   else if(tRet>905 &tRet<=918)
-    tRet=3;
-   else if(tRet>918 &tRet<=931)
-    tRet=4;
-   else if(tRet>918 &tRet<=944)
-    tRet=5;
-   else if(tRet>944 &tRet<=970)
-    tRet=6;   
-    else if(tRet>970 &tRet<=986)
-    tRet=7;      
-  else
-     tRet=tRet*20/2173;
 
-   if(tRet>20){
-     tRet=20;
-   }
+  float realValue = tRet - 850.00;
+  Serial.println(realValue);
+  unsigned short level;
+  if (realValue < 0) {
+      level = 0;
+  } else if (realValue < 70) {
+      level = (int)((realValue - 15) / 13.5);
+  } else if (realValue < 1210) {
+      level = (int)((realValue + 1134)/ 288.0);
+  } else if (realValue < 1565) {
+      level = (int)((realValue + 206)/ 177);
+  } else if (realValue < 1821) {
+      level = (int)((realValue - 1033)/ 53.75);
+  } else if (realValue < 2200) {
+      level = (int)((realValue - 1462)/ 22.75);
+  } else {
+      level = 20;
+  }
+  if(level > 20){
+      level = 20;
+  }
+  return level;
+
+  
+//  if(tRet<=850)
+//    tRet=0;
+//  else if(tRet>850 &tRet<=879)
+//    tRet=1;
+//  else if(tRet>879 &tRet<=905)
+//    tRet=2;
+//   else if(tRet>905 &tRet<=918)
+//    tRet=3;
+//   else if(tRet>918 &tRet<=931)
+//    tRet=4;
+//   else if(tRet>918 &tRet<=944)
+//    tRet=5;
+//   else if(tRet>944 &tRet<=970)
+//    tRet=6;   
+//    else if(tRet>970 &tRet<=986)
+//    tRet=7;      
+//  else
+//     tRet=tRet*20/2173;
+//
+//   if(tRet>20){
+//     tRet=20;
+//   }
      
- return tRet; 
 
 
 }
@@ -227,7 +256,7 @@ void uKitSensor::setEyelightPetal(char id,unsigned char petalsnum,unsigned char 
   
 }
 void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,String petals){
-  const size_t capacity = JSON_ARRAY_SIZE(3) + JSON_OBJECT_SIZE(1) + 10;
+  const size_t capacity = JSON_ARRAY_SIZE(32) + JSON_OBJECT_SIZE(1) + 10;
   DynamicJsonDocument root(capacity);
   signed char tData2[1] ;
   unsigned char tData[35];
@@ -570,44 +599,35 @@ unsigned char uKitSensor::setSensorUpdate(char id,unsigned char sensor){
   return tRet;
     
 }
-unsigned char uKitSensor::setButtonUpdating(char id,unsigned int frame,unsigned int frameTotal,unsigned long data){
+unsigned char uKitSensor::setButtonUpdating(char id,unsigned int frame,unsigned int frameTotal,unsigned char *data){
   unsigned char tRet = 0,g=0;
-  unsigned char buf[200],crcdata[8];
+  unsigned char buf[90]={0};
   
   cm_t ubt_cm;
   volatile p_cm_t spi_crc32;
   spi_crc32 = &ubt_cm;
   memset(spi_crc32, 0, sizeof(cm_t));
   crc32_pack_init(spi_crc32);
+  
   buf[g++]=id;
   buf[g++]=(uint8_t)(frame);
   buf[g++]=(uint8_t)(frame>>8);
-  uint16_t val16[4];
-  val16[0] = (u16)(data&0xFFFF);
-  val16[1] =(u16)((data>>16)&0xFFFF);
-  val16[2] =(u16)((data>>32)&0xFFFF);
-  val16[3] =(u16)((data>>48)&0xFFFF);
-  crcdata[0]=buf[g++]=(uint8_t)val16[0];
-  crcdata[1]=buf[g++]=(uint8_t)(val16[0]>>8);
-  crcdata[2]=buf[g++]=(uint8_t)val16[1];
-  crcdata[3]=buf[g++]=(uint8_t)(val16[1]>>8);
-  crcdata[4]=buf[g++]=(uint8_t)val16[2];
-  crcdata[5]=buf[g++]=(uint8_t)(val16[2]>>8);
-  crcdata[6]=buf[g++]=(uint8_t)val16[3];
-  crcdata[7]=buf[g++]=(uint8_t)(val16[3]>>8);
-  crc32_pack(spi_crc32,crcdata,8);
+  for(int i=0;i<64;i++){
+    buf[g++]=data[i];  
+  }
+  crc32_pack(spi_crc32,data,64);
   
   if(frame==frameTotal){
     crc32 = crc32_pack_end(spi_crc32, 0, 0);
   }
-  tRet=ubtButtonProtocol(0xf7,g+6,0x11,buf);
-  delay(5);     
+  tRet=ubtButtonUpdateProtocol(0xf7,g+5,0x11,buf); 
+  delay(5);   
   return tRet; 
   
 
 }
 
-unsigned char uKitSensor::setSensorUpdating(char id,unsigned int frame,unsigned int frameTotal,unsigned long data,unsigned char sensor){
+unsigned char uKitSensor::setSensorUpdating(char id,unsigned int frame,unsigned int frameTotal,unsigned char *data,unsigned char sensor){
   unsigned char tRet=0;
   switch(sensor){
     case 1://舵机
@@ -646,7 +666,7 @@ unsigned char uKitSensor::setSensorUpdating(char id,unsigned int frame,unsigned 
 }
 unsigned char uKitSensor::setButtonUpdated(char id,unsigned int frame){
   unsigned char tRet = 0,g=0;
-  unsigned char buf[4];
+  unsigned char buf[90];
  
   buf[g++]=id;  
   buf[g++]=(uint8_t)(frame);
@@ -655,10 +675,10 @@ unsigned char uKitSensor::setButtonUpdated(char id,unsigned int frame){
   buf[g++]=(uint8_t)(crc32>>8);
   buf[g++]=(uint8_t)(crc32>>16);
   buf[g++]=(uint8_t)(crc32>>24);    
-  for(uint8_t i=4;i<8;i++){
+  for(uint8_t i=4;i<64;i++){
     buf[g++]=0;
   } 
-  tRet=ubtButtonProtocol(0xf7,g+6,0x12,buf);
+  tRet=ubtButtonProtocol(0xf7,g+5,0x12,buf);
   delay(5);     
   return tRet;
 

@@ -67,9 +67,9 @@ ClickButton::ClickButton(uint8_t buttonPin)
   clicks         = 0;
   depressed      = false;
   _lastBounceTime= 0;
-  debounceTime   = 20;            // Debounce timer in ms
+  debounceTime   = 10;            // Debounce timer in ms
   multiclickTime = 250;           // Time limit for multi clicks
-  longClickTime  = 1000;          // time until long clicks register
+  longClickTime  = 800;          // time until long clicks register
   pinMode(_pin, INPUT);
 }
 
@@ -100,7 +100,7 @@ ClickButton::ClickButton(uint8_t buttonPin, boolean activeType, boolean internal
   clicks         = 0;
   depressed      = 0;
   _lastBounceTime= 0;
-  debounceTime   = 20;            // Debounce timer in ms
+  debounceTime   = 10;            // Debounce timer in ms
   multiclickTime = 250;           // Time limit for multi clicks
   longClickTime  = 800;          // time until "long" click register
   pinMode(_pin, INPUT);
@@ -144,6 +144,7 @@ void ClickButton::Update()
   // debounce the button (Check if a stable, changed state has occured)
   if (now - _lastBounceTime > debounceTime && _btnState != depressed)
   {
+    
     depressed = _btnState;
     if (depressed) _clickCount++;
   }
@@ -160,8 +161,8 @@ void ClickButton::Update()
   if (depressed && (now - _lastBounceTime > longClickTime))
   {
     // negative count for long clicks
-    clicks = 0 - _clickCount;
-    _clickCount = 0;
+    clicks =-1;
+     _clickCount = 0;
   }
 
   _lastState = _btnState;
