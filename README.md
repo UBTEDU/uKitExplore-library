@@ -1,13 +1,13 @@
 # uKit Explore Library v1.1.3
 ```
-git clone git@10.10.1.34:explore/explorer-library.git
+git clone git@github.com:UBTEDU/uKit-Explore-library.git
 
 ```
 Arduino Library for uKit Explore Modules
 
 ### How to use:
 
-1. Download the source from the git http://10.10.1.34/uKit-explore/ubtrobot
+1. Download the source from the git https://github.com/UBTEDU/uKit-Explore-library.git
 
 2. Importing a .zip Library. In the Arduino IDE, navigate to Sketch > Include Library > Add .ZIP Library. At the top of the drop down list, select the option to "Add .ZIP Library''.
 ![Image text](http://10.10.1.245/uKit-explore/Course/blob/master/image/lib.jpg)
