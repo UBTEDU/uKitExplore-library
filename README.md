@@ -1,4 +1,8 @@
 # uKit Explore Library v1.1.3
+</a>
+<a href="https://github.com/sipeed/MaixPy/releases">
+    <img src="https://img.shields.io/github/release/sipeed/maixpy.svg" alt="Latest release version" />
+</a>
 ```
 git clone git@github.com:UBTEDU/uKit-Explore-library.git
 
