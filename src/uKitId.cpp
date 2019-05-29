@@ -10,7 +10,7 @@ void uKitId::printUUID(){
     }
   }
   Serial.print("\"}");
-  Serial.print('\n');
+  Serial.print(' ');
 }
 unsigned char uKitId::setLightId(char oldid,char newid){
   unsigned short int tRet = 0;
@@ -2434,7 +2434,7 @@ void uKitId::getDeciveIdRu(){
  
 }
   serializeMsgPack(root,Serial);
-  Serial.print('\n');
+  Serial.print(' ');
 } 
  void uKitId::getDeciveIdJs1M(const String uuid){
   
@@ -2597,7 +2597,7 @@ void uKitId::getDeciveIdRu(){
  
 }
   serializeMsgPack(root, Serial);
-  Serial.print('\n');
+  Serial.print(' ');
 } 
 void uKitId::getDeciveIdEn(){
  

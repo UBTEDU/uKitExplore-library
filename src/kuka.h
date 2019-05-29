@@ -193,7 +193,7 @@ void flexiTimer2_func() {
   Serial.print("\",\"");
   Serial.print(Sensor.Version);
   Serial.print("\"]}");
-  Serial.print('\n');
+  Serial.print(' ');
   FlexiTimer2::set(30,flexiTimer2_func);
   FlexiTimer2::start();
   //getDeciveId();
@@ -591,7 +591,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
   }
   if(device!=11 || mode!=128){
       root.printTo(Serial);
-      Serial.print('\n');
+      Serial.print(' ');
       uuid="";
   }
 

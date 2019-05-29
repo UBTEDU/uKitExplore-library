@@ -201,7 +201,7 @@ long OnBoardHW::readHcsr04Distance(unsigned char jp){
  }
  void OnBoardHW::printInf(){
     Serial.print("{\"device\":\"v2\"}");
-    Serial.print('\n');
+    Serial.print(' ');
   
 }
 void OnBoardHW::checkVersion(){

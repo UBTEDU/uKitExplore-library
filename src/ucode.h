@@ -14,7 +14,7 @@
 #include "ClickButton.h"
 #include"uKitId.h"
 #include"Gyroscope.h"
-const char* versionNumber="v1.1.2";
+const char* versionNumber="v1.1.3";
 
 uint64_t incomingByte = 0;          // 接收到的 data byte
 String inputString = "";         // 用来储存接收到的内容
@@ -210,7 +210,7 @@ void flexiTimer2_func() {
   data.add(versionNumber);
   data.add(Sensor.Version);
   serializeMsgPack(doc, Serial);
-  Serial.print('\n');
+  Serial.print(' ');
   FlexiTimer2::set(20,flexiTimer2_func);
   FlexiTimer2::start();
   //getDeciveId();
@@ -437,7 +437,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
         delete [] values;             
       }                            
       break;
-     case 18: //板载按键      
+     case 10: //板载按键      
         if(mode==127){                
           data.add(buttonFlag); 
           delay(2); 
@@ -503,7 +503,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
   }
   if(device!=11 || mode!=128){
       serializeMsgPack(root,Serial);
-      Serial.print('\n');
+      Serial.print(' ');
       uuid="";
   }  
 
@@ -514,7 +514,7 @@ void serialEvent(){
   if (Serial.available()) {  
     incomingByte = Serial.read();              //一个字节一个字节地读，下一句是读到的放入字符串数组中组成一个完成的数据包
     inputString += (char) incomingByte;     // 全双工串口可以不用在下面加延时，半双工则要加的//   
-    if (incomingByte == '\n') {    
+    if (incomingByte == ' ') {    
       newLineReceived = true;
 
     }

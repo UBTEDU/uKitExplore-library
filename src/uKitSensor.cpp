@@ -2,66 +2,47 @@
 
 unsigned short  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
   unsigned char buf[1];
-  float  tRet=0;
+  unsigned short  tRet=0;
   static unsigned char InfraredState=1;
+  buf[0]=ID;
   if(InfraredState==1){
     ubtInfraredProtocol(0xf8,0x06,0x02,buf);
     InfraredState=0;   
   }  
-  buf[0]=ID;
-  tRet=ubtInfraredProtocols(0xf8,0x06,0x04,buf);
+  
+  tRet=ubtInfraredProtocol(0xf8,0x06,0x04,buf);
   delay(5);
   if(tRet==238){
     ubtInfraredProtocol(0xf8,0x06,0x02,buf);
-    tRet=ubtInfraredProtocols(0xf8,0x06,0x04,buf);
+    tRet=ubtInfraredProtocol(0xf8,0x06,0x04,buf);
   }
 
-  float realValue = tRet - 850.00;
-  Serial.println(realValue);
-  unsigned short level;
-  if (realValue < 0) {
-      level = 0;
-  } else if (realValue < 70) {
-      level = (int)((realValue - 15) / 13.5);
-  } else if (realValue < 1210) {
-      level = (int)((realValue + 1134)/ 288.0);
-  } else if (realValue < 1565) {
-      level = (int)((realValue + 206)/ 177);
-  } else if (realValue < 1821) {
-      level = (int)((realValue - 1033)/ 53.75);
-  } else if (realValue < 2200) {
-      level = (int)((realValue - 1462)/ 22.75);
-  } else {
-      level = 20;
-  }
-  if(level > 20){
-      level = 20;
-  }
-  return level;
+if(tRet<=850)
+    tRet=0;
+  else if(tRet>850 &tRet<=879)
+    tRet=1;
+  else if(tRet>879 &tRet<=905)
+    tRet=2;
+   else if(tRet>905 &tRet<=918)
+    tRet=3;
+   else if(tRet>918 &tRet<=931)
+    tRet=4;
+   else if(tRet>918 &tRet<=944)
+    tRet=5;
+   else if(tRet>944 &tRet<=970)
+    tRet=6;   
+    else if(tRet>970 &tRet<=986)
+    tRet=7;      
+  else
+     tRet=tRet*20/2173;
 
-  
-//  if(tRet<=850)
-//    tRet=0;
-//  else if(tRet>850 &tRet<=879)
-//    tRet=1;
-//  else if(tRet>879 &tRet<=905)
-//    tRet=2;
-//   else if(tRet>905 &tRet<=918)
-//    tRet=3;
-//   else if(tRet>918 &tRet<=931)
-//    tRet=4;
-//   else if(tRet>918 &tRet<=944)
-//    tRet=5;
-//   else if(tRet>944 &tRet<=970)
-//    tRet=6;   
-//    else if(tRet>970 &tRet<=986)
-//    tRet=7;      
-//  else
-//     tRet=tRet*20/2173;
-//
-//   if(tRet>20){
-//     tRet=20;
-//   }
+   if(tRet>20){
+     tRet=20;
+   }
+     
+ return tRet; 
+
+
      
 
 

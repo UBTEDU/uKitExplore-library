@@ -14,8 +14,7 @@ unsigned char SemiduplexSerial::Cheak_Sum(unsigned char len, unsigned char *buf)
   unsigned char i, sum = 0;
   
   if(len > 254) return 0;
-  for(i = 0; i < len; i++)
-  {
+  for(i = 0; i < len; i++){
     sum += buf[i];
   }
   return  (uint8_t)(sum);

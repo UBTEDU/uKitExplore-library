@@ -222,6 +222,6 @@ long Sensor2::readHcsr04Distance(unsigned char jp){
 
 void Sensor2::printInf(){
     Serial.print("{\"device\":\"v2\"}");
-    Serial.print('\n');
+    Serial.print(' ');
   
 }
