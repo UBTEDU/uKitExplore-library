@@ -10,35 +10,55 @@ unsigned short  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
     InfraredState=0;   
   }  
   
-  tRet=ubtInfraredProtocol(0xf8,0x06,0x04,buf);
-  delay(5);
+  tRet=ubtInfraredProtocols(0xf8,0x06,0x04,buf);
   if(tRet==238){
     ubtInfraredProtocol(0xf8,0x06,0x02,buf);
-    tRet=ubtInfraredProtocol(0xf8,0x06,0x04,buf);
+    tRet=ubtInfraredProtocols(0xf8,0x06,0x04,buf);
   }
 
 if(tRet<=850)
     tRet=0;
-  else if(tRet>850 &tRet<=879)
+  else if(tRet>850 &tRet<=917)
     tRet=1;
-  else if(tRet>879 &tRet<=905)
+  else if(tRet>917 &tRet<=985)
     tRet=2;
-   else if(tRet>905 &tRet<=918)
+   else if(tRet>985 &tRet<=1052)
     tRet=3;
-   else if(tRet>918 &tRet<=931)
+   else if(tRet>1052 &tRet<=1120)
     tRet=4;
-   else if(tRet>918 &tRet<=944)
+   else if(tRet>1120 &tRet<=1187)
     tRet=5;
-   else if(tRet>944 &tRet<=970)
+   else if(tRet>1187 &tRet<=1225)
     tRet=6;   
-    else if(tRet>970 &tRet<=986)
-    tRet=7;      
-  else
-     tRet=tRet*20/2173;
+    else if(tRet>1225 &tRet<=1332)
+    tRet=7;   
+   else if(tRet>1332 &tRet<=1390)
+    tRet=8;  
+   else if(tRet>1390 &tRet<=1457)
+    tRet=9;  
+   else if(tRet>1457 &tRet<=1525)
+    tRet=10;  
+   else if(tRet>1525 &tRet<=1592)
+    tRet=11;  
+   else if(tRet>1592 &tRet<=1660)
+    tRet=12;  
+   else if(tRet>1660 &tRet<=1727)
+    tRet=13;  
+   else if(tRet>1727 &tRet<=1795)
+    tRet=14;  
+   else if(tRet>1795 &tRet<=1862)
+    tRet=15;  
+   else if(tRet>1862 &tRet<=1930)
+    tRet=16;                             
+  else if(tRet>1930 & tRet<2100)
+     tRet=(int)(tRet*20.0/2200.0);
+     else
+      tRet=20;
 
    if(tRet>20){
      tRet=20;
    }
+   delay(1);
      
  return tRet; 
 

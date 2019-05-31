@@ -86,7 +86,7 @@ Gyroscope gyro;
 //uKitId
 #define setDeciveId() uKitId.setDeciveId1M()
 #define getDeciveId() uKitId.getDeciveId1M()
-#define printUUID() uKitId.printUUID()
+#define getCpuUUID() uKitId.getCpuUUID()
 //TransforRobot_API
 #define forward(a) TransforRobot.forward(a)//小车前进函数，速度0-5
 #define turnL(speed) TransforRobot.turnL(speed)//小车左转，速度0-5

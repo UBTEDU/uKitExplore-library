@@ -466,8 +466,8 @@ Retry_Servo:
   }
   return tRet;
 }
-int SemiduplexSerial::ubtInfraredProtocols(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
-  int tRet=0;
+unsigned short SemiduplexSerial::ubtInfraredProtocols(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
+  unsigned short tRet=0;
   unsigned char tCnt = 0;
   unsigned long temp = 2; //2ms 发完
   unsigned char buf[8];
@@ -487,15 +487,13 @@ int SemiduplexSerial::ubtInfraredProtocols(unsigned char Head,unsigned char len,
     
 Retry_Servo:
   
-  temp = (Usart3_Rx_Ack_Len+12) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  temp = (Usart3_Rx_Ack_Len+7) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
   Serial3.begin(115200);  //uart3
   Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
   Serial2.begin(115200);  //设置波特率
   Serial2.write(buf,len + 1);  //发送消息
   Serial2.end();  //关闭串口2,否则会影响接收消息
-  if(CMD==0x06){
-    delay(25);
-  }  
+
   tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len+2); //接收应答
   Serial3.end();  //关闭串口3,否则会影响接收消息
   if(tRet == 0){ //没有接收到消息 

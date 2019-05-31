@@ -86,7 +86,7 @@ Gyroscope gyro;
 //uKitId
 #define setDeciveId() uKitId.setDeciveId()
 #define getDeciveId() uKitId.getDeciveId()
-#define printUUID() uKitId.printUUID()
+#define getCpuUUID() uKitId.getCpuUUID()
 //TransforRobot_API
 #define forward(a) TransforRobot.forward(a)//小车前进函数，速度0-5
 #define turnL(speed) TransforRobot.turnL(speed)//小车左转，速度0-5
@@ -204,11 +204,13 @@ void flexiTimer2_func() {
   setUltrasonicRgbledOff(0x00);
   Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
   delay(2);
-  const size_t capacity = JSON_ARRAY_SIZE(2) + JSON_OBJECT_SIZE(1);
+  const size_t capacity = JSON_ARRAY_SIZE(3) + JSON_OBJECT_SIZE(1);
   DynamicJsonDocument doc(capacity);
   JsonArray data = doc.createNestedArray("data");
   data.add(versionNumber);
   data.add(Sensor.Version);
+  data.add(getCpuUUID());
+  
   serializeMsgPack(doc, Serial);
   Serial.print(' ');
   FlexiTimer2::set(20,flexiTimer2_func);
@@ -562,6 +564,7 @@ void consoleLog(unsigned char level, const String msg){
   doc["level"] = level;
   doc["msg"] = msg;
   serializeMsgPack(doc, Serial);
+  Serial.print(' ');
   
 }
 
@@ -571,6 +574,7 @@ void consoleLog(unsigned char level, const long msg){
   doc["level"] = level;
   doc["msg"] = msg;
   serializeMsgPack(doc, Serial);
+  Serial.print(' ');
   
 }
 void consoleLog(unsigned char level, const char msg){
@@ -579,6 +583,7 @@ void consoleLog(unsigned char level, const char msg){
   doc["level"] = level;
   doc["msg"] = msg;
   serializeMsgPack(doc, Serial);
+  Serial.print(' ');
   
 }
 void consoleLog(unsigned char level, const int msg){
@@ -587,6 +592,7 @@ void consoleLog(unsigned char level, const int msg){
   doc["level"] = level;
   doc["msg"] = msg;
   serializeMsgPack(doc, Serial);
+  Serial.print(' ');
   
 }
 void consoleLog(unsigned char level, const uint16_t msg){
@@ -595,6 +601,7 @@ void consoleLog(unsigned char level, const uint16_t msg){
   doc["level"] = level;
   doc["msg"] = msg;
   serializeMsgPack(doc, Serial);
+  Serial.print(' ');
 }
 void consoleLog(unsigned char level, const uint32_t msg){
   const size_t capacity = JSON_OBJECT_SIZE(2);
@@ -602,6 +609,7 @@ void consoleLog(unsigned char level, const uint32_t msg){
   doc["level"] = level;
   doc["msg"] = msg;
   serializeMsgPack(doc, Serial);
+  Serial.print(' ');
 }
 void consoleLog(unsigned char level,const double msg){
   const size_t capacity = JSON_OBJECT_SIZE(2);
@@ -609,6 +617,7 @@ void consoleLog(unsigned char level,const double msg){
   doc["level"] = level;
   doc["msg"] = msg;
   serializeMsgPack(doc, Serial);
+  Serial.print(' ');
 }
 
 
