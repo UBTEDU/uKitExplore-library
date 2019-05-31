@@ -227,7 +227,7 @@ void flexiTimer2_func() {
 
 
 void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int *buf,const char* uuid){
-  const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5)+40;
+  const size_t capacity = JSON_ARRAY_SIZE(6) + JSON_OBJECT_SIZE(5)+40;
   DynamicJsonDocument root(capacity);
   root["device"]=device;
   root["mode"]=mode;
@@ -473,6 +473,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            data.add(0);   
            data.add(versionNumber);
            data.add(Sensor.Version);
+           data.add(getCpuUUID());
           break;   
       case 131: //获取版本号
         if(uKitSensor.getSensorVersion(id,buf[0])==170){
