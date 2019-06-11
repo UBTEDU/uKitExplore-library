@@ -12,7 +12,6 @@
  */
 unsigned char SemiduplexSerial::Cheak_Sum(unsigned char len, unsigned char *buf){
   unsigned char i, sum = 0;
-  
   if(len > 254) return 0;
   for(i = 0; i < len; i++){
     sum += buf[i];
@@ -452,10 +451,13 @@ Retry_Servo:
     }
 
     else if(Usart3_Rx_Buf[len+1]==0xF8 && Usart3_Rx_Buf[len+2]==0x8F || Usart3_Rx_Buf[len+5]-0xEE==Data[0]){
-      tRet=0xee;
+      tRet=Data[0]*16+0x0e;
   
     }
-
+    else if(Usart3_Rx_Buf[len+1]!=0xF8 && Usart3_Rx_Buf[len+1]!=0 ){
+      tRet=Data[0]*16+0x0e;
+  
+    }
     else{
       tRet=0;  
       
@@ -466,13 +468,13 @@ Retry_Servo:
   }
   return tRet;
 }
-unsigned short SemiduplexSerial::ubtInfraredProtocols(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
-  unsigned short tRet=0;
+uint16_t SemiduplexSerial::ubtInfraredProtocols(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
+  
+  uint16_t tRet=0;
   unsigned char tCnt = 0;
   unsigned long temp = 2; //2ms 发完
   unsigned char buf[8];
   unsigned char Usart3_Rx_Ack_Len=0;
-
   
   memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
   memset((void *)buf,0,sizeof(buf));
@@ -515,7 +517,8 @@ Retry_Servo:
           tRet=0xAA;  //成功信息         
           break;    
         case 0x04://读取传感器数据
-          tRet = (Usart3_Rx_Buf[len + 6]<<8) | Usart3_Rx_Buf[len + 7];       
+          unsigned short sdata=Usart3_Rx_Buf[len + 6]*256+Usart3_Rx_Buf[len + 7];
+          tRet=map(sdata,900,2200,850,2800);
           break; 
         case 0x06://修改ID
           tRet=Usart3_Rx_Buf[len+5]-Data[0];  //成功信息                   
@@ -607,10 +610,13 @@ Retry_Servo:
     }
 
     else if(Usart3_Rx_Buf[len+1]==0xF4 && Usart3_Rx_Buf[len+2]==0x4F || Usart3_Rx_Buf[len+5]-0xEE==Data[0]){
-      tRet=0xee;
+      tRet=Data[0]*16+0x0e;
   
     }
-
+    else if(Usart3_Rx_Buf[len+1]!=0xF4 && Usart3_Rx_Buf[len+1]!=0){
+      tRet=Data[0]*16+0x0e;
+  
+    }
     else{
       tRet=0;  
       
@@ -902,7 +908,8 @@ Retry_Servo:
     }
   }
   else{ //接收到消息
-    
+//    Serial.print("AC:");
+//    Serial.println(Usart3_Rx_Buf[len]);
     if(Usart3_Rx_Buf[len]==0xAC  && Usart3_Rx_Buf[len+5]==0){
       switch(CMD){      
         case 0x05:
@@ -920,6 +927,10 @@ Retry_Servo:
       tRet=0xee;
   
     }
+    else if(Usart3_Rx_Buf[len]!=0xAC && Usart3_Rx_Buf[len]!=0){//重复ID
+      tRet=Data[0]*16+0x0E;
+      //tRet=0xee;
+    }
 
     else{
       tRet=0;  
@@ -931,6 +942,8 @@ Retry_Servo:
   }
   return tRet;
 }
+
+
 short SemiduplexSerial::ubtMotorProtocol(unsigned char len,unsigned char CMD,unsigned char * Data){
   short tRet=0;
   unsigned char tCnt = 0;
@@ -1009,9 +1022,14 @@ delay(3);
     }
 
     else if(Usart3_Rx_Buf[len]==0xAC  &&  Usart3_Rx_Buf[len+5]==1){
-      tRet=0xee;
+      tRet=Data[0]*16+0x0e;
   
     }
+    else if(Usart3_Rx_Buf[len]!=0xAC  &&  Usart3_Rx_Buf[len]!=0){
+      tRet=Data[0]*16+0x0e;
+  
+    }
+    
 
     else{
       tRet=0;  
@@ -1061,6 +1079,7 @@ Retry_Servo:
   Serial2.write(buf,len + 1);  //发送消息
   Serial2.end();  //关闭串口2,否则会影响接收消息
   tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+10); //接收应答
+  
   Serial3.end();  //关闭串口3,否则会影响接收消息
 
   if(tRet == 0) //没有接收到消息

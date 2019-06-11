@@ -1,9 +1,10 @@
 #ifndef UKITID_h
 #define UKITID_h
 #include"SemiduplexSerial.h" 
-
+#include"EEPROM.h"
 #include <Arduino.h>
-
+#define EEPROM_START_ADDRESS    0     // Start Address in EEPROM
+#define EEPROM_SIZE             1024  // EEPROM size
 class uKitId : public SemiduplexSerial
 {
 public:
@@ -69,9 +70,16 @@ public:
     void getDeciveIdJs1M(const String uuid);
    
     void getDeciveIdEn();
-     void getDeciveIdKo();
-     void getDeciveIdTh();
-      void getDeciveIdRu();
+    void getDeciveIdKo();
+    void getDeciveIdTh();
+    void getDeciveIdRu();
+
+    unsigned int EEPROM_read_short(unsigned int Address);
+    void EEPROM_write_short(unsigned int Address, unsigned int Data);
+    void EEPROM_clear_all(unsigned int eeprom_size);
+    void EEPROM_read_block(unsigned char *memory_block, unsigned int start_address, unsigned int block_size);
+    void EEPROM_write_block(unsigned char *memory_block, unsigned int start_address, unsigned int block_size);
+
       
 
  };

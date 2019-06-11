@@ -16,51 +16,29 @@ unsigned short  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
     tRet=ubtInfraredProtocols(0xf8,0x06,0x04,buf);
   }
 
-if(tRet<=850)
-    tRet=0;
-  else if(tRet>850 &tRet<=917)
-    tRet=1;
-  else if(tRet>917 &tRet<=985)
-    tRet=2;
-   else if(tRet>985 &tRet<=1052)
-    tRet=3;
-   else if(tRet>1052 &tRet<=1120)
-    tRet=4;
-   else if(tRet>1120 &tRet<=1187)
-    tRet=5;
-   else if(tRet>1187 &tRet<=1225)
-    tRet=6;   
-    else if(tRet>1225 &tRet<=1332)
-    tRet=7;   
-   else if(tRet>1332 &tRet<=1390)
-    tRet=8;  
-   else if(tRet>1390 &tRet<=1457)
-    tRet=9;  
-   else if(tRet>1457 &tRet<=1525)
-    tRet=10;  
-   else if(tRet>1525 &tRet<=1592)
-    tRet=11;  
-   else if(tRet>1592 &tRet<=1660)
-    tRet=12;  
-   else if(tRet>1660 &tRet<=1727)
-    tRet=13;  
-   else if(tRet>1727 &tRet<=1795)
-    tRet=14;  
-   else if(tRet>1795 &tRet<=1862)
-    tRet=15;  
-   else if(tRet>1862 &tRet<=1930)
-    tRet=16;                             
-  else if(tRet>1930 & tRet<2100)
-     tRet=(int)(tRet*20.0/2200.0);
-     else
-      tRet=20;
-
-   if(tRet>20){
-     tRet=20;
-   }
-   delay(1);
-     
- return tRet; 
+        float realValue = tRet - 850;
+        int level;
+        
+        if (realValue < 0 || tRet==0 ) {
+            level = 0;
+        } else if (realValue < 70) {
+            level = (int)((realValue - 15) / 13.5);
+        } else if (realValue < 1210) {
+            level = (int)((realValue + 1134)/ 288.0);
+        } else if (realValue < 1565) {
+            level = (int)((realValue + 206)/ 177);
+        } else if (realValue < 1821) {
+            level = (int)((realValue - 1033)/ 53.75);
+        } else if (realValue < 2200) {
+            level = (int)((realValue - 1462)/ 22.75);
+        } else {
+            level = 20;
+        }
+        if(level > 20){
+            level = 20;
+        }
+        delay(2);
+        return level;
 
 
      
@@ -91,7 +69,7 @@ unsigned short uKitSensor::readSoundValue(char id){
   else if(tRet2>=1023){
     tRet2=1023;
   }
-  
+  delay(10);
   return tRet2;
 }
 unsigned short int uKitSensor::readLightValue(char id){
@@ -740,7 +718,7 @@ unsigned short uKitSensor::readUltrasonicDistance(char id){
 } 
    
     tRet/=10;
-    delay(30);
+    delay(5);
 
     return tRet; 
     

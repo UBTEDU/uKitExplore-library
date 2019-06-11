@@ -3285,3 +3285,49 @@ void uKitId::getDeciveIdKo(){
  
 }
 }
+
+void uKitId::EEPROM_write_block(unsigned char *memory_block, unsigned int start_address, unsigned int block_size)
+{
+   unsigned char Count = 0;
+   for (Count=0; Count<block_size; Count++)
+   {  
+       EEPROM.write(start_address + Count, memory_block[Count]);
+   }
+}
+
+void uKitId::EEPROM_read_block(unsigned char *memory_block, unsigned int start_address, unsigned int block_size)
+{
+   unsigned char Count = 0;
+   for (Count=0; Count<block_size; Count++)
+   {
+       memory_block[Count]= EEPROM.read(start_address + Count);
+       //Serial.println((unsigned int)(memory_block[Count]));   delay(400);
+   }
+}
+
+void uKitId::EEPROM_clear_all(unsigned int eeprom_size)
+{
+   unsigned int Count = 0;
+   unsigned char data = 0;
+   for (Count=0; Count<eeprom_size; Count++)
+   {  
+       EEPROM.write(Count, data);
+   }
+}
+
+// Write an uint value to EEPROM
+void uKitId::EEPROM_write_short(unsigned int Address, unsigned int Data)
+{
+   unsigned int DataL = Data&0x00FF;
+   unsigned int DataH = Data>>8;
+   EEPROM.write(Address,   DataL);
+   EEPROM.write(Address+1, DataH);
+}                      
+
+// Read an uint value from EEPROM
+unsigned int uKitId::EEPROM_read_short(unsigned int Address)
+{
+   unsigned int DataL = EEPROM.read(Address);
+   unsigned int DataH = EEPROM.read(Address+1);
+   return((DataH<<8) + DataL);
+}

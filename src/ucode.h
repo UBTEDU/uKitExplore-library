@@ -14,10 +14,11 @@
 #include "ClickButton.h"
 #include"uKitId.h"
 #include"Gyroscope.h"
-const char* versionNumber="v1.1.3";
+const char* versionNumber="v1.1.4";
 
 uint64_t incomingByte = 0;          // 接收到的 data byte
 String inputString = "";         // 用来储存接收到的内容
+const char* snCode="";
 boolean newLineReceived = false; // 前一次数据结束标志
 float *values=NULL;
 
@@ -216,8 +217,9 @@ void flexiTimer2_func() {
   FlexiTimer2::set(20,flexiTimer2_func);
   FlexiTimer2::start();
   //getDeciveId();
-  delay(150);
+  
   serialEvent();
+  delay(150);
   protocol();
  
   
@@ -496,6 +498,32 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
           root["code"]=0; 
         }
         break;     
+     case 135: //烧录SN
+          const char *getSnCode="";
+          uKitId.EEPROM_clear_all(10);
+          delay(5);
+          uKitId.EEPROM_write_block((unsigned char*)&snCode,0, 6);  
+          delay(5);
+          uKitId.EEPROM_read_block((unsigned char*)&getSnCode, 0, 6);
+          if(snCode==getSnCode){
+            root["code"]=0; 
+            tone(buzzer_pin,800,0);
+            setRgbledColor(255,0,0);
+            delay(10);
+            noTone(buzzer_pin);
+            setRgbledColor(0,0,0);
+             
+          }
+          else{
+            root["code"]=1; 
+          }      
+        break;    
+     case 136: //读取sn
+          const char *getSnCodes="";
+          uKitId.EEPROM_read_block((unsigned char*)&getSnCodes, 0, 6);   
+          root["sn"]=getSnCodes;  
+          break;      
+               
       }
       break;                             
     default:
@@ -527,7 +555,7 @@ void serialEvent(){
 void protocol(){  
   
     if (newLineReceived) { 
-    const size_t capacity = JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(5) + 40;  
+    const size_t capacity = JSON_ARRAY_SIZE(6) + JSON_OBJECT_SIZE(5) + 40;  
     DynamicJsonDocument root(capacity);  
     deserializeMsgPack(root,inputString);     
     int buf[5]={0}; 
@@ -540,6 +568,9 @@ void protocol(){
     buf[3]  = root["data"][3];
     buf[4]  = root["data"][4];    
     const char* uuid = root["uuid"];
+    if(device==11 && mode==135){
+      snCode = root["sn"];
+    }
     ProtocolParser(device,mode,id,buf,uuid);
     inputString = "";   // clear the string       
     newLineReceived = false;
@@ -550,7 +581,7 @@ void protocol(){
     protocolRunState=true;   
     
   }
-  if(timeTimes>=5){
+  if(timeTimes>=10){
     protocolRunState=false;
     //FlexiTimer2::stop();
     timeFlag=1;
@@ -559,8 +590,19 @@ void protocol(){
   }
 
 }
-void consoleLog(unsigned char level, const String msg){
-  const size_t capacity = JSON_OBJECT_SIZE(2);
+void consoleLog(unsigned char level,  const String msg){
+  const size_t capacity = JSON_OBJECT_SIZE(2);   
+  DynamicJsonDocument doc(capacity);
+  doc["level"] = level;
+  const char *buf=NULL;
+  buf=msg.c_str();
+  doc["msg"] = buf;
+  serializeMsgPack(doc, Serial);
+  Serial.print(' ');
+  
+}
+void consoleLog(unsigned char level,  const char* msg){
+  const size_t capacity = JSON_OBJECT_SIZE(2);   
   DynamicJsonDocument doc(capacity);
   doc["level"] = level;
   doc["msg"] = msg;
@@ -568,6 +610,7 @@ void consoleLog(unsigned char level, const String msg){
   Serial.print(' ');
   
 }
+
 
 void consoleLog(unsigned char level, const long msg){
   const size_t capacity = JSON_OBJECT_SIZE(2);
@@ -587,6 +630,7 @@ void consoleLog(unsigned char level, const char msg){
   Serial.print(' ');
   
 }
+
 void consoleLog(unsigned char level, const int msg){
   const size_t capacity = JSON_OBJECT_SIZE(2);
   DynamicJsonDocument doc(capacity);
