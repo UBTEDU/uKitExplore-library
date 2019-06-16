@@ -104,7 +104,12 @@ Retry_Servo:
       
     }
     else if(Usart3_Rx_Buf[len+1]==0xE8 && Usart3_Rx_Buf[len+2]==0x8E || Usart3_Rx_Buf[len+5]-0xEE==Data[0]){
-      rxBuf[0]=0xee;
+      rxBuf[0]=Data[0]+0xec;
+      rxBuf[1]=0; 
+      rxBuf[2]=0;   
+    }
+    else if((Usart3_Rx_Buf[len+1]!=0xE8 && Usart3_Rx_Buf[len+1]!=0) || (Usart3_Rx_Buf[len+2]!=0x8E && Usart3_Rx_Buf[len+2]!=0) || (Usart3_Rx_Buf[len+5]-Data[0]!=0xAA && Usart3_Rx_Buf[len+5]!=0)){
+      rxBuf[0]=Data[0]+0xec;
       rxBuf[1]=0; 
       rxBuf[2]=0;   
     }
@@ -115,7 +120,7 @@ Retry_Servo:
       rxBuf[2]=0;   
       
     }
-  
+
    
   
   }
@@ -207,7 +212,11 @@ Retry_Servo:
     }
 
     else if(Usart3_Rx_Buf[len+1]==0xF7 && Usart3_Rx_Buf[len+2]==0x7F || Usart3_Rx_Buf[len+5]-0xEE==Data[0]){
-      tRet=0xee;
+      tRet=Data[0]+0xec;
+  
+    }
+       else if((Usart3_Rx_Buf[len+1]!=0xF7 && Usart3_Rx_Buf[len+1]!=0) || (Usart3_Rx_Buf[len+2]!=0x7F && Usart3_Rx_Buf[len+2]!=0 ) ||(Usart3_Rx_Buf[len+5]-Data[0]!=0xAA && Usart3_Rx_Buf[len+5]!=0) ){
+      tRet=Data[0]+0xec;
   
     }
 
@@ -451,13 +460,13 @@ Retry_Servo:
     }
 
     else if(Usart3_Rx_Buf[len+1]==0xF8 && Usart3_Rx_Buf[len+2]==0x8F || Usart3_Rx_Buf[len+5]-0xEE==Data[0]){
-      tRet=Data[0]*16+0x0e;
+      tRet=Data[0]+0xec;
   
     }
-    else if(Usart3_Rx_Buf[len+1]!=0xF8 && Usart3_Rx_Buf[len+1]!=0 ){
-      tRet=Data[0]*16+0x0e;
-  
-    }
+   else if((Usart3_Rx_Buf[len+1]!=0xF8 && Usart3_Rx_Buf[len+1]!=0) || (Usart3_Rx_Buf[len+2]!=0x8F && Usart3_Rx_Buf[len+2]!=0 ) ||(Usart3_Rx_Buf[len+5]-Data[0]!=0xAA && Usart3_Rx_Buf[len+5]!=0) ){
+      tRet=Data[0]+0xec;
+
+}
     else{
       tRet=0;  
       
@@ -478,7 +487,7 @@ uint16_t SemiduplexSerial::ubtInfraredProtocols(unsigned char Head,unsigned char
   
   memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
   memset((void *)buf,0,sizeof(buf));
-  Usart3_Rx_Ack_Len = 8; //应答消息长度 
+  Usart3_Rx_Ack_Len = 10; //应答消息长度 
   buf[0] = Head;  //协议头
   buf[1] = swab8(Head);
   buf[2] = len;
@@ -496,14 +505,20 @@ Retry_Servo:
   Serial2.write(buf,len + 1);  //发送消息
   Serial2.end();  //关闭串口2,否则会影响接收消息
 
-  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len+2); //接收应答
+  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
   Serial3.end();  //关闭串口3,否则会影响接收消息
+  
+
+  
+
   if(tRet == 0){ //没有接收到消息 
     if( tCnt < 2){
       tCnt ++;  //重试
       goto  Retry_Servo;
     }
   }
+
+  
   else{ //接收到消息
     if(Usart3_Rx_Buf[len+1]==0xF8 && Usart3_Rx_Buf[len+2]==0x8F && Usart3_Rx_Buf[len+5]-0xAA==Data[0]){
       switch(CMD){      
@@ -517,8 +532,7 @@ Retry_Servo:
           tRet=0xAA;  //成功信息         
           break;    
         case 0x04://读取传感器数据
-          unsigned short sdata=Usart3_Rx_Buf[len + 6]*256+Usart3_Rx_Buf[len + 7];
-          tRet=map(sdata,900,2200,850,2800);
+          tRet = (Usart3_Rx_Buf[len + 6] << 8) + Usart3_Rx_Buf[len + 7]; 
           break; 
         case 0x06://修改ID
           tRet=Usart3_Rx_Buf[len+5]-Data[0];  //成功信息                   
@@ -531,9 +545,13 @@ Retry_Servo:
     }
 
     else if(Usart3_Rx_Buf[len+1]==0xF8 && Usart3_Rx_Buf[len+2]==0x8F || Usart3_Rx_Buf[len+5]-0xEE==Data[0]){
-      tRet=0xee;
+      tRet=Data[0]+0xec;
   
     }
+   else if((Usart3_Rx_Buf[len+1]!=0xF8 && Usart3_Rx_Buf[len+1]!=0) || (Usart3_Rx_Buf[len+2]!=0x8F && Usart3_Rx_Buf[len+2]!=0 ) ||(Usart3_Rx_Buf[len+5]-Data[0]!=0xAA  && Usart3_Rx_Buf[len+5]!=0) ){
+      tRet=Data[0]+0xec;
+
+}
 
     else{
       tRet=0;  
@@ -610,13 +628,13 @@ Retry_Servo:
     }
 
     else if(Usart3_Rx_Buf[len+1]==0xF4 && Usart3_Rx_Buf[len+2]==0x4F || Usart3_Rx_Buf[len+5]-0xEE==Data[0]){
-      tRet=Data[0]*16+0x0e;
+      tRet=Data[0]+0xec;
   
     }
-    else if(Usart3_Rx_Buf[len+1]!=0xF4 && Usart3_Rx_Buf[len+1]!=0){
-      tRet=Data[0]*16+0x0e;
-  
-    }
+   else if((Usart3_Rx_Buf[len+1]!=0xF4 && Usart3_Rx_Buf[len+1]!=0) || (Usart3_Rx_Buf[len+2]!=0x4F && Usart3_Rx_Buf[len+2]!=0 ) ||(Usart3_Rx_Buf[len+5]-Data[0]!=0xAA && Usart3_Rx_Buf[len+5]!=0) ){
+      tRet=Data[0]+0xec;
+
+}
     else{
       tRet=0;  
       
@@ -686,7 +704,12 @@ Retry_Servo:
           tRet=Usart3_Rx_Buf[len+5]-Data[0];  //成功信息                   
           break;              
         case 0x07://读取ID
+          if(Usart3_Rx_Buf[len+3]==14 && Usart3_Rx_Buf[len+4]==7){
           tRet=Usart3_Rx_Buf[len+5]-0xAA;  //ID       
+          }
+          else{
+            tRet=Data[0]+0xec;
+          }
           break;          
         case 0x08://灯管
           tRet=Usart3_Rx_Buf[len+5]-0xAA;  //ID       
@@ -699,7 +722,11 @@ Retry_Servo:
     }
 
     else if(Usart3_Rx_Buf[len+1]==0xF5 && Usart3_Rx_Buf[len+2]==0x5F || Usart3_Rx_Buf[len+5]-0xEE==Data[0]){
-      tRet=0xee;
+      tRet=Data[0]+0xec;
+  
+    }
+   else if((Usart3_Rx_Buf[len+1]!=0xF5 && Usart3_Rx_Buf[len+1]!=0) || (Usart3_Rx_Buf[len+2]!=0x5F && Usart3_Rx_Buf[len+2]!=0 ) ||(Usart3_Rx_Buf[len+5]-Data[0]!=0xAA && Usart3_Rx_Buf[len+5]!=0) ){
+      tRet=Data[0]+0xec;
   
     }
 
@@ -707,7 +734,7 @@ Retry_Servo:
       tRet=0;  
       
     }
-  
+
    
   
   }
@@ -756,7 +783,12 @@ Retry_Servo:
     if(Usart3_Rx_Buf[len]==0xAC  && Usart3_Rx_Buf[len+5]==0){
       switch(CMD){      
         case 0x05:
-          tRet=(Usart3_Rx_Buf[len+6]<<8) |(Usart3_Rx_Buf[len+7] & 0xff);        
+          if(Usart3_Rx_Buf[len+1]==16){
+            tRet=(Usart3_Rx_Buf[len+6]<<8) |(Usart3_Rx_Buf[len+7] & 0xff);   
+          }
+          else{
+            tRet=Data[0]+0xec;   
+          }
           break;   
         case 0x06:
           tRet=0xAA;        
@@ -767,15 +799,22 @@ Retry_Servo:
     }
 
     else if(Usart3_Rx_Buf[len]==0xAC  &&  Usart3_Rx_Buf[len+5]==1){
-      tRet=0xee;
+      tRet=Data[0]+0xec;
   
+    }
+    else if((Usart3_Rx_Buf[len]!=0xAC && Usart3_Rx_Buf[len]!=0) ||(Usart3_Rx_Buf[len+1]!=16 && Usart3_Rx_Buf[len+1]!=0) ||  Usart3_Rx_Buf[len+5]!=0){//重复ID
+      tRet=Data[0]+0xec;
+    
     }
 
     else{
       tRet=0;  
       
     }
-  
+//  Serial.print("head[0]:");
+//  Serial.print(Usart3_Rx_Buf[len]);
+//  Serial.print(",head[1]:");
+//  Serial.println(Usart3_Rx_Buf[len+1]);//fixme
    
   
   }
@@ -828,22 +867,28 @@ Retry_Servo:
     if(Usart3_Rx_Buf[len]==0xAC  && Usart3_Rx_Buf[len+5]==0){
       switch(CMD){      
         case 0x05:
-          switch(choice){
-            case 'C':
-              tRet=ceil(((Usart3_Rx_Buf[len+6]<<8) | (Usart3_Rx_Buf[len+7] & 0xff))/10.0); 
-              break;
-            case 'F':
-              tRet=ceil(((Usart3_Rx_Buf[len+6]<<8) | (Usart3_Rx_Buf[len+7] & 0xff))/10.0);
-              tRet*=1.8;
-              tRet+=32;
-              break;
-            case 'H':
-              tRet=(Usart3_Rx_Buf[len+8]<<8)+Usart3_Rx_Buf[len+9];
-              break;
-            default:
-              tRet=((Usart3_Rx_Buf[len+6]<<8) | (Usart3_Rx_Buf[len+7] & 0xff));
-              break;          
+          if(Usart3_Rx_Buf[len+1]==5){
+            switch(choice){
+              case 'C':
+                tRet=ceil(((Usart3_Rx_Buf[len+6]<<8) | (Usart3_Rx_Buf[len+7] & 0xff))/10.0); 
+                break;
+              case 'F':
+                tRet=ceil(((Usart3_Rx_Buf[len+6]<<8) | (Usart3_Rx_Buf[len+7] & 0xff))/10.0);
+                tRet*=1.8;
+                tRet+=32;
+                break;
+              case 'H':
+                tRet=(Usart3_Rx_Buf[len+8]<<8)+Usart3_Rx_Buf[len+9];
+                break;
+              default:
+                tRet=((Usart3_Rx_Buf[len+6]<<8) | (Usart3_Rx_Buf[len+7] & 0xff));
+                break;          
+            }
           }
+          else{
+            tRet=Data[0]+0xec; 
+          }
+        
           break;   
         case 0x06:
           tRet=0xAA;        
@@ -854,14 +899,22 @@ Retry_Servo:
     }
 
     else if(Usart3_Rx_Buf[len]==0xAC  &&  Usart3_Rx_Buf[len+5]==1){
-      tRet=0xee;
+      tRet=Data[0]+0xec;
   
+    }
+    else if((Usart3_Rx_Buf[len]!=0xAC && Usart3_Rx_Buf[len]!=0) ||(Usart3_Rx_Buf[len+1]!=5 && Usart3_Rx_Buf[len+1]!=0) || Usart3_Rx_Buf[len+5]!=0){//重复ID
+      tRet=Data[0]+0xec;
+    
     }
 
     else{
       tRet=0;  
       
     }
+//  Serial.print("head[0]:");
+//  Serial.print(Usart3_Rx_Buf[len]);
+//  Serial.print(",head[1]:");
+//  Serial.println(Usart3_Rx_Buf[len+1]);//fixme
   
    
   
@@ -908,8 +961,7 @@ Retry_Servo:
     }
   }
   else{ //接收到消息
-//    Serial.print("AC:");
-//    Serial.println(Usart3_Rx_Buf[len]);
+
     if(Usart3_Rx_Buf[len]==0xAC  && Usart3_Rx_Buf[len+5]==0){
       switch(CMD){      
         case 0x05:
@@ -924,18 +976,20 @@ Retry_Servo:
     }
 
     else if(Usart3_Rx_Buf[len]==0xAC  &&  Usart3_Rx_Buf[len+5]==1){
-      tRet=0xee;
+      tRet=Data[0]+0xec;
   
     }
-    else if(Usart3_Rx_Buf[len]!=0xAC && Usart3_Rx_Buf[len]!=0){//重复ID
-      tRet=Data[0]*16+0x0E;
-      //tRet=0xee;
+    else if((Usart3_Rx_Buf[len]!=0xAC && Usart3_Rx_Buf[len]!=0) ||(Usart3_Rx_Buf[len+1]!=6 && Usart3_Rx_Buf[len+1]!=0)||  Usart3_Rx_Buf[len+5]!=0  ){//重复ID
+      tRet=Data[0]+0xec;
+    
     }
 
     else{
       tRet=0;  
       
     }
+    
+
   
    
   
@@ -972,7 +1026,7 @@ short SemiduplexSerial::ubtMotorProtocol(unsigned char len,unsigned char CMD,uns
     
 Retry_Servo:
   
-  temp = (Usart3_Rx_Ack_Len+6) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  temp = (Usart3_Rx_Ack_Len+8) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
   Serial3.begin(115200);  //uart3
   Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
   Serial2.begin(115200);  //设置波特率
@@ -1022,12 +1076,12 @@ delay(3);
     }
 
     else if(Usart3_Rx_Buf[len]==0xAC  &&  Usart3_Rx_Buf[len+5]==1){
-      tRet=Data[0]*16+0x0e;
+      tRet=Data[0]+0xec;
   
     }
-    else if(Usart3_Rx_Buf[len]!=0xAC  &&  Usart3_Rx_Buf[len]!=0){
-      tRet=Data[0]*16+0x0e;
-  
+   else if((Usart3_Rx_Buf[len]!=0xAC && Usart3_Rx_Buf[len]!=0) ||(Usart3_Rx_Buf[len+1]!=3 && Usart3_Rx_Buf[len+1]!=0)|| Usart3_Rx_Buf[len+5]!=0){//重复ID
+      tRet=Data[0]+0xec;
+    
     }
     
 
@@ -1035,6 +1089,8 @@ delay(3);
       tRet=0;  
       
     }
+    
+    
   
    
   
@@ -1098,7 +1154,15 @@ Retry_Servo:
     switch(CMD){
       case 0x01:
         if(Head==0xFC){
-          tRet=Usart3_Rx_Buf[len+3]; 
+          if(Usart3_Rx_Buf[len+1]==0xfc && Usart3_Rx_Buf[len+2]==0xcf && Usart3_Rx_Buf[len+4]==0xaa){
+            tRet=Usart3_Rx_Buf[len+3];   
+          }
+          else if((Usart3_Rx_Buf[len+1]!=0xfc && Usart3_Rx_Buf[len+1]!=0) || (Usart3_Rx_Buf[len+2]!=0xcf && Usart3_Rx_Buf[len+2]!=0) || (Usart3_Rx_Buf[len+4]!=0xAA && Usart3_Rx_Buf[len+4]!=0)){
+            tRet=ServoNO+0xec;
+          }
+          else{
+            tRet=0;
+          }
         }
         else{
           tRet=Usart3_Rx_Buf[len+1]-0xAA-ServoNO; 
@@ -1113,6 +1177,7 @@ Retry_Servo:
         break;    
       
     }
+    
     
     
 

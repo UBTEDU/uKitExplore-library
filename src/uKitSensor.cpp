@@ -11,11 +11,10 @@ unsigned short  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
   }  
   
   tRet=ubtInfraredProtocols(0xf8,0x06,0x04,buf);
-  if(tRet==238){
+  if(tRet==ID+0xec){
     ubtInfraredProtocol(0xf8,0x06,0x02,buf);
     tRet=ubtInfraredProtocols(0xf8,0x06,0x04,buf);
   }
-
         float realValue = tRet - 850;
         int level;
         
@@ -37,8 +36,9 @@ unsigned short  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
         if(level > 20){
             level = 20;
         }
+        
         delay(2);
-        return level;
+        return constrain(level,0,20);
 
 
      
@@ -109,7 +109,7 @@ void uKitSensor::setEyelightLook(char id,char face,int times,int red,int green,i
   tData[6]=blue;
   
   tRet=ubtEyelightProtocol(0xf4,0x0c,0x0a,tData);
-  if(tRet==238){
+  if(tRet==id+0xec){
     ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
     tRet=ubtEyelightProtocol(0xf4,0x0c,0x0a,tData);
 } 
@@ -136,7 +136,7 @@ void uKitSensor::setEyelightScene(char id,char scene,int times){
   tData[5]=0;
   tData[6]=0;
   tRet=ubtEyelightProtocol(0xf4,0x0c,0x0a,tData);
-  if(tRet==238){
+  if(tRet==id+0xec){
     ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
     tRet=ubtEyelightProtocol(0xf4,0x0c,0x0a,tData);
 } 
@@ -163,7 +163,7 @@ void uKitSensor::setEyelightAllPetals(char id,int red,int green,int blue){
   tData[6]=blue;
   tData[7]=8;
     tRet=ubtEyelightProtocol(0xf4,0x0c,0x0b,tData);
-  if(tRet==238){
+  if(tRet==id+0xec){
     ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
     tRet=ubtEyelightProtocol(0xf4,0x0c,0x0b,tData);
   
@@ -223,7 +223,7 @@ void uKitSensor::setEyelightPetal(char id,unsigned char petalsnum,unsigned char 
   tData[33]=petals[7][2];
   tData[34]=petals[7][3];  
   tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
-  if(tRet==238){
+  if(tRet==id+0xec){
     ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
     tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
   
@@ -295,7 +295,7 @@ void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,String petals
   tData[34]=int(root["data"][31]);  
 
     tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
-  if(tRet==238){
+  if(tRet==id+0xec){
     ubtEyelightProtocol(0xf4,0x06,0x02,tData2); 
     tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
  }
@@ -383,7 +383,7 @@ unsigned char *uKitSensor::readColorRgb(char id){
   }  
   value1=ubtColorProtocol(0xe8,0x06,0x04,tData);   
   delay(80);
-  if(value1[0]==238){ //获取失败，开启颜色传感器
+  if(value1[0]==id+0xec){ //获取失败，开启颜色传感器
        ubtColorProtocol(0xe8,0x06,0x02,tData); 
        value1=ubtColorProtocol(0xe8,0x06,0x04,tData); 
        
@@ -473,15 +473,24 @@ void uKitSensor::setAllSensorOff(){
 
 
 unsigned char uKitSensor::readButtonValue(char id){
-  unsigned  char tData[1];
-  unsigned char  tRet=0;
-  tData[0]=id; 
-  tRet=ubtButtonProtocol(0xf7,0x06,0x04,tData);
-  if(tRet==238){
-    ubtButtonProtocol(0xf7,0x06,0x02,tData);
-  }
-  return tRet;  
-  delay(2);
+  unsigned char buf[1] ;
+  unsigned short tRet=0;
+  static unsigned char ButtonState=1;
+  buf[0]=id;
+  if(ButtonState==1){
+    ubtButtonProtocol(0xf7,0x06,0x02,buf);
+    ButtonState=0;
+    
+  }  
+  
+  tRet=ubtButtonProtocol(0xf7,0x06,0x04,buf);
+  if(tRet==id+0xec){
+    ubtButtonProtocol(0xf7,0x06,0x02,buf);
+    tRet=ubtButtonProtocol(0xf7,0x06,0x04,buf);
+} 
+    delay(2);
+
+    return tRet;   
 }
 
 unsigned long uKitSensor::getButtonVersion(char id){
@@ -701,7 +710,7 @@ unsigned char uKitSensor::setSensorUpdated(char id,unsigned int frame,unsigned c
     
 }
 
-unsigned short uKitSensor::readUltrasonicDistance(char id){
+unsigned short uKitSensor::readUltrasonicDistance(char id){//超声波传感器
   unsigned char buf[1] ;
   unsigned short tRet=0;
   static unsigned char UltrasonicState=1;
@@ -713,8 +722,9 @@ unsigned short uKitSensor::readUltrasonicDistance(char id){
   }  
   
   tRet=ubtUltrasonicProtocol(0xF5,0x06,0x04,buf);
-  if(tRet==238){
+  if(tRet==id+0xec){
     ubtUltrasonicProtocol(0xF5,0x06,0x02,buf);
+    tRet=ubtUltrasonicProtocol(0xF5,0x06,0x04,buf);
 } 
    
     tRet/=10;

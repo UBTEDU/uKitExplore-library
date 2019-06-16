@@ -5,6 +5,7 @@ float *Gyroscope::getMpu6050Data(){
   static int initFlog=0;
   if(initFlog==0){
     initialize();//初始化
+    delay(5);
     unsigned short times = 200;             //采样次数
     for(int i=0;i<times;i++){
       getMotion6(&ax, &ay, &az, &gx, &gy, &gz); //读取六轴原始数值

@@ -14,7 +14,7 @@
 #include "ClickButton.h"
 #include"uKitId.h"
 #include"Gyroscope.h"
-const char* versionNumber="v1.1.4";
+const char* versionNumber="v1.1.5";
 
 uint64_t incomingByte = 0;          // 接收到的 data byte
 String inputString = "";         // 用来储存接收到的内容
@@ -210,17 +210,17 @@ void flexiTimer2_func() {
   JsonArray data = doc.createNestedArray("data");
   data.add(versionNumber);
   data.add(Sensor.Version);
-  data.add(getCpuUUID());
-  
+  data.add(getCpuUUID());  
   serializeMsgPack(doc, Serial);
   Serial.print(' ');
   FlexiTimer2::set(20,flexiTimer2_func);
   FlexiTimer2::start();
   //getDeciveId();
-  
+  for(int i=0;i<600;i++){
   serialEvent();
-  delay(150);
   protocol();
+  delayMicroseconds(300);
+  }
  
   
   
@@ -458,7 +458,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            break;          
         case 127: //修改ID               
            uKitId.setAllDeciveId(buf[0],buf[1],buf[2]);
-           delay(120);                
+           delay(150);                
            if(buf[2]==uKitId.getAllDeciveId(buf[0],buf[2])){
             root["code"]=0;
            }
@@ -581,7 +581,7 @@ void protocol(){
     protocolRunState=true;   
     
   }
-  if(timeTimes>=10){
+  if(timeTimes>=5){
     protocolRunState=false;
     //FlexiTimer2::stop();
     timeFlag=1;
@@ -659,11 +659,34 @@ void consoleLog(unsigned char level, const uint32_t msg){
 void consoleLog(unsigned char level,const double msg){
   const size_t capacity = JSON_OBJECT_SIZE(2);
   DynamicJsonDocument doc(capacity);
+  String gy = "";
+  const char *buf=NULL;
+  long tmp = msg;   // 整数部分
+  long yytmp = abs((msg -tmp))*100+0.5;  //  小数部分; 从小数点后第三位做四舍五入(round)到第二位
+  if(yytmp >= 100) {   // 防错
+   yytmp=0;  
+   ++tmp;  // 0.99xyz.. +0.005 ===>  1.0pqr...
+  } // it is 0.99xyz...
+  if(msg<0 &&tmp==0){
+  gy += "-0"; // 整数部分
+  gy += ".";  // 小数点, 废话
+  if(yytmp < 10) gy += "0";
+  gy += yytmp;
+  }
+  else{
+  gy += tmp; // 整数部分
+  gy += ".";  // 小数点, 废话
+  if(yytmp < 10) gy += "0";
+  gy += yytmp;
+  }
+  buf=gy.c_str();
   doc["level"] = level;
-  doc["msg"] = msg;
+  doc["msg"] =buf;
   serializeMsgPack(doc, Serial);
   Serial.print(' ');
+
 }
+
 
 
 void tone2(uint16_t frequency, long duration)

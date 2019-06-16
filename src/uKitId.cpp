@@ -385,7 +385,7 @@ unsigned char uKitId::getColorId(char id){
   unsigned char *tRet = NULL;
   unsigned char buf[1];
   buf[0]=id;
-  tRet=ubtColorProtocol(0xe8,0x06,0x07,buf);;
+  tRet=ubtColorProtocol(0xe8,0x06,0x07,buf);
   delay(3);
   return tRet[0];
   delete [] tRet;
@@ -2310,7 +2310,7 @@ void uKitId::getDeciveIdRu(){
   for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getServoId(i);
-      idbuf[i+18]=getMotorId(i);
+      idbuf[i+18]=getMotorId(i);      
       idbuf[i+36]=getInfraredId(i);
       idbuf[i+46]=getUltrasonicId(i);
       idbuf[i+56]=getLedId(i);

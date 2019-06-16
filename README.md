@@ -1,4 +1,4 @@
-# uKit Explore Library v1.1.4
+# uKit Explore Library v1.1.5
 ```
 git clone git@github.com:UBTEDU/uKit-Explore-library.git
 
@@ -21,7 +21,18 @@ Arduino Library for uKit Explore Modules
 - [Instructions](http://10.10.1.245/uKit-explore/Course/blob/master/uKit_Explore_Course_CN.pdf)  
 
 ### Update
-#### V1.1.3更新说明
+
+#### V1.1.5更新说明
+1. 加入检查设备ID重复问题
+2. 修复重复ID不显示设备问题
+3. 修复颜色传感器误识别问题
+4. 修复上传模式陀螺仪打印失败问题
+5. 修复眼灯关闭后不能亮问题
+6. 修复上传模式初始化程序不能用问题
+7. 打印双精度输出修改为后两位
+8. 优化红外传感器数值问题
+
+#### V1.1.4更新说明
 1. 修复上传模式切换到舞台模式，舵机没有停止
 2. 修复红外传感器距离算法与ukit app端不一致
 3. 修复打印电机转速不可显示
