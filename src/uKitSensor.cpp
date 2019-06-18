@@ -1,5 +1,5 @@
 #include"uKitSensor.h" 
-
+#include<math.h>
 unsigned short  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
   unsigned char buf[1];
   unsigned short  tRet=0;
@@ -293,6 +293,94 @@ void uKitSensor::setEyelightPetals(char id,unsigned char petalsnum,String petals
   tData[32]=int(root["data"][29]);
   tData[33]=int(root["data"][30]);
   tData[34]=int(root["data"][31]);  
+
+    tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
+  if(tRet==id+0xec){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2); 
+    tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
+ }
+  
+  
+  
+}
+void uKitSensor::setEyelightPetalu(char id,unsigned char petalsnum,int* petals){
+
+  signed char tData2[1];
+  unsigned char tData[35],g=0;
+  
+  unsigned char tRet=0;
+  tData2[0]=id;
+  static unsigned char eyelightState=1;
+  
+  if(eyelightState==1){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+    eyelightState=0;   
+  } 
+  
+  tData[g++]=id;  //ID
+  tData[g++]=petals[8]/100;//持续时间
+  tData[g++]=petalsnum;//色块数量
+
+  for(int i=0;i<8;i++){
+    if(i<=1){
+      tData[g++]=int(pow(2,i)); 
+    }
+    else{
+      tData[g++]=int(pow(2,i)+1); 
+    
+    }
+    
+    if (petals[i]==1){
+      
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=0;
+    }
+    else if (petals[i]==2){
+     
+      tData[g++]=255;
+      tData[g++]=128;
+      tData[g++]=0;
+    }
+    else if (petals[i]==3){
+     
+      tData[g++]=255;
+      tData[g++]=240;
+      tData[g++]=0;
+    }
+    else if (petals[i]==4){
+     
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=0;
+    }
+    else if (petals[i]==5){
+    
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=255;
+    }
+    else if (petals[i]==6){
+     
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=255;
+    }
+    else if (petals[i]==7){
+      
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=255;
+    }
+    else if (petals[i]==8){
+  
+      tData[g++]=255;
+      tData[g++]=255;
+      tData[g++]=255;
+    }
+        
+  }
+  
 
     tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
   if(tRet==id+0xec){

@@ -21,7 +21,7 @@ String inputString = "";         // 用来储存接收到的内容
 const char* snCode="";
 boolean newLineReceived = false; // 前一次数据结束标志
 float *values=NULL;
-
+const char* deciveSN="";
 
 unsigned char *rgbValue=NULL;
 
@@ -195,7 +195,7 @@ void flexiTimer2_func() {
   pinMode(GrayscaleNum5, INPUT);  //右1的循迹传感器
   pinMode(IR_S,OUTPUT);
   pinMode(buzzer_pin,OUTPUT);
-
+ 
   delay(5);  //开机延时
  
   Wire.begin();
@@ -210,7 +210,8 @@ void flexiTimer2_func() {
   JsonArray data = doc.createNestedArray("data");
   data.add(versionNumber);
   data.add(Sensor.Version);
-  data.add(getCpuUUID());  
+  uKitId.EEPROM_read_block((unsigned char*)&deciveSN, 0, 6);
+  data.add(deciveSN);  
   serializeMsgPack(doc, Serial);
   Serial.print(' ');
   FlexiTimer2::set(20,flexiTimer2_func);
@@ -301,7 +302,11 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
         case 130: //关闭眼灯  
            setEyelightOff(id);
            root["code"]=0;
-           break;                                      
+           break;    
+        case 131: //自定义眼灯          
+           uKitSensor.setEyelightPetalu(id,8,buf);
+           root["code"]=0;
+           break;                                                 
       }
       break;        
     case 4:    //传感器         
@@ -475,7 +480,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            data.add(0);   
            data.add(versionNumber);
            data.add(Sensor.Version);
-           data.add(getCpuUUID());
+           data.add(deciveSN);
           break;   
       case 131: //获取版本号
         if(uKitSensor.getSensorVersion(id,buf[0])==170){
@@ -509,7 +514,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
             root["code"]=0; 
             tone(buzzer_pin,800,0);
             setRgbledColor(255,0,0);
-            delay(10);
+            delay(100);
             noTone(buzzer_pin);
             setRgbledColor(0,0,0);
              
@@ -555,10 +560,10 @@ void serialEvent(){
 void protocol(){  
   
     if (newLineReceived) { 
-    const size_t capacity = JSON_ARRAY_SIZE(6) + JSON_OBJECT_SIZE(5) + 40;  
+    const size_t capacity = JSON_ARRAY_SIZE(6) + JSON_OBJECT_SIZE(9) + 40;  
     DynamicJsonDocument root(capacity);  
     deserializeMsgPack(root,inputString);     
-    int buf[5]={0}; 
+    int buf[9]={0}; 
     unsigned char device = root["device"];
     unsigned char mode = root["mode"];
     unsigned char id = root["id"];   
@@ -566,7 +571,11 @@ void protocol(){
     buf[1]  = root["data"][1];
     buf[2]  = root["data"][2];
     buf[3]  = root["data"][3];
-    buf[4]  = root["data"][4];    
+    buf[4]  = root["data"][4]; 
+    buf[5]  = root["data"][5]; 
+    buf[6]  = root["data"][6]; 
+    buf[7]  = root["data"][7];  
+    buf[8]  = root["data"][8];  
     const char* uuid = root["uuid"];
     if(device==11 && mode==135){
       snCode = root["sn"];

@@ -354,41 +354,39 @@ unsigned char uKitId::getUltrasonicId(char id){
 
 }
 unsigned char uKitId::setColorId(char oldid,char newid){
-  unsigned char *tRet = NULL;
-  unsigned char buf[2];
+  unsigned char tRet = 0;
+  unsigned char buf[2]={0};
   buf[0]=oldid;
   buf[1]=newid;
   //tRet=TXD(0xE8,1,2,0x06,buf);
-  tRet=ubtColorProtocol(0xe8,0x07,0x06,buf);
+  tRet=ubtColorIdProtocol(0xe8,0x07,0x06,buf);
   delay(5);  
-  return tRet[0];
-  delete [] tRet;
+  return tRet;
+ 
  
 }
 
 unsigned char uKitId::getColorId(){
-  unsigned char *tRet = NULL;
+  unsigned char tRet =0;
   unsigned char buf[1];
   for(int testid=1;testid<=10;testid++){
     buf[0]=testid;
-    tRet=ubtColorProtocol(0xe8,0x06,0x07,buf);
+    tRet=ubtColorIdProtocol(0xe8,0x06,0x07,buf);
     delay(5);
-    if(tRet[0]==testid){
-      return tRet[0];
+    if(tRet==testid){
+      return tRet;
     } 
   }
-  delete [] tRet;
-  tRet=NULL;
   return 0;
 }
 unsigned char uKitId::getColorId(char id){
-  unsigned char *tRet = NULL;
+  unsigned char tRet = 0;
   unsigned char buf[1];
   buf[0]=id;
-  tRet=ubtColorProtocol(0xe8,0x06,0x07,buf);
+  tRet=ubtColorIdProtocol(0xe8,0x06,0x07,buf);
   delay(3);
-  return tRet[0];
-  delete [] tRet;
+  return tRet;
+
 }
 
 unsigned char uKitId::setServoId(char oldid,char newid){
@@ -2298,15 +2296,14 @@ void uKitId::getDeciveIdRu(){
  void uKitId::getDeciveIdJs(const String uuid){
   
   
-  unsigned char idbuf[116]={0};
-  unsigned char decivenum[10]={0};
-  unsigned char deciveid[116]={0};
-  const size_t capacity = 8*JSON_ARRAY_SIZE(2) + JSON_ARRAY_SIZE(4) + JSON_ARRAY_SIZE(10) + JSON_ARRAY_SIZE(13) + JSON_OBJECT_SIZE(14);
+  unsigned char idbuf[120]={0};
+  unsigned char decivenum[12]={0};
+  unsigned char deciveid[120]={0};
+  const size_t capacity = 10*JSON_ARRAY_SIZE(2) + JSON_ARRAY_SIZE(4) + JSON_ARRAY_SIZE(10) + JSON_ARRAY_SIZE(13) + JSON_OBJECT_SIZE(14);
   DynamicJsonDocument root(capacity);
   JsonArray drivers = root.createNestedArray("drivers");  
   root["uuid"]=uuid;
- if (Serial) {
-  
+ 
   for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getServoId(i);
@@ -2454,7 +2451,7 @@ void uKitId::getDeciveIdRu(){
     }
   } 
  
-}
+
   serializeMsgPack(root,Serial);
   Serial.print(' ');
 } 
