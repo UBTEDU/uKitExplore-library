@@ -21,7 +21,7 @@ String inputString = "";         // 用来储存接收到的内容
 const char* snCode="";
 boolean newLineReceived = false; // 前一次数据结束标志
 float *values=NULL;
-const char* deciveSN="";
+String deciveSN="";
 
 unsigned char *rgbValue=NULL;
 
@@ -178,6 +178,7 @@ void flexiTimer2_func() {
   
 }
  void Initialization(){
+ 
   Sensor.checkVersion();
   delay(5);
   button1.ClickButtons(Button_pin, HIGH, CLICKBTN_PULLUP);
@@ -195,25 +196,25 @@ void flexiTimer2_func() {
   pinMode(GrayscaleNum5, INPUT);  //右1的循迹传感器
   pinMode(IR_S,OUTPUT);
   pinMode(buzzer_pin,OUTPUT);
- 
+  
   delay(5);  //开机延时
- 
+  deciveSN=uKitId.read_String(0);
   Wire.begin();
   setAllSensorOff();
   setMotorStop(0xff);
   StopServo();
   setUltrasonicRgbledOff(0x00);
   Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
-  delay(2);
+  delay(2); 
   const size_t capacity = JSON_ARRAY_SIZE(3) + JSON_OBJECT_SIZE(1);
   DynamicJsonDocument doc(capacity);
   JsonArray data = doc.createNestedArray("data");
   data.add(versionNumber);
   data.add(Sensor.Version);
-  uKitId.EEPROM_read_block((unsigned char*)&deciveSN, 0, 6);
-  data.add(deciveSN);  
+  data.add(deciveSN.c_str()); 
   serializeMsgPack(doc, Serial);
   Serial.print(' ');
+  deciveSN="";
   FlexiTimer2::set(20,flexiTimer2_func);
   FlexiTimer2::start();
   //getDeciveId();
@@ -477,10 +478,12 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            break;    
       case 129: //检测固件  
            root["code"]=0; 
+           deciveSN = uKitId.read_String(0); 
            data.add(0);   
            data.add(versionNumber);
-           data.add(Sensor.Version);
-           data.add(deciveSN);
+           data.add(Sensor.Version);        
+           data.add(deciveSN.c_str());
+           deciveSN="";
           break;   
       case 131: //获取版本号
         if(uKitSensor.getSensorVersion(id,buf[0])==170){
@@ -503,30 +506,27 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
           root["code"]=0; 
         }
         break;     
-     case 135: //烧录SN
-          const char *getSnCode="";
-          uKitId.EEPROM_clear_all(10);
+     case 135: //烧录SN       
+          uKitId.writeString(0, snCode);  
           delay(5);
-          uKitId.EEPROM_write_block((unsigned char*)&snCode,0, 6);  
-          delay(5);
-          uKitId.EEPROM_read_block((unsigned char*)&getSnCode, 0, 6);
-          if(snCode==getSnCode){
+          deciveSN = uKitId.read_String(0);
+          if(deciveSN.c_str()!=0x00){
             root["code"]=0; 
             tone(buzzer_pin,800,0);
             setRgbledColor(255,0,0);
             delay(100);
             noTone(buzzer_pin);
             setRgbledColor(0,0,0);
-             
+            deciveSN="";
           }
           else{
             root["code"]=1; 
           }      
         break;    
-     case 136: //读取sn
-          const char *getSnCodes="";
-          uKitId.EEPROM_read_block((unsigned char*)&getSnCodes, 0, 6);   
-          root["sn"]=getSnCodes;  
+     case 136: //读取sn     
+          deciveSN = uKitId.read_String(0);   
+          root["sn"]=deciveSN.c_str();
+          deciveSN="";  
           break;      
                
       }
@@ -538,6 +538,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
       break;
   }
   if(device!=11 || mode!=128){
+      //Serial.print(measureMsgPack(root)); 
       serializeMsgPack(root,Serial);
       Serial.print(' ');
       uuid="";
@@ -587,6 +588,7 @@ void protocol(){
     timeTimes=0;
     //FlexiTimer2::stop();
     uuid="";
+    snCode="";
     protocolRunState=true;   
     
   }

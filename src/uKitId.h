@@ -73,12 +73,10 @@ public:
     void getDeciveIdKo();
     void getDeciveIdTh();
     void getDeciveIdRu();
+    void writeString(char add,String data);
+    String read_String(char add);
 
-    unsigned int EEPROM_read_short(unsigned int Address);
-    void EEPROM_write_short(unsigned int Address, unsigned int Data);
-    void EEPROM_clear_all(unsigned int eeprom_size);
-    void EEPROM_read_block(unsigned char *memory_block, unsigned int start_address, unsigned int block_size);
-    void EEPROM_write_block(unsigned char *memory_block, unsigned int start_address, unsigned int block_size);
+
 
       
 

@@ -3282,49 +3282,32 @@ void uKitId::getDeciveIdKo(){
  
 }
 }
-
-void uKitId::EEPROM_write_block(unsigned char *memory_block, unsigned int start_address, unsigned int block_size)
+void uKitId::writeString(char add,String data)
 {
-   unsigned char Count = 0;
-   for (Count=0; Count<block_size; Count++)
-   {  
-       EEPROM.write(start_address + Count, memory_block[Count]);
-   }
+  int _size = data.length();
+  int i;
+  for(i=0;i<_size;i++)
+  {
+    EEPROM.write(add+i,data[i]);
+  }
+  EEPROM.write(add+_size,'\0');   //Add termination null character for String Data
+  
 }
-
-void uKitId::EEPROM_read_block(unsigned char *memory_block, unsigned int start_address, unsigned int block_size)
+ 
+ 
+String uKitId::read_String(char add)
 {
-   unsigned char Count = 0;
-   for (Count=0; Count<block_size; Count++)
-   {
-       memory_block[Count]= EEPROM.read(start_address + Count);
-       //Serial.println((unsigned int)(memory_block[Count]));   delay(400);
-   }
-}
-
-void uKitId::EEPROM_clear_all(unsigned int eeprom_size)
-{
-   unsigned int Count = 0;
-   unsigned char data = 0;
-   for (Count=0; Count<eeprom_size; Count++)
-   {  
-       EEPROM.write(Count, data);
-   }
-}
-
-// Write an uint value to EEPROM
-void uKitId::EEPROM_write_short(unsigned int Address, unsigned int Data)
-{
-   unsigned int DataL = Data&0x00FF;
-   unsigned int DataH = Data>>8;
-   EEPROM.write(Address,   DataL);
-   EEPROM.write(Address+1, DataH);
-}                      
-
-// Read an uint value from EEPROM
-unsigned int uKitId::EEPROM_read_short(unsigned int Address)
-{
-   unsigned int DataL = EEPROM.read(Address);
-   unsigned int DataH = EEPROM.read(Address+1);
-   return((DataH<<8) + DataL);
+  int i;
+  char data[100]; //Max 100 Bytes
+  int len=0;
+  unsigned char k;
+  k=EEPROM.read(add);
+  while(k != '\0' && len<500)   //Read until null character
+  {    
+    k=EEPROM.read(add+len);
+    data[len]=k;
+    len++;
+  }
+  data[len]='\0';
+  return String(data);
 }
