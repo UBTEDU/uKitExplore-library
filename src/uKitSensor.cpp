@@ -15,6 +15,7 @@ unsigned short  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
     ubtInfraredProtocol(0xf8,0x06,0x02,buf);
     tRet=ubtInfraredProtocols(0xf8,0x06,0x04,buf);
   }
+ 
         float realValue = tRet - 850;
         int level;
         

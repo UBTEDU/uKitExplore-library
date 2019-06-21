@@ -16,11 +16,15 @@
 #include"Gyroscope.h"
 const char* versionNumber="v1.1.5";
 
-uint64_t incomingByte = 0;          // 接收到的 data byte
+unsigned char g=0,lengthBuf[]={0};
+uint16_t dataLength=0;
+uint16_t times=0;
+
+uint8_t incomingByte = 0;          // 接收到的 data byte
 String inputString = "";         // 用来储存接收到的内容
 const char* snCode="";
 boolean newLineReceived = false; // 前一次数据结束标志
-float *values=NULL;
+
 String deciveSN="";
 
 unsigned char *rgbValue=NULL;
@@ -212,8 +216,13 @@ void flexiTimer2_func() {
   data.add(versionNumber);
   data.add(Sensor.Version);
   data.add(deciveSN.c_str()); 
+  uint16_t bufferLength=measureMsgPack(doc);
+  byte Buffer[2]={0};
+  Buffer[0]=(bufferLength>>8)&0xff;
+  Buffer[1]=(bufferLength)&0xff;
+  Serial.write(Buffer,2); 
   serializeMsgPack(doc, Serial);
-  Serial.print(' ');
+  
   deciveSN="";
   FlexiTimer2::set(20,flexiTimer2_func);
   FlexiTimer2::start();
@@ -438,12 +447,15 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
       }                                  
       break;  
      case 9: //陀螺仪         
-      if(mode==127){     
+      if(mode==127){   
+        float *values=NULL;  
         values=getMpu6050Data();        
         data.add(values[0]);   
         data.add(values[1]);   
         data.add(values[2]);  
+        
         root["code"]=0;  
+        values=NULL;
         delete [] values;             
       }                            
       break;
@@ -538,24 +550,54 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
       break;
   }
   if(device!=11 || mode!=128){
-      //Serial.print(measureMsgPack(root)); 
+      uint16_t bufferLength=measureMsgPack(root);
+      byte Buffer[2]={0};
+      Buffer[0]=(bufferLength>>8)&0xff;
+      Buffer[1]=(bufferLength)&0xff;
+      Serial.write(Buffer,2); 
       serializeMsgPack(root,Serial);
-      Serial.print(' ');
+      
       uuid="";
   }  
 
   
   
 }
+
 void serialEvent(){
-  if (Serial.available()) {  
-    incomingByte = Serial.read();              //一个字节一个字节地读，下一句是读到的放入字符串数组中组成一个完成的数据包
-    inputString += (char) incomingByte;     // 全双工串口可以不用在下面加延时，半双工则要加的//   
-    if (incomingByte == ' ') {    
+
+  static int readFlag=0;
+
+  
+  if (Serial.available() && readFlag==0) { 
+     
+    if(readFlag==0){
+      Serial.readBytes(lengthBuf,2);    
+      dataLength=lengthBuf[0]<<8 |lengthBuf[1];
+      readFlag=1;
+      
+    } 
+  }
+  if (Serial.available()){
+    
+    
+    times++;
+    
+    incomingByte=Serial.read(); 
+    
+    inputString += (char) incomingByte;     // 全双工串口可以不用在下面加延时，半双工则要加的//  
+   
+    if (dataLength==times) {    
       newLineReceived = true;
+      readFlag=0;
+      g=0;
+      times=0;
+      dataLength=0;
+      
 
     }
   }
+ 
    
 }
 void protocol(){  
@@ -608,8 +650,13 @@ void consoleLog(unsigned char level,  const String msg){
   const char *buf=NULL;
   buf=msg.c_str();
   doc["msg"] = buf;
+  uint16_t bufferLength=measureMsgPack(doc);
+  byte Buffer[2]={0};
+  Buffer[0]=(bufferLength>>8)&0xff;
+  Buffer[1]=(bufferLength)&0xff;
+  Serial.write(Buffer,2); 
   serializeMsgPack(doc, Serial);
-  Serial.print(' ');
+  
   
 }
 void consoleLog(unsigned char level,  const char* msg){
@@ -617,8 +664,13 @@ void consoleLog(unsigned char level,  const char* msg){
   DynamicJsonDocument doc(capacity);
   doc["level"] = level;
   doc["msg"] = msg;
+  uint16_t bufferLength=measureMsgPack(doc);
+  byte Buffer[2]={0};
+  Buffer[0]=(bufferLength>>8)&0xff;
+  Buffer[1]=(bufferLength)&0xff;
+  Serial.write(Buffer,2); 
   serializeMsgPack(doc, Serial);
-  Serial.print(' ');
+  
   
 }
 
@@ -628,8 +680,13 @@ void consoleLog(unsigned char level, const long msg){
   DynamicJsonDocument doc(capacity);
   doc["level"] = level;
   doc["msg"] = msg;
+  uint16_t bufferLength=measureMsgPack(doc);
+  byte Buffer[2]={0};
+  Buffer[0]=(bufferLength>>8)&0xff;
+  Buffer[1]=(bufferLength)&0xff;
+  Serial.write(Buffer,2); 
   serializeMsgPack(doc, Serial);
-  Serial.print(' ');
+  
   
 }
 void consoleLog(unsigned char level, const char msg){
@@ -637,8 +694,13 @@ void consoleLog(unsigned char level, const char msg){
   DynamicJsonDocument doc(capacity);
   doc["level"] = level;
   doc["msg"] = msg;
+  uint16_t bufferLength=measureMsgPack(doc);
+  byte Buffer[2]={0};
+  Buffer[0]=(bufferLength>>8)&0xff;
+  Buffer[1]=(bufferLength)&0xff;
+  Serial.write(Buffer,2); 
   serializeMsgPack(doc, Serial);
-  Serial.print(' ');
+  
   
 }
 
@@ -647,8 +709,13 @@ void consoleLog(unsigned char level, const int msg){
   DynamicJsonDocument doc(capacity);
   doc["level"] = level;
   doc["msg"] = msg;
+  uint16_t bufferLength=measureMsgPack(doc);
+  byte Buffer[2]={0};
+  Buffer[0]=(bufferLength>>8)&0xff;
+  Buffer[1]=(bufferLength)&0xff;
+  Serial.write(Buffer,2); 
   serializeMsgPack(doc, Serial);
-  Serial.print(' ');
+  
   
 }
 void consoleLog(unsigned char level, const uint16_t msg){
@@ -656,16 +723,26 @@ void consoleLog(unsigned char level, const uint16_t msg){
   DynamicJsonDocument doc(capacity);
   doc["level"] = level;
   doc["msg"] = msg;
+  uint16_t bufferLength=measureMsgPack(doc);
+  byte Buffer[2]={0};
+  Buffer[0]=(bufferLength>>8)&0xff;
+  Buffer[1]=(bufferLength)&0xff;
+  Serial.write(Buffer,2); 
   serializeMsgPack(doc, Serial);
-  Serial.print(' ');
+  
 }
 void consoleLog(unsigned char level, const uint32_t msg){
   const size_t capacity = JSON_OBJECT_SIZE(2);
   DynamicJsonDocument doc(capacity);
   doc["level"] = level;
   doc["msg"] = msg;
+  uint16_t bufferLength=measureMsgPack(doc);
+  byte Buffer[2]={0};
+  Buffer[0]=(bufferLength>>8)&0xff;
+  Buffer[1]=(bufferLength)&0xff;
+  Serial.write(Buffer,2); 
   serializeMsgPack(doc, Serial);
-  Serial.print(' ');
+  
 }
 void consoleLog(unsigned char level,const double msg){
   const size_t capacity = JSON_OBJECT_SIZE(2);
@@ -693,10 +770,16 @@ void consoleLog(unsigned char level,const double msg){
   buf=gy.c_str();
   doc["level"] = level;
   doc["msg"] =buf;
+  uint16_t bufferLength=measureMsgPack(doc);
+  byte Buffer[2]={0};
+  Buffer[0]=(bufferLength>>8)&0xff;
+  Buffer[1]=(bufferLength)&0xff;
+  Serial.write(Buffer,2); 
   serializeMsgPack(doc, Serial);
-  Serial.print(' ');
+  
 
 }
+
 
 
 

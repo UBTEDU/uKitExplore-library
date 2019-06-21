@@ -12,6 +12,8 @@ void setup() {
 void loop() {
     protocol();
     if (protocolRunState == false) {
+      Serial.println(readInfraredDistance(1));
+      delay(300);
 
 
     }

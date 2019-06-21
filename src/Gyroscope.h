@@ -8,7 +8,7 @@
 class Gyroscope:MPU6050
 {
 public:
-	float *getMpu6050Data();
+	float* getMpu6050Data();
 
 
   

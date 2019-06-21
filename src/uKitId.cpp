@@ -2453,7 +2453,7 @@ void uKitId::getDeciveIdRu(){
  
 
   serializeMsgPack(root,Serial);
-  Serial.print(' ');
+  
 } 
  void uKitId::getDeciveIdJs1M(const String uuid){
   
@@ -2615,8 +2615,13 @@ void uKitId::getDeciveIdRu(){
   } 
  
 }
+  uint16_t bufferLength=measureMsgPack(root);
+  byte Buffer[2]={0};
+  Buffer[0]=(bufferLength>>8)&0xff;
+  Buffer[1]=(bufferLength)&0xff;
+  Serial.write(Buffer,2); 
   serializeMsgPack(root, Serial);
-  Serial.print(' ');
+  
 } 
 void uKitId::getDeciveIdEn(){
  
