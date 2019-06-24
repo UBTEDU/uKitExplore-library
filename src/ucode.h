@@ -14,7 +14,7 @@
 #include "ClickButton.h"
 #include"uKitId.h"
 #include"Gyroscope.h"
-const char* versionNumber="v1.1.5";
+const char* versionNumber="v1.1.6";
 
 unsigned char g=0,lengthBuf[]={0};
 uint16_t dataLength=0;
@@ -28,7 +28,7 @@ boolean newLineReceived = false; // 前一次数据结束标志
 String deciveSN="";
 
 unsigned char *rgbValue=NULL;
-
+void tone2(uint16_t frequency, long duration);
 bool protocolRunState=true;
 int timeTimes=0,timeFlag=0,buttonFlag=0;
 OnBoardHW Sensor;
@@ -154,7 +154,7 @@ void stopDecives(){
   digitalWrite(redPin,HIGH);//EN:Main board RGB lamp, R interface set to HIGH/CN:主板RGB灯，R接口设置为高电平输出.
   digitalWrite(greenPin,HIGH);//EN:Main board RGB lamp, G interface set to HIGH/CN:主板RGB灯，G接口设置为高电平输出.
   digitalWrite(bluePin,HIGH);//EN:Main board RGB lamp, B interface set to HIGH/CN:主板RGB灯，B接口设置为高电平输出.
-  noTone(buzzer_pin);     
+  Sensor.noTone(buzzer_pin);     
   setAllSensorOff();
   setMotorStop(0xff);
   StopServo();
@@ -210,18 +210,18 @@ void flexiTimer2_func() {
   setUltrasonicRgbledOff(0x00);
   Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
   delay(2); 
-  const size_t capacity = JSON_ARRAY_SIZE(3) + JSON_OBJECT_SIZE(1);
-  DynamicJsonDocument doc(capacity);
-  JsonArray data = doc.createNestedArray("data");
-  data.add(versionNumber);
-  data.add(Sensor.Version);
-  data.add(deciveSN.c_str()); 
-  uint16_t bufferLength=measureMsgPack(doc);
-  byte Buffer[2]={0};
-  Buffer[0]=(bufferLength>>8)&0xff;
-  Buffer[1]=(bufferLength)&0xff;
-  Serial.write(Buffer,2); 
-  serializeMsgPack(doc, Serial);
+//  const size_t capacity = JSON_ARRAY_SIZE(3) + JSON_OBJECT_SIZE(1);
+//  DynamicJsonDocument doc(capacity);
+//  JsonArray data = doc.createNestedArray("data");
+//  data.add(versionNumber);
+//  data.add(Sensor.Version);
+//  data.add(deciveSN.c_str()); 
+//  uint16_t bufferLength=measureMsgPack(doc);
+//  byte Buffer[2]={0};
+//  Buffer[0]=(bufferLength>>8)&0xff;
+//  Buffer[1]=(bufferLength)&0xff;
+//  Serial.write(Buffer,2); 
+//  serializeMsgPack(doc, Serial);
   
   deciveSN="";
   FlexiTimer2::set(20,flexiTimer2_func);
@@ -239,7 +239,7 @@ void flexiTimer2_func() {
 
 
 
-void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int *buf,const char* uuid){
+void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int* buf,const char* uuid){
   const size_t capacity = JSON_ARRAY_SIZE(6) + JSON_OBJECT_SIZE(5)+40;
   DynamicJsonDocument root(capacity);
   root["device"]=device;
@@ -409,15 +409,15 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
      case 5:    //板载蜂鸣器      
       switch(mode){
         case 127: //播放音调                      
-           tone(buzzer_pin,buf[0],0);
+           tone2(buf[0],buf[1]);
            root["code"]=0; 
            break;
         case 128: //播放频率   
-           tone(buzzer_pin,buf[0],0); 
+           tone2(buf[0],buf[1]); 
            root["code"]=0; 
            break;    
         case 129://结束声音
-           noTone(buzzer_pin);     
+           Sensor.noTone(buzzer_pin);     
            root["code"]=0; 
            break;                                           
       }
@@ -509,9 +509,9 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
        
         break;    
      case 133: //正在升级
-        if(uKitSensor.setSensorUpdating(id,buf[1],buf[2],buf[3],buf[0])==170){
-           root["code"]=0; 
-        }      
+        //if(uKitSensor.setSensorUpdating(id,buf[1],buf[2],buf[3],buf[0])==170){
+       //    root["code"]=0; 
+      //  }      
         break;        
      case 134: //结束升级
         if(uKitSensor.setSensorUpdated(id,buf[1],buf[0])==170){
@@ -523,11 +523,10 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
           delay(5);
           deciveSN = uKitId.read_String(0);
           if(deciveSN.c_str()!=0x00){
-            root["code"]=0; 
-            tone(buzzer_pin,800,0);
+            root["code"]=0;     
             setRgbledColor(255,0,0);
-            delay(100);
-            noTone(buzzer_pin);
+            tone2(800,100);
+            Sensor.noTone(buzzer_pin);
             setRgbledColor(0,0,0);
             deciveSN="";
           }
@@ -788,18 +787,20 @@ void tone2(uint16_t frequency, long duration)
   int period = 1000000L / frequency;
   int pulse = period / 2;
   pinMode(buzzer_pin, OUTPUT);
-  if(duration==0)
-    tone(buzzer_pin,frequency,0);
-    else{
+
   for (long i = 0; i < duration * 1000L; i += period) 
   {
     digitalWrite(buzzer_pin, HIGH);
     delayMicroseconds(pulse);
     digitalWrite(buzzer_pin, LOW);
     delayMicroseconds(pulse);
+    serialEvent();
+    if(newLineReceived)
+      return;
+ 
    
   }
     }
-}
+
 
 #endif

@@ -1065,19 +1065,18 @@ short SemiduplexSerial::ubtMotorProtocol(unsigned char len,unsigned char CMD,uns
   short tRet=0;
   unsigned char tCnt = 0;
   unsigned long temp = 0; //2ms 发完
-  unsigned char buf[16];
+  unsigned char buf[16]={0};
   unsigned char Usart3_Rx_Ack_Len=0;
 
   
   memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
   memset((void *)buf,0,sizeof(buf));
-  if(Data[2]==0x07 && Data[4]==0x01){
+  if(Data[2]==0x07 && Data[4]==0x01){//回读
     Usart3_Rx_Ack_Len = 8; //应答消息长度 
   }
   else{
-    Usart3_Rx_Ack_Len = 5; //应答消息长度 
+    Usart3_Rx_Ack_Len = 6; //应答消息长度 
   }
-  
   
   buf[0] = 0xFB;//帧头
   buf[1] = 0x03;//设备类型
@@ -1095,9 +1094,8 @@ Retry_Servo:
   Serial2.begin(115200);  //设置波特率
   Serial2.write(buf,len);  //发送消息
   Serial2.end();  //关闭串口2,否则会影响接收消息
-  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
+  tRet = Serial3.readBytes(Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
   Serial3.end();  //关闭串口3,否则会影响接收消息
-  delay(2);
  
   if(Usart3_Rx_Buf[len]==0x00){
     Serial3.begin(114200);  //uart3
@@ -1105,12 +1103,10 @@ Retry_Servo:
     Serial2.begin(114200);  //设置波特率
     Serial2.write(buf,len);  //发送消息
     Serial2.end();  //关闭串口2,否则会影响接收消息
-    Serial3.readBytes(Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
+    tRet =Serial3.readBytes(Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
     Serial3.end();  //关闭串口3,否则会影响接收消息
   }
-delay(3);
-    
- 
+
   if(tRet == 0){ //没有接收到消息 
     if( tCnt < 2){
       tCnt ++;  //重试

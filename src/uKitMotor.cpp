@@ -4,10 +4,9 @@
 
 unsigned char uKitMotor::setMotorTurn(uint8_t id, uint16_t pwmDuty){
   clearMotorInf(id);
-
   unsigned char tRet = 0;
-  unsigned char buf[7];
-  uint16_t speeds;
+  unsigned char buf[7]={0};
+  uint16_t speeds=0;
   speeds=pwmDuty*8;
 
   buf[0] = id;
@@ -32,7 +31,7 @@ unsigned char uKitMotor::setMotorTurn(uint8_t id, uint16_t pwmDuty){
 unsigned char uKitMotor::setMotorTurnAdj(uint8_t id, uint16_t speed, uint16_t time){
   clearMotorInf(id);
   unsigned char tRet = 0;
-  unsigned char buf[11];  
+  unsigned char buf[11]={0};  
   buf[0] = id;
   buf[1] = 0x00;
   buf[2] = 0x04;
@@ -55,7 +54,7 @@ unsigned char uKitMotor::setMotorTurnAdj(uint8_t id, uint16_t speed, uint16_t ti
  */
 short uKitMotor::readMotorSpeed(uint8_t id){
   short tRet = 0;
-  unsigned char buf[5];
+  unsigned char buf[5]={0};
 
   buf[0] = id;
   buf[1] = 0x00;
@@ -75,7 +74,7 @@ short uKitMotor::readMotorSpeed(uint8_t id){
 int uKitMotor::setMotorStop(uint8_t id)
 {
   unsigned long tRet = 0;
-  unsigned char buf[7];
+  unsigned char buf[7]={0};
   
 
   buf[0] = id;
@@ -90,7 +89,7 @@ int uKitMotor::setMotorStop(uint8_t id)
   return tRet;
 }
 void uKitMotor::clearMotorInf(unsigned char id){
-  unsigned char buf[7];  
+  unsigned char buf[7]={0};  
   buf[0] = id;
   buf[1] = 0x00;
   buf[2] = 0x0F;
