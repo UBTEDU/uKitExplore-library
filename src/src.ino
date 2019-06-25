@@ -1,12 +1,11 @@
 #include "ucode.h"
-#include<EEPROM.h>
-#include <IRremote.h>
+
 
  
 void setup() {
     Initialization();
     if (protocolRunState == false) {
-
+     
 
     }
 }

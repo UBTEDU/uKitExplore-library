@@ -28,7 +28,7 @@ boolean newLineReceived = false; // 前一次数据结束标志
 String deciveSN="";
 
 unsigned char *rgbValue=NULL;
-void tone2(uint16_t frequency, long duration);
+
 bool protocolRunState=true;
 int timeTimes=0,timeFlag=0,buttonFlag=0;
 OnBoardHW Sensor;
@@ -237,7 +237,35 @@ void flexiTimer2_func() {
   
 }
 
+void tone2(uint16_t frequency, long duration)
+{
+  int period = 1000000L / frequency;
+  int pulse = period / 2;
+  bool toneState=1;
+  pinMode(buzzer_pin, OUTPUT);
 
+  for (long i = 0; i < duration * 1000L; i += period) {
+    digitalWrite(buzzer_pin, toneState);
+    if(toneState==1){
+      toneState=0;
+    }
+    else{
+      toneState=1;
+    }
+    if (Serial.available()){
+      
+       digitalWrite(buzzer_pin, 0);
+       break;
+      
+    }
+    delayMicroseconds(pulse);
+    
+
+   
+  }
+
+
+    }
 
 void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int* buf,const char* uuid){
   const size_t capacity = JSON_ARRAY_SIZE(6) + JSON_OBJECT_SIZE(5)+40;
@@ -782,25 +810,7 @@ void consoleLog(unsigned char level,const double msg){
 
 
 
-void tone2(uint16_t frequency, long duration)
-{
-  int period = 1000000L / frequency;
-  int pulse = period / 2;
-  pinMode(buzzer_pin, OUTPUT);
 
-  for (long i = 0; i < duration * 1000L; i += period) 
-  {
-    digitalWrite(buzzer_pin, HIGH);
-    delayMicroseconds(pulse);
-    digitalWrite(buzzer_pin, LOW);
-    delayMicroseconds(pulse);
-    serialEvent();
-    if(newLineReceived)
-      return;
- 
-   
-  }
-    }
 
 
 #endif
