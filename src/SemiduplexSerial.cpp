@@ -131,7 +131,7 @@ unsigned char SemiduplexSerial::ubtColorIdProtocol(unsigned char Head,unsigned c
   unsigned char tRet=0;
   unsigned char tCnt = 0;
   unsigned long temp = 2; //2ms 发完
-  unsigned char buf[20];
+  unsigned char buf[20]={0};
   unsigned char Usart3_Rx_Ack_Len=0;
   
   memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
@@ -197,6 +197,9 @@ Retry_Servo:
    
   
   }
+  if(tRet=128){
+    tRet=0;
+  }
   return tRet;
  
 }
@@ -205,7 +208,7 @@ unsigned char SemiduplexSerial::ubtButtonProtocol(unsigned char Head,unsigned ch
   unsigned char tRet=0;
   unsigned char tCnt = 0;
   unsigned long temp = 2; //2ms 发完
-  unsigned char buf[8];
+  unsigned char buf[8]={0};
   unsigned char Usart3_Rx_Ack_Len=0;
 
   

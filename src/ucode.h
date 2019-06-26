@@ -241,28 +241,22 @@ void tone2(uint16_t frequency, long duration)
 {
   int period = 1000000L / frequency;
   int pulse = period / 2;
-  bool toneState=1;
   pinMode(buzzer_pin, OUTPUT);
-
   for (long i = 0; i < duration * 1000L; i += period) {
-    digitalWrite(buzzer_pin, toneState);
-    if(toneState==1){
-      toneState=0;
-    }
-    else{
-      toneState=1;
-    }
+    digitalWrite(buzzer_pin, HIGH);
+    delayMicroseconds(pulse);
+    digitalWrite(buzzer_pin, LOW);
+    delayMicroseconds(pulse);
+
     if (Serial.available()){
       
-       digitalWrite(buzzer_pin, 0);
+       Sensor.noTone(buzzer_pin);
        break;
       
     }
-    delayMicroseconds(pulse);
-    
-
-   
+         
   }
+  Sensor.noTone(buzzer_pin);
 
 
     }
