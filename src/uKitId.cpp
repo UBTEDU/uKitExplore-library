@@ -372,7 +372,7 @@ unsigned char uKitId::getColorId(){
   for(int testid=1;testid<=10;testid++){
     buf[0]=testid;
     tRet=ubtColorIdProtocol(0xe8,0x06,0x07,buf);
-    delay(5);
+    delay(2);
     if(tRet==testid){
       return tRet;
     } 
@@ -384,7 +384,7 @@ unsigned char uKitId::getColorId(char id){
   unsigned char buf[1];
   buf[0]=id;
   tRet=ubtColorIdProtocol(0xe8,0x06,0x07,buf);
-  delay(3);
+  delay(2);
   return tRet;
 
 }
@@ -2299,7 +2299,7 @@ void uKitId::getDeciveIdRu(){
   unsigned char idbuf[120]={0};
   unsigned char decivenum[12]={0};
   unsigned char deciveid[120]={0};
-  const size_t capacity = 10*JSON_ARRAY_SIZE(2) + JSON_ARRAY_SIZE(4) + JSON_ARRAY_SIZE(10) + JSON_ARRAY_SIZE(13) + JSON_OBJECT_SIZE(14);
+  const size_t capacity = JSON_ARRAY_SIZE(34) + JSON_OBJECT_SIZE(12);
   DynamicJsonDocument root(capacity);
   JsonArray drivers = root.createNestedArray("drivers");  
   root["uuid"]=uuid;

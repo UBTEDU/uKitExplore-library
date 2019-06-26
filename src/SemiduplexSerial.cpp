@@ -161,13 +161,7 @@ Retry_Servo:
   } 
   tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
   Serial3.end();  //关闭串口3,否则会影响接收消息
-  if(tRet == 0){ //没有接收到消息 
-    if( tCnt < 2){
-      tCnt ++;  //重试
-      goto  Retry_Servo;
-    }
-  }
-  else{ //接收到消息
+
 
     if(Usart3_Rx_Buf[len+1]==0xE8 && Usart3_Rx_Buf[len+2]==0x8E && Usart3_Rx_Buf[len+5]-0xAA==Data[0]){
       switch(CMD){      
@@ -196,8 +190,9 @@ Retry_Servo:
 
    
   
-  }
-  if(tRet=128){
+  
+  if(tRet==128){
+ 
     tRet=0;
   }
   return tRet;
