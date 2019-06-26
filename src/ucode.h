@@ -202,7 +202,6 @@ void flexiTimer2_func() {
   pinMode(buzzer_pin,OUTPUT);
   
   delay(5);  //开机延时
-  deciveSN=uKitId.read_String(0);
   Wire.begin();
   setAllSensorOff();
   setMotorStop(0xff);
@@ -210,6 +209,11 @@ void flexiTimer2_func() {
   setUltrasonicRgbledOff(0x00);
   Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
   delay(2); 
+  if(EEPROM.read(0)!=65){
+    for(int i=0;i<21;i++){
+      EEPROM.write(i,0);
+    }
+  }
 //  const size_t capacity = JSON_ARRAY_SIZE(3) + JSON_OBJECT_SIZE(1);
 //  DynamicJsonDocument doc(capacity);
 //  JsonArray data = doc.createNestedArray("data");
@@ -223,7 +227,6 @@ void flexiTimer2_func() {
 //  Serial.write(Buffer,2); 
 //  serializeMsgPack(doc, Serial);
   
-  deciveSN="";
   FlexiTimer2::set(20,flexiTimer2_func);
   FlexiTimer2::start();
   //getDeciveId();
@@ -515,7 +518,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            deciveSN = uKitId.read_String(0); 
            data.add(0);   
            data.add(versionNumber);
-           data.add(Sensor.Version);        
+           data.add(Sensor.Version);       
            data.add(deciveSN.c_str());
            deciveSN="";
           break;   

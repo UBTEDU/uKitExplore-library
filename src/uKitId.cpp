@@ -3306,12 +3306,12 @@ void uKitId::writeString(char add,String data)
  
 String uKitId::read_String(char add)
 {
-  int i;
-  char data[100]; //Max 100 Bytes
+  int i=0;
+  char data[21]={0}; //Max 100 Bytes
   int len=0;
-  unsigned char k;
+  unsigned char k=0;
   k=EEPROM.read(add);
-  while(k != '\0' && len<500)   //Read until null character
+  while(k != '\0' && len<20)   //Read until null character
   {    
     k=EEPROM.read(add+len);
     data[len]=k;
