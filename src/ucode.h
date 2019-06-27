@@ -264,7 +264,7 @@ void tone2(uint16_t frequency, long duration)
 
     }
 
-void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int* buf,const char* uuid){
+void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int* buf,const char* uuid,unsigned char* bin64){
   const size_t capacity = JSON_ARRAY_SIZE(6) + JSON_OBJECT_SIZE(5)+40;
   DynamicJsonDocument root(capacity);
   root["device"]=device;
@@ -534,9 +534,9 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
        
         break;    
      case 133: //正在升级
-        //if(uKitSensor.setSensorUpdating(id,buf[1],buf[2],buf[3],buf[0])==170){
-       //    root["code"]=0; 
-      //  }      
+        if(uKitSensor.setSensorUpdating(id,buf[1],buf[2],bin64,buf[0])==170){
+           root["code"]=0; 
+        }      
         break;        
      case 134: //结束升级
         if(uKitSensor.setSensorUpdated(id,buf[1],buf[0])==170){
@@ -627,27 +627,32 @@ void serialEvent(){
 void protocol(){  
   
     if (newLineReceived) { 
-    const size_t capacity = JSON_ARRAY_SIZE(6) + JSON_OBJECT_SIZE(9) + 40;  
+    const size_t capacity =JSON_ARRAY_SIZE(3) + JSON_ARRAY_SIZE(64) + JSON_OBJECT_SIZE(6) + 230; 
     DynamicJsonDocument root(capacity);  
     deserializeMsgPack(root,inputString);     
     int buf[9]={0}; 
+    unsigned char bin64[64]={0};
     unsigned char device = root["device"];
     unsigned char mode = root["mode"];
-    unsigned char id = root["id"];   
-    buf[0]  = root["data"][0];
-    buf[1]  = root["data"][1];
-    buf[2]  = root["data"][2];
-    buf[3]  = root["data"][3];
-    buf[4]  = root["data"][4]; 
-    buf[5]  = root["data"][5]; 
-    buf[6]  = root["data"][6]; 
-    buf[7]  = root["data"][7];  
-    buf[8]  = root["data"][8];  
-    const char* uuid = root["uuid"];
-    if(device==11 && mode==135){
-      snCode = root["sn"];
+    unsigned char id = root["id"];  
+    for(int i=0;i<9;i++){
+       buf[i]  = root["data"][i];  
     }
-    ProtocolParser(device,mode,id,buf,uuid);
+    const char* uuid = root["uuid"];
+    if(device==11){
+      if(mode==135){
+        snCode = root["sn"];
+      }
+      if(mode==133){
+        for(int i=0;i<64;i++){
+          
+          bin64[i] = root["bin64"][i];
+        }
+        
+      }
+      
+    }  
+    ProtocolParser(device,mode,id,buf,uuid,bin64);
     inputString = "";   // clear the string       
     newLineReceived = false;
     timeFlag=1; 
