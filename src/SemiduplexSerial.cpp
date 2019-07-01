@@ -312,7 +312,7 @@ unsigned char SemiduplexSerial::ubtButtonUpdateProtocol(unsigned char Head,unsig
   
   memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
   memset((void *)buf,0,sizeof(buf));
-  Usart3_Rx_Ack_Len = 12; //应答消息长度 
+  Usart3_Rx_Ack_Len = 10; //应答消息长度 
   buf[0] = Head;  //协议头
   buf[1] = swab8(Head);
   buf[2] = len;
@@ -333,19 +333,18 @@ Retry_Servo:
     delay(20);
   } 
   else if(CMD==0x11){
-    delay(20);
+    delay(5);
     
   }
   
   tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
   Serial3.end();  //关闭串口3,否则会影响接收消息
-  if(tRet == 0){ //没有接收到消息 
-    if( tCnt < 2){
-      tCnt ++;  //重试
-      goto  Retry_Servo;
-    }
+  for(int i=0;i<120;i++){
+    Serial.print(",");
+    Serial.print(Usart3_Rx_Buf[i],HEX);
   }
-  else{ //接收到消息
+
+
   
     if(Usart3_Rx_Buf[len+1]==0xF7 && Usart3_Rx_Buf[len+2]==0x7F && Usart3_Rx_Buf[len+5]-0xAA==Data[0]){
       switch(CMD){      
@@ -397,7 +396,7 @@ Retry_Servo:
   
    
   
-  }
+  
   return tRet;
 }
 

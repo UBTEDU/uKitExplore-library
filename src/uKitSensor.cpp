@@ -118,6 +118,127 @@ void uKitSensor::setEyelightLook(char id,char face,int times,int red,int green,i
   
 
  }
+
+
+void uKitSensor::_delay(float seconds) {
+long endTime = millis() + seconds * 1000;
+while(millis() < endTime){
+  if (Serial.available()){
+    break;
+  }
+}
+
+}
+
+ void uKitSensor::setEyelightLookUntil(char id,char face,int times,int red,int green,int blue){
+
+  unsigned char tData2[1] ;
+  unsigned char tData[7];
+  unsigned char tRet=0;
+  static unsigned char eyelightState=1;
+  tData2[0]=id;
+  if(eyelightState==1){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+    eyelightState=0;
+    
+  }  
+  tData[0]=id;  //ID
+  tData[1]=face;//表情
+  tData[2]=0x00;//
+  tData[3]=times;//
+  tData[4]=red;
+  tData[5]=green;
+  tData[6]=blue;
+  
+  tRet=ubtEyelightProtocol(0xf4,0x0c,0x0a,tData);
+  if(tRet==id+0xec){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+    tRet=ubtEyelightProtocol(0xf4,0x0c,0x0a,tData);
+} 
+
+switch(face){
+  case 0://眨眼
+    _delay(times*2.55); 
+    break;
+  case 1://害羞
+    _delay(times*4.4);  
+    break;  
+  case 2://热泪盈眶
+   _delay(times*2.8); 
+    break;  
+  case 3://泪光闪动
+    _delay(times*1.72); 
+    break;
+  case 4://哭泣
+    _delay(times*2.95);  
+    break;  
+  case 5://晕
+   _delay(times*0.8); 
+    break;  
+  case 6://开心
+    _delay(times*2.05); 
+    break;
+  case 7://惊讶
+    _delay(times*3.4);  
+    break;  
+  case 8://呼吸
+   _delay(times*3); 
+    break;          
+  case 9://闪烁
+    _delay(times*0.4); 
+    break;
+  case 10://风扇
+    _delay(times*0.3);  
+    break;  
+  case 11://雨刮
+   _delay(times*1); 
+    break;      
+}
+
+  
+
+ }
+
+void uKitSensor::setEyelightSceneUntil(char id,char scene,int times){
+
+  unsigned char tData2[1] ;
+  unsigned char tData[7];
+  unsigned char tRet=0;
+  static unsigned char eyelightState=1;
+   tData2[0]=id;
+  if(eyelightState==1){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+    eyelightState=0;   
+  }  
+  tData[0]=id;  //ID
+  tData[1]=scene+12;//表情
+  tData[2]=0x00;//
+  tData[3]=times;// 
+  tData[4]=0;
+  tData[5]=0;
+  tData[6]=0;
+  tRet=ubtEyelightProtocol(0xf4,0x0c,0x0a,tData);
+  if(tRet==id+0xec){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+    tRet=ubtEyelightProtocol(0xf4,0x0c,0x0a,tData);
+} 
+switch(scene){
+  case 0://七彩跑马灯
+    _delay(times*2.4); 
+    break;
+  case 1://Disco
+    _delay(times*2.04);  
+    break;  
+  case 2://三原色
+   _delay(times*1.5); 
+    break;  
+  case 3://颜色堆叠
+    _delay(times*8.4); 
+    break;
+}
+  
+
+ } 
 void uKitSensor::setEyelightScene(char id,char scene,int times){
 
   unsigned char tData2[1] ;

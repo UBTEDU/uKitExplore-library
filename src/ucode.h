@@ -14,7 +14,7 @@
 #include "ClickButton.h"
 #include"uKitId.h"
 #include"Gyroscope.h"
-const char* versionNumber="v1.1.6";
+const char* versionNumber="v1.1.7";
 
 unsigned char g=0,lengthBuf[]={0};
 uint16_t dataLength=0;
@@ -214,19 +214,17 @@ void flexiTimer2_func() {
       EEPROM.write(i,0);
     }
   }
-//  const size_t capacity = JSON_ARRAY_SIZE(3) + JSON_OBJECT_SIZE(1);
-//  DynamicJsonDocument doc(capacity);
-//  JsonArray data = doc.createNestedArray("data");
-//  data.add(versionNumber);
-//  data.add(Sensor.Version);
-//  data.add(deciveSN.c_str()); 
-//  uint16_t bufferLength=measureMsgPack(doc);
-//  byte Buffer[2]={0};
-//  Buffer[0]=(bufferLength>>8)&0xff;
-//  Buffer[1]=(bufferLength)&0xff;
-//  Serial.write(Buffer,2); 
-//  serializeMsgPack(doc, Serial);
-  
+  const size_t capacity = JSON_ARRAY_SIZE(3) + JSON_OBJECT_SIZE(1);
+  DynamicJsonDocument doc(capacity);
+  JsonArray data = doc.createNestedArray("data");
+  data.add(versionNumber);
+  data.add(Sensor.Version);
+  uint16_t bufferLength=measureMsgPack(doc);
+  byte Buffer[2]={0};
+  Buffer[0]=(bufferLength>>8)&0xff;
+  Buffer[1]=(bufferLength)&0xff;
+  Serial.write(Buffer,2); 
+  serializeMsgPack(doc, Serial);
   FlexiTimer2::set(20,flexiTimer2_func);
   FlexiTimer2::start();
   //getDeciveId();
@@ -263,6 +261,8 @@ void tone2(uint16_t frequency, long duration)
 
 
     }
+
+
 
 void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int* buf,const char* uuid,unsigned char* bin64){
   const size_t capacity = JSON_ARRAY_SIZE(6) + JSON_OBJECT_SIZE(5)+40;
@@ -341,7 +341,16 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
         case 131: //自定义眼灯          
            uKitSensor.setEyelightPetalu(id,8,buf);
            root["code"]=0;
-           break;                                                 
+           break;   
+        case 132: //眼灯表情阻塞         
+           uKitSensor.setEyelightLookUntil(id,buf[0],buf[4],buf[1],buf[2],buf[3]);
+           root["code"]=0;
+           break;  
+        case 133: //情景灯阻塞         
+           uKitSensor.setEyelightSceneUntil(id,buf[0],buf[1]);             
+           root["code"]=0;
+           break;             
+                                                         
       }
       break;        
     case 4:    //传感器         
@@ -530,13 +539,20 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
      case 132: //进入升级
         if(uKitSensor.setSensorUpdate(id,buf[0])==170){
           root["code"]=0; 
-        }    
+          Serial.println("updata succed");
+        }  
+        Serial.println("updata succedsss");  
        
         break;    
      case 133: //正在升级
-        if(uKitSensor.setSensorUpdating(id,buf[1],buf[2],bin64,buf[0])==170){
+        unsigned char tRet=0;
+        tRet=uKitSensor.setSensorUpdating(id,buf[1],buf[2],bin64,buf[0]);
+        if(tRet==170){
+          tone2(1000,10);
            root["code"]=0; 
-        }      
+        }  
+        
+       
         break;        
      case 134: //结束升级
         if(uKitSensor.setSensorUpdated(id,buf[1],buf[0])==170){

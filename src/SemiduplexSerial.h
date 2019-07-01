@@ -83,7 +83,7 @@ private:
   }ANGLE_PACK_V002;
     unsigned char gServos = SERVO_NUMER_MAX;  //舵机个数
     unsigned char gServo_list[SERVO_NUMER_MAX / 8]; //舵机列表,位表示
-    unsigned char Usart3_Rx_Buf[64];
+    unsigned char Usart3_Rx_Buf[120];
     unsigned char Usart3_Rx_Buf_count=0;
     volatile ANGLE_PACK_V002 gsSave_Angle;    //存角度,相同角度不再下发
 
