@@ -339,13 +339,7 @@ Retry_Servo:
   
   tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
   Serial3.end();  //关闭串口3,否则会影响接收消息
-  for(int i=0;i<120;i++){
-    Serial.print(",");
-    Serial.print(Usart3_Rx_Buf[i],HEX);
-  }
 
-
-  
     if(Usart3_Rx_Buf[len+1]==0xF7 && Usart3_Rx_Buf[len+2]==0x7F && Usart3_Rx_Buf[len+5]-0xAA==Data[0]){
       switch(CMD){      
         case 0x01://重启传感器

@@ -539,16 +539,16 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
      case 132: //进入升级
         if(uKitSensor.setSensorUpdate(id,buf[0])==170){
           root["code"]=0; 
-          Serial.println("updata succed");
-        }  
-        Serial.println("updata succedsss");  
-       
+         
+        }    
         break;    
      case 133: //正在升级
         unsigned char tRet=0;
         tRet=uKitSensor.setSensorUpdating(id,buf[1],buf[2],bin64,buf[0]);
         if(tRet==170){
-          tone2(1000,10);
+           setRgbledColor(255,0,0);
+           delay(10);
+           setRgbledColor(0,0,0);
            root["code"]=0; 
         }  
         
