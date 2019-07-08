@@ -1,4 +1,4 @@
-# uKit Explore Library v1.1.5
+# uKit Explore Library v1.1.7
 ```
 git clone git@github.com:UBTEDU/uKit-Explore-library.git
 
@@ -21,6 +21,22 @@ Arduino Library for uKit Explore Modules
 - [Instructions](http://10.10.1.245/uKit-explore/Course/blob/master/uKit_Explore_Course_CN.pdf)  
 
 ### Update
+V1.1.7更新说明：
+1. 新增眼灯表情阻塞功能
+2. 新增情景灯阻塞功能
+3. 恢复开机打印设备类型和版本号
+4. 灯光时长持续时间优化为3600s
+5. 修复编译警告
+
+
+V1.1.6更新说明：
+1. 修复蜂鸣器与IR冲突 BUG
+2. 取消空格分隔符通讯机制，改为长度和协议头
+3. 加入蜂鸣器阻塞功能
+4. 新增自定义灯瓣颜色功能
+5. 修复升级固件失败问题
+6. 修复重复按压传感器，出现颜色传感器问题
+
 
 #### V1.1.5更新说明
 1. 加入检查设备ID重复问题
