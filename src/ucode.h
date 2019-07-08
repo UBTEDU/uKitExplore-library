@@ -167,6 +167,7 @@ void flexiTimer2_func() {
      timeTimes+=1;
   }
   else{
+   
     button1.Update();
     if(button1.clicks == 1){
       buttonFlag=1;   
@@ -543,9 +544,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
         }    
         break;    
      case 133: //正在升级
-        unsigned char tRet=0;
-        tRet=uKitSensor.setSensorUpdating(id,buf[1],buf[2],bin64,buf[0]);
-        if(tRet==170){
+        if(uKitSensor.setSensorUpdating(id,buf[1],buf[2],bin64,buf[0])==170){
            setRgbledColor(255,0,0);
            delay(10);
            setRgbledColor(0,0,0);

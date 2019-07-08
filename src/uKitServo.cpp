@@ -171,14 +171,13 @@ void uKitServo::readServoAngleNPD_M(unsigned char *read_id,char num)//舵机回�
 }
 void uKitServo::ServoRead(){
   unsigned char t=0;
-  static unsigned char ServoId[18],ServoIdRead[18];
+  static unsigned char ServoId[18]={0},ServoIdRead[18]={0};
   static int start=0;
   if(start==0){
   Serial.print("当前读取的舵机ID：{");
   for(int i=1;i<=18;i++){
     ServoId[i]=getServoId(i);
-    if(ServoId[i]!=0){
-     
+    if(ServoId[i]!=0){   
       ServoIdRead[t]=ServoId[i];
       Serial.print(ServoIdRead[t]);
         Serial.print(",");
