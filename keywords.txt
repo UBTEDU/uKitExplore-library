@@ -32,6 +32,9 @@ readLightValue	KEYWORD2
 setAllSensorOff	KEYWORD2
 setEyelightLook	KEYWORD2
 setEyelightScene	KEYWORD2
+setEyelightPetalu	KEYWORD2
+setEyelightSceneUntil	KEYWORD2
+setEyelightLookUntil	KEYWORD2
 setEyelightAllPetals	KEYWORD2
 setEyelightPetal	KEYWORD2
 setEyelightPetals	KEYWORD2

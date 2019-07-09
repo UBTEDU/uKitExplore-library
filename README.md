@@ -21,7 +21,7 @@ Arduino Library for uKit Explore Modules
 - [Instructions](http://10.10.1.245/uKit-explore/Course/blob/master/uKit_Explore_Course_CN.pdf)  
 
 ### Update
-V1.1.7更新说明：
+#### V1.1.7更新说明：
 1. 新增眼灯表情阻塞功能
 2. 新增情景灯阻塞功能
 3. 恢复开机打印设备类型和版本号
@@ -29,7 +29,7 @@ V1.1.7更新说明：
 5. 修复编译警告
 
 
-V1.1.6更新说明：
+#### V1.1.6更新说明：
 1. 修复蜂鸣器与IR冲突 BUG
 2. 取消空格分隔符通讯机制，改为长度和协议头
 3. 加入蜂鸣器阻塞功能

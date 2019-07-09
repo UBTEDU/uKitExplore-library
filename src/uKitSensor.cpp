@@ -941,7 +941,7 @@ unsigned short uKitSensor::readUltrasonicDistance(char id){//超声波传感器
 } 
    
     tRet/=10;
-    delay(5);
+    delay(30);
 
     return tRet; 
     

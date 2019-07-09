@@ -56,6 +56,11 @@ Gyroscope gyro;
 #define readServoAngleNPD_M(read_id,num) uKitServo.readServoAngleNPD_M(read_id,num)//单个舵机回读，返回舵机角度值(掉电回读）
 #define playMotion(id,action,times) uKitServo.playMotion(id,action,times)//播放动作
 //uKitSensor_API
+
+
+#define setEyelightPetalu(id,a,b) uKitSensor.setEyelightPetalu(id,a,b)
+#define setEyelightSceneUntil(id,a,b) uKitSensor.setEyelightSceneUntil(id,a,b)
+#define setEyelightLookUntil(id,a,b,c,d,e) uKitSensor.setEyelightLookUntil(id,a,b,c,d,e)
 #define setUltrasonicRgbled(id,r,g,b) uKitSensor.setUltrasonicRgbled(id,r,g,b)
 #define setUltrasonicRgbledOff(id) uKitSensor.setUltrasonicRgbledOff(id)
 #define setAllSensorOff() uKitSensor.setAllSensorOff()
@@ -340,15 +345,15 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            root["code"]=0;
            break;    
         case 131: //自定义眼灯          
-           uKitSensor.setEyelightPetalu(id,8,buf);
+           setEyelightPetalu(id,8,buf);
            root["code"]=0;
            break;   
         case 132: //眼灯表情阻塞         
-           uKitSensor.setEyelightLookUntil(id,buf[0],buf[4],buf[1],buf[2],buf[3]);
+           setEyelightLookUntil(id,buf[0],buf[4],buf[1],buf[2],buf[3]);
            root["code"]=0;
            break;  
         case 133: //情景灯阻塞         
-           uKitSensor.setEyelightSceneUntil(id,buf[0],buf[1]);             
+           setEyelightSceneUntil(id,buf[0],buf[1]);             
            root["code"]=0;
            break;             
                                                          
