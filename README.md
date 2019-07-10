@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 # uKit Explore Library v1.1.7
+=======
+# uKit Explore Library v1.1.3
+
+
+>>>>>>> b8b54c5a36fdb98824fe69722c3314e200a4d0ff
 ```
 git clone git@github.com:UBTEDU/uKit-Explore-library.git
 
