@@ -27,6 +27,7 @@ Arduino Library for uKit Explore Modules
 3. 恢复开机打印设备类型和版本号
 4. 灯光时长持续时间优化为3600s
 5. 修复编译警告
+6. uCode库加入眼灯阻塞等功能
 
 
 #### V1.1.6更新说明：
