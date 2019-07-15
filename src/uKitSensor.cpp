@@ -440,7 +440,7 @@ void uKitSensor::setEyelightPetalu(char id,unsigned char petalsnum,int* petals){
   } 
   
   tData[g++]=id;  //ID
-  tData[g++]=0xff;//持续时间
+  tData[g++]=petals[8]/100;//持续时间
   tData[g++]=petalsnum;//色块数量
 
   for(int i=0;i<8;i++){
@@ -509,8 +509,7 @@ void uKitSensor::setEyelightPetalu(char id,unsigned char petalsnum,int* petals){
     ubtEyelightProtocol(0xf4,0x06,0x02,tData2); 
     tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
  }
- _delay(petals[8]);
- setEyelightOff(id);
+
  
   
   

@@ -14,7 +14,7 @@
 #include "ClickButton.h"
 #include"uKitId.h"
 #include"Gyroscope.h"
-const char* versionNumber="v1.1.7";
+const char* versionNumber="v1.1.8";
 
 unsigned char g=0,lengthBuf[]={0};
 uint16_t dataLength=0;
