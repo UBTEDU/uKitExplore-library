@@ -1,9 +1,10 @@
 # uKit Explore Library v1.1.8
 
+```
 git clone git@github.com:UBTEDU/uKit-Explore-library.git
+```
 
-
-Arduino Library for uKit Explore Modules
+## Arduino Library for uKit Explore Modules
 
 ### How to use:
 
@@ -21,6 +22,10 @@ Arduino Library for uKit Explore Modules
 - [Instructions](http://10.10.1.245/uKit-explore/Course/blob/master/uKit_Explore_Course_CN.pdf)  
 
 ### Update
+
+#### V1.1.8更新说明：
+1. 自定义眼灯时间改回100-9999ms
+
 #### V1.1.7更新说明：
 1. 新增眼灯表情阻塞功能
 2. 新增情景灯阻塞功能

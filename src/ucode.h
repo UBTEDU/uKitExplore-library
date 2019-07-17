@@ -516,7 +516,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            break;          
         case 127: //修改ID               
            uKitId.setAllDeciveId(buf[0],buf[1],buf[2]);
-           delay(150);                
+           delay(220);                
            if(buf[2]==uKitId.getAllDeciveId(buf[0],buf[2])){
             root["code"]=0;
            }

@@ -11,21 +11,38 @@ public:
    
     unsigned char *ubtColorProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
     unsigned char ubtColorIdProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+    
     unsigned char ubtButtonProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+    unsigned char ubtButtonIdProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
     unsigned long ubtButtonVersionProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
     unsigned char ubtButtonUpdateProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+    
     unsigned short ubtInfraredProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+    unsigned char  ubtInfraredIdProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
     uint16_t ubtInfraredProtocols(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+    
     unsigned char ubtEyelightProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+    unsigned char ubtEyelightIdProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+    
     unsigned short ubtUltrasonicProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+     unsigned char ubtUltrasonicIdProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+    
     unsigned short ubtServoProtocol(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data);
+     unsigned char ubtServoIdProtocol(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data);
      unsigned short ubtServoProtocol1M(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data);
 
     unsigned short ubtSoundProtocol(unsigned char len,unsigned char CMD,unsigned char * Data);
+    unsigned char ubtSoundIdProtocol(unsigned char len,unsigned char CMD,unsigned char * Data);
+    
     unsigned short ubtHumitureProtocol(unsigned char len,unsigned char CMD,char choice,unsigned char * Data);
+    unsigned char ubtHumitureIdProtocol(unsigned char len,unsigned char CMD,char choice,unsigned char * Data);
+    
     unsigned short ubtLightProtocol(unsigned char len,unsigned char CMD,unsigned char * Data);
+    unsigned char ubtLightIdProtocol(unsigned char len,unsigned char CMD,unsigned char * Data);
+
 
     short ubtMotorProtocol(unsigned char len,unsigned char CMD,unsigned char * Data);
+    unsigned char ubtMotorIdProtocol(unsigned char len,unsigned char CMD,unsigned char * Data);
   
     unsigned char Cheak_Sum(unsigned char len, unsigned char *buf);
     unsigned long TXD(unsigned char Head,unsigned char ServoNO,unsigned char len,unsigned char CMD,unsigned char RGB,unsigned char * Data);

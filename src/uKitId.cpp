@@ -55,10 +55,10 @@ unsigned char uKitId::getLightId(){
   unsigned char buf[5];
   buf[0] = 0xff;//id
   buf[1] = 0x00;//参数
-  buf[2] = 0x06;
+  buf[2] = 0x01;
   buf[3] = 0x00;
-  buf[4] = 0x01;
-  tRet=ubtLightProtocol(0x0A,0x05,buf);
+  buf[4] = 0x05;
+  tRet=ubtLightIdProtocol(0x0A,0x05,buf);
   delay(2);
   return tRet;
 }
@@ -67,10 +67,10 @@ unsigned char uKitId::getLightId(char id){
   unsigned char buf[5];
   buf[0] = id;//id
   buf[1] = 0x00;//参数
-  buf[2] = 0x06;
+  buf[2] = 0x01;
   buf[3] = 0x00;
-  buf[4] = 0x01;
-  tRet=ubtLightProtocol(0x0A,0x05,buf);
+  buf[4] = 0x05;
+  tRet=ubtLightIdProtocol(0x0A,0x05,buf);
   delay(2);
   return tRet;
 }
@@ -96,10 +96,10 @@ unsigned char uKitId::getSoundId(){
 
   buf[0] = 0xff;//id
   buf[1] = 0x00;//参数
-  buf[2] = 0x06;
+  buf[2] = 0x01;
   buf[3] = 0x00;
-  buf[4] = 0x01;
-  tRet=ubtSoundProtocol(0x0A,0x05,buf);
+  buf[4] = 0x05;
+  tRet=ubtSoundIdProtocol(0x0A,0x05,buf);
   delay(2);
   return tRet;
 }
@@ -109,10 +109,10 @@ unsigned char uKitId::getSoundId(char id){
 
   buf[0] = id;//id
   buf[1] = 0x00;//参数
-  buf[2] = 0x06;
+  buf[2] = 0x01;
   buf[3] = 0x00;
-  buf[4] = 0x01;
-  tRet=ubtSoundProtocol(0x0A,0x05,buf);
+  buf[4] = 0x05;
+  tRet=ubtSoundIdProtocol(0x0A,0x05,buf);
   delay(2);
   return tRet;
 }
@@ -142,12 +142,12 @@ unsigned char uKitId::getHumitureId(){
   unsigned char buf[5];
   buf[0] = 0xff;//id
   buf[1] = 0x00;//参数
-  buf[2] = 0x06;
+  buf[2] = 0x01;
   buf[3] = 0x00;
-  buf[4] = 0x01;
+  buf[4] = 0x05;
   //tRet=TXD(10,buf);
-  tRet=ubtHumitureProtocol(0x0A,0x05,0x00,buf);
-  delay(3);
+  tRet=ubtHumitureIdProtocol(0x0A,0x05,0x00,buf);
+  delay(2);
   return tRet;
 }
 unsigned char uKitId::getHumitureId(char id){
@@ -155,12 +155,12 @@ unsigned char uKitId::getHumitureId(char id){
   unsigned char buf[5];
   buf[0] = id;//id
   buf[1] = 0x00;//参数
-  buf[2] = 0x06;
+  buf[2] = 0x01;
   buf[3] = 0x00;
-  buf[4] = 0x01;
+  buf[4] = 0x05;
   //tRet=TXD(10,buf);
-  tRet=ubtHumitureProtocol(0x0A,0x05,0x00,buf);
-  delay(3);
+  tRet=ubtHumitureIdProtocol(0x0A,0x05,0x00,buf);
+  delay(2);
   return tRet;
 }
 unsigned char uKitId::setMotorId(uint8_t id_old, uint8_t id_new){
@@ -189,7 +189,7 @@ unsigned char uKitId::getMotorId(){
     buf[2] = 0x09;
     buf[3] = 0x00;
     buf[4] = 0x05; 
-    tRet=ubtMotorProtocol(0x0A,0x05,buf);
+    tRet=ubtMotorIdProtocol(0x0A,0x05,buf);
     delay(5);
     if(tRet==testid){
       return tRet;
@@ -207,7 +207,7 @@ unsigned char uKitId::getMotorId(char id){
   buf[2] = 0x09;
   buf[3] = 0x00;
   buf[4] = 0x05; 
-  tRet=ubtMotorProtocol(0x0A,0x05,buf);
+  tRet=ubtMotorIdProtocol(0x0A,0x05,buf);
   delay(3);
   return tRet;
 }
@@ -228,7 +228,7 @@ unsigned char uKitId::getInfraredId(){
   for(int testid=1;testid<=10;testid++){
     buf[0]=testid;
     //tRet=TXD(0xF8,1,1,0x07,buf);
-    tRet=ubtInfraredProtocol(0xf8,0x06,0x07,buf);
+    tRet=ubtInfraredIdProtocol(0xf8,0x06,0x07,buf);
     delay(5);
     if(tRet==testid){
       return tRet;
@@ -242,7 +242,7 @@ unsigned char uKitId::getInfraredId(char id){
   unsigned char tRet = 0;
   unsigned char buf[1];
   buf[0]=id;
-  tRet=ubtInfraredProtocol(0xf8,0x06,0x07,buf);
+  tRet=ubtInfraredIdProtocol(0xf8,0x06,0x07,buf);
   delay(5);
   return tRet;
 
@@ -262,7 +262,7 @@ unsigned char uKitId::getLedId(){
   unsigned char buf[1];
   for(int testid=1;testid<=10;testid++){
     buf[0]=testid;
-    tRet=ubtEyelightProtocol(0xf4,0x06,0x07,buf);
+    tRet=ubtEyelightIdProtocol(0xf4,0x06,0x07,buf);
     delay(5);
     if(tRet==testid){
       return tRet;
@@ -277,7 +277,7 @@ unsigned char uKitId::getLedId(char id){
   unsigned char buf[1];
     buf[0]=id;
     //tRet=TXD(0xF4,1,1,0x07,buf);
-    tRet=ubtEyelightProtocol(0xf4,0x06,0x07,buf);
+    tRet=ubtEyelightIdProtocol(0xf4,0x06,0x07,buf);
     delay(5);
     return tRet;
 
@@ -299,7 +299,7 @@ unsigned char uKitId::getButtonId(){
   for(int testid=1;testid<=10;testid++){
     buf[0]=testid;
     //tRet=TXD(0xF7,1,1,0x07,buf);  
-    tRet=ubtButtonProtocol(0xf7,0x06,0x07,buf);
+    tRet=ubtButtonIdProtocol(0xf7,0x06,0x07,buf);
     delay(5);
     if(tRet==testid){
       return tRet;
@@ -314,7 +314,7 @@ unsigned char uKitId::getButtonId(char id){
   unsigned char buf[1];
   buf[0]=id;
   //tRet=TXD(0xF7,1,1,0x07,buf); 
-  tRet=ubtButtonProtocol(0xf7,0x06,0x07,buf);
+  tRet=ubtButtonIdProtocol(0xf7,0x06,0x07,buf);
   delay(5);
   return tRet;
 
@@ -334,8 +334,8 @@ unsigned char uKitId::getUltrasonicId(){
   unsigned char buf[1];
   for(int testid=1;testid<=10;testid++){
     buf[0]=testid;
-    tRet=tRet=ubtUltrasonicProtocol(0xF5,0x06,0x07,buf);
-    delay(5);
+    tRet=tRet=ubtUltrasonicIdProtocol(0xF5,0x06,0x07,buf);
+    delay(2);
     if(tRet==testid){
       return tRet;
     }
@@ -348,8 +348,8 @@ unsigned char uKitId::getUltrasonicId(char id){
   unsigned char tRet = 0;
   unsigned char buf[1];
   buf[0]=id;
-  tRet=ubtUltrasonicProtocol(0xF5,0x06,0x07,buf);
-  delay(3);
+  tRet=ubtUltrasonicIdProtocol(0xF5,0x06,0x07,buf);
+  delay(2);
   return tRet;
 
 }
@@ -359,7 +359,7 @@ unsigned char uKitId::setColorId(char oldid,char newid){
   buf[0]=oldid;
   buf[1]=newid;
   //tRet=TXD(0xE8,1,2,0x06,buf);
-  tRet=ubtColorIdProtocol(0xe8,0x07,0x06,buf);
+  tRet=ubtColorProtocol(0xe8,0x07,0x06,buf);
   delay(5);  
   return tRet;
  
@@ -409,8 +409,8 @@ unsigned char uKitId::getServoId(){
     buf[1]=0x00;
     buf[2]=0x00;
     buf[3]=0x00;
-    tRet=ubtServoProtocol(0xFC,testid,0x01,buf);
-    delay(5);
+    tRet=ubtServoIdProtocol(0xFC,testid,0x01,buf);
+    delay(2);
     if(tRet==testid){
       return tRet;
     }
@@ -426,8 +426,8 @@ unsigned char uKitId::getServoId(char id){
     buf[2]=0x00;
     buf[3]=0x00;
     //tRet=TXD(0xFC,id,4,0x01,buf);
-    tRet=ubtServoProtocol(0xFC,id,0x01,buf);
-    delay(3);
+    tRet=ubtServoIdProtocol(0xFC,id,0x01,buf);
+    delay(2);
     return tRet;
 }
 

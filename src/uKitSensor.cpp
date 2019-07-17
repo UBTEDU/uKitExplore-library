@@ -500,7 +500,12 @@ void uKitSensor::setEyelightPetalu(char id,unsigned char petalsnum,int* petals){
       tData[g++]=255;
       tData[g++]=255;
     }
-        
+    else if (petals[i]==9){
+  
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=0;
+    }        
   }
   
 
