@@ -3,7 +3,7 @@
 float* Gyroscope::getMpu6050Data(){
   // float *data=new float[3];
   
-  static float  data[3];
+  static float data[3];
   static int initFlog=0;
   if(initFlog==0){
     initialize();//初始化
@@ -123,9 +123,5 @@ float* Gyroscope::getMpu6050Data(){
     data[1]=agy;
     data[2]=agz;
     return data;
-   // delete [] data;
-   
-//    Serial.print(agx);Serial.print(",");
-//    Serial.print(agy);Serial.print(",");
-//    Serial.print(agz);Serial.println();  
+  
 }

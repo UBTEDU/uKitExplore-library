@@ -9,7 +9,7 @@ class SemiduplexSerial
 {  
 public:
    
-    unsigned char *ubtColorProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
+    unsigned char* ubtColorProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
     unsigned char ubtColorIdProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
     
     unsigned char ubtButtonProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);

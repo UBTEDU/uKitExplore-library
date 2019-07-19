@@ -544,8 +544,7 @@ signed char uKitSensor::readHumitureValue(char id, char choice){
   return tRet;
 }
 int  *uKitSensor::Rgb2Hsb(unsigned char rgbR,unsigned char rgbG,unsigned char rgbB){
-  int *temp =NULL; 
-  temp=new int[3];
+  static int temp[3] ={0,0,0}; 
   int Max,Min=0;
   Max=max(max(rgbR,rgbG),rgbB);
   Min=min(min(rgbR,rgbG),rgbB);
@@ -566,7 +565,7 @@ int  *uKitSensor::Rgb2Hsb(unsigned char rgbR,unsigned char rgbG,unsigned char rg
   temp[2]=hsbB;
   
   return temp;
-  delete [] temp;
+  
   
   
 }
@@ -589,7 +588,7 @@ unsigned char uKitSensor::readColorRgb(char id,unsigned char RGB){
           
  }
  
-unsigned char *uKitSensor::readColorRgb(char id){
+unsigned char* uKitSensor::readColorRgb(char id){
   unsigned  char tData[1];
   unsigned char *value1=NULL;  
   static unsigned char ColorState=1;
@@ -606,7 +605,7 @@ unsigned char *uKitSensor::readColorRgb(char id){
        
   }
   return value1;
-  delete [] value1;
+ 
         
           
  }
@@ -674,8 +673,7 @@ if(getid==id){
   else{
     state=false;
   }
-    delete [] ColorRgb;
-    delete [] buf;
+   
     delay(100);
     return state;
    

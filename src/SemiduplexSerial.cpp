@@ -19,13 +19,14 @@ unsigned char SemiduplexSerial::Cheak_Sum(unsigned char len, unsigned char *buf)
   return  (uint8_t)(sum);
 }
 
-unsigned char *SemiduplexSerial::ubtColorProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
+unsigned char* SemiduplexSerial::ubtColorProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
   unsigned char tRet=0;
   unsigned char tCnt = 0;
   unsigned long temp = 2; //2ms 发完
   unsigned char buf[20];
   unsigned char Usart3_Rx_Ack_Len=0;
-  unsigned char *rxBuf= new unsigned char[3];  
+  //unsigned char *rxBuf= new unsigned char[3];  
+  static unsigned char rxBuf[3]={0,0,0};
   
   memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
   memset((void *)buf,0,sizeof(buf));
@@ -125,7 +126,7 @@ Retry_Servo:
   
   }
   return rxBuf;
-  delete [] rxBuf;
+ 
 }
 unsigned char SemiduplexSerial::ubtColorIdProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
   unsigned char tRet=0;
@@ -2266,7 +2267,7 @@ Retry_Servo:
 
 unsigned char  * SemiduplexSerial::TXDRandom(unsigned char Head,unsigned char ServoNO,unsigned char len,unsigned char CMD,unsigned char * Data){
   unsigned long tRet = 0;
-  unsigned char *data=new unsigned char [3];  
+  static unsigned char data[3]={0,0,0};  
   unsigned char tCnt = 0;
   unsigned long temp = 2; //2ms 发完
   unsigned char buf[40];
@@ -2450,7 +2451,7 @@ Retry_Servo:
   }
   
   return data;
-  delete [] data;
+
   
 }
 unsigned long SemiduplexSerial::TXD(unsigned char len,unsigned char * Data){

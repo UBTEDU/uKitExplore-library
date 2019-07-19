@@ -27,7 +27,7 @@ boolean newLineReceived = false; // 前一次数据结束标志
 
 String deciveSN="";
 
-unsigned char *rgbValue=NULL;
+
 
 bool protocolRunState=true;
 int timeTimes=0,timeFlag=0,buttonFlag=0;
@@ -272,6 +272,7 @@ void tone2(uint16_t frequency, long duration)
 
 void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int* buf,const char* uuid,unsigned char* bin64){
   const size_t capacity = JSON_ARRAY_SIZE(6) + JSON_OBJECT_SIZE(5)+40;
+  unsigned char* rgbValue=NULL;
   DynamicJsonDocument root(capacity);
   root["device"]=device;
   root["mode"]=mode;
@@ -432,8 +433,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            rgbValue=readColorRgb(id);
            data.add(rgbValue[0]);
            data.add(rgbValue[1]);
-           data.add(rgbValue[2]);
-           delete [] rgbValue;   
+           data.add(rgbValue[2]);  
            root["code"]=0;                     
            break;    
         case 135: //ukit超声波灯光       
@@ -488,15 +488,13 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
       break;  
      case 9: //陀螺仪         
       if(mode==127){   
-        float *values=NULL;  
-        values=getMpu6050Data();        
-        data.add(values[0]);   
-        data.add(values[1]);   
-        data.add(values[2]);  
-        
+        float* gyronum=getMpu6050Data();        
+        data.add(gyronum[0]);   
+        data.add(gyronum[1]);   
+        data.add(gyronum[2]);  
         root["code"]=0;  
-        values=NULL;
-        delete [] values;             
+        
+                
       }                            
       break;
      case 10: //板载按键      
