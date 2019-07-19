@@ -531,7 +531,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
         root["mode"]=127;
         root["code"]=0;  
         data.add(button1.clicks);   
-        button1.clicks=0;
+        buttonFlag=0; 
                              
       }  
       root["uuid"]=uuid;                                   

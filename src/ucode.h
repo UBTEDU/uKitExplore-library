@@ -19,7 +19,7 @@ const char* versionNumber="v1.1.8";
 unsigned char g=0,lengthBuf[]={0};
 uint16_t dataLength=0;
 uint16_t times=0;
-
+boolean butonTimer=true;
 uint8_t incomingByte = 0;          // 接收到的 data byte
 String inputString = "";         // 用来储存接收到的内容
 const char* snCode="";
@@ -172,6 +172,7 @@ void flexiTimer2_func() {
      timeTimes+=1;
   }
   else{
+    if(butonTimer==true){
    
     button1.Update();
     if(button1.clicks == 1){
@@ -182,7 +183,8 @@ void flexiTimer2_func() {
     }
     if(button1.clicks == -1){
       buttonFlag=-1;   
-    }        
+    }    
+    }
   }
  
   
@@ -280,9 +282,10 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
   root["code"]=1;
   JsonArray data = root.createNestedArray("data");
   root["uuid"]=uuid;
-
   switch(device){
     case 1: //舵机
+      butonTimer=false;
+      buttonFlag=0; 
       switch(mode){
         case 127: //轮模式  
            setServoTurn(id,buf[0],buf[1]);     
@@ -308,6 +311,8 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
       }
       break;
     case 2:    //电机 
+      butonTimer=false;
+      buttonFlag=0; 
       switch(mode){
         case 127: //恒速转动  
            setMotorTurnAdj(id,buf[0],0xffff);     
@@ -327,7 +332,9 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            break;                                      
       }
       break;
-    case 3:    //眼灯   
+    case 3:    //眼灯 
+      butonTimer=false;  
+      buttonFlag=0; 
       switch(mode){
         case 127: //亮起眼灯
            setEyelightAllPetals(id,buf[0],buf[1],buf[2]);    
@@ -360,7 +367,9 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
                                                          
       }
       break;        
-    case 4:    //传感器         
+    case 4:    //传感器      
+      butonTimer=false;   
+      buttonFlag=0; 
       switch(mode){
         case 127: //超声波                           
            data.add(readUltrasonicDistance(id)); 
@@ -446,7 +455,9 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            break;                                                                  
       }
       break;    
-     case 5:    //板载蜂鸣器      
+     case 5:    //板载蜂鸣器  
+      butonTimer=false;    
+      buttonFlag=0; 
       switch(mode){
         case 127: //播放音调                      
            tone2(buf[0],buf[1]);
@@ -462,7 +473,9 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            break;                                           
       }
       break; 
-     case 6:    //板载RGB    
+     case 6:    //板载RGB  
+      butonTimer=false;  
+      buttonFlag=0; 
       switch(mode){
         case 127: //RGB                     
            setRgbledColor(buf[0],buf[1],buf[2]);
@@ -474,19 +487,25 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            break;                                            
       }
       break;   
-     case 7: //电池电压     
+     case 7: //电池电压   
+      butonTimer=false;  
+      buttonFlag=0; 
       if(mode==127){     
         data.add(readBatteryVoltage());  
         root["code"]=0;                  
       }                                  
       break;    
-    case 8: //巡线传感器        
+    case 8: //巡线传感器 
+      butonTimer=false;      
+      buttonFlag=0;  
       if(mode==127){            
         data.add(readGrayValue(id,buf[0]));   
         root["code"]=0;                
       }                                  
       break;  
-     case 9: //陀螺仪         
+     case 9: //陀螺仪  
+      butonTimer=false;     
+      buttonFlag=0;   
       if(mode==127){   
         float* gyronum=getMpu6050Data();        
         data.add(gyronum[0]);   
@@ -494,16 +513,16 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
         data.add(gyronum[2]);  
         root["code"]=0;  
         
+        
                 
       }                            
       break;
-     case 10: //板载按键      
+     case 10: //板载按键    
+        delay(30); 
         if(mode==127){                
           data.add(buttonFlag); 
-          delay(2); 
           buttonFlag=0; 
-          root["code"]=0; 
-                               
+          root["code"]=0;                            
         }                                 
         break;
      case 11:    //ID相关    
@@ -657,6 +676,9 @@ void protocol(){
        buf[i]  = root["data"][i];  
     }
     const char* uuid = root["uuid"];
+    if(device==10){
+      butonTimer=true; 
+    }
     if(device==11){
       if(mode==135){
         snCode = root["sn"];
