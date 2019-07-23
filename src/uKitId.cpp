@@ -3294,6 +3294,7 @@ void uKitId::getDeciveIdKo(){
 void uKitId::writeString(char add,String data)
 {
   int _size = data.length();
+ 
   int i;
   for(i=0;i<_size;i++)
   {

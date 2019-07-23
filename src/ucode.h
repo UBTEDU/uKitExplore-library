@@ -25,7 +25,7 @@ String inputString = "";         // 用来储存接收到的内容
 const char* snCode="";
 boolean newLineReceived = false; // 前一次数据结束标志
 
-String deciveSN="";
+char deciveSN[20]={0};
 
 
 
@@ -217,7 +217,7 @@ void flexiTimer2_func() {
   setUltrasonicRgbledOff(0x00);
   Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
   delay(2); 
-  if(EEPROM.read(0)!=65){
+  if(EEPROM.read(0)!=48){
     for(int i=0;i<21;i++){
       EEPROM.write(i,0);
     }
@@ -273,7 +273,7 @@ void tone2(uint16_t frequency, long duration)
 
 
 void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int* buf,const char* uuid,unsigned char* bin64){
-  const size_t capacity = JSON_ARRAY_SIZE(6) + JSON_OBJECT_SIZE(5)+40;
+  const size_t capacity = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(8)+100;
   unsigned char* rgbValue=NULL;
   DynamicJsonDocument root(capacity);
   root["device"]=device;
@@ -546,13 +546,13 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            root["code"]=0;         
            break;    
       case 129: //检测固件  
-           root["code"]=0; 
-           deciveSN = uKitId.read_String(0); 
+           root["code"]=0;  
+           strcpy(deciveSN,uKitId.read_String(0).c_str());
            data.add(0);   
            data.add(versionNumber);
            data.add(Sensor.Version);       
-           data.add(deciveSN.c_str());
-           deciveSN="";
+           data.add(deciveSN);
+          
           break;   
       case 131: //获取版本号
         if(uKitSensor.getSensorVersion(id,buf[0])==170){
@@ -580,26 +580,26 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
           root["code"]=0; 
         }
         break;     
-     case 135: //烧录SN       
+     case 135: //烧录SN  
           uKitId.writeString(0, snCode);  
           delay(5);
-          deciveSN = uKitId.read_String(0);
-          if(deciveSN.c_str()!=0x00){
+          //strcpy(deciveSN,uKitId.read_String(0).c_str());
+          if(uKitId.read_String(0).c_str()!=0x00){
             root["code"]=0;     
             setRgbledColor(255,0,0);
             tone2(800,100);
             Sensor.noTone(buzzer_pin);
             setRgbledColor(0,0,0);
-            deciveSN="";
+           
           }
           else{
             root["code"]=1; 
           }      
         break;    
-     case 136: //读取sn     
-          deciveSN = uKitId.read_String(0);   
-          root["sn"]=deciveSN.c_str();
-          deciveSN="";  
+     case 136: //读取sn    
+          char snbuf[20]={0};
+          strcpy(snbuf,uKitId.read_String(0).c_str());
+          root["sn"]=snbuf;
           break;      
                
       }
