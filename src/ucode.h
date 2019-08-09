@@ -7,6 +7,7 @@
 #include "FlexiTimer2.h"
 #include "ArduinoJson.h"
 #include"onBoardHW.h"
+#include "NewTone.h"
 #include"TransforRobot.h"
 #include"uKitMotor.h"
 #include"uKitSensor.h"
@@ -14,7 +15,7 @@
 #include "ClickButton.h"
 #include"uKitId.h"
 #include"Gyroscope.h"
-const char* versionNumber="v1.1.8";
+const char* versionNumber="v1.1.9";
 
 unsigned char g=0,lengthBuf[]={0};
 uint16_t dataLength=0;
@@ -159,7 +160,7 @@ void stopDecives(){
   digitalWrite(redPin,HIGH);//EN:Main board RGB lamp, R interface set to HIGH/CN:主板RGB灯，R接口设置为高电平输出.
   digitalWrite(greenPin,HIGH);//EN:Main board RGB lamp, G interface set to HIGH/CN:主板RGB灯，G接口设置为高电平输出.
   digitalWrite(bluePin,HIGH);//EN:Main board RGB lamp, B interface set to HIGH/CN:主板RGB灯，B接口设置为高电平输出.
-  Sensor.noTone(buzzer_pin);     
+  noNewTone(buzzer_pin);     
   setAllSensorOff();
   setMotorStop(0xff);
   StopServo();
@@ -246,29 +247,14 @@ void flexiTimer2_func() {
   
 }
 
-void tone2(uint16_t frequency, long duration)
+void tone2(uint16_t frequency, unsigned long duration = 0)
 {
-  int period = 1000000L / frequency;
-  int pulse = period / 2;
-  pinMode(buzzer_pin, OUTPUT);
-  for (long i = 0; i < duration * 1000L; i += period) {
-    digitalWrite(buzzer_pin, HIGH);
-    delayMicroseconds(pulse);
-    digitalWrite(buzzer_pin, LOW);
-    delayMicroseconds(pulse);
-
-    if (Serial.available()){
-      
-       Sensor.noTone(buzzer_pin);
-       break;
-      
-    }
-         
-  }
-  Sensor.noTone(buzzer_pin);
-
-
-    }
+  NewTone(buzzer_pin,frequency,duration);  
+}
+void noTone2(int pin)
+{
+  noNewTone(pin);  
+}
 
 
 
@@ -468,7 +454,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            root["code"]=0; 
            break;    
         case 129://结束声音
-           Sensor.noTone(buzzer_pin);     
+           noNewTone(buzzer_pin);     
            root["code"]=0; 
            break;                                           
       }
@@ -588,7 +574,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
             root["code"]=0;     
             setRgbledColor(255,0,0);
             tone2(800,100);
-            Sensor.noTone(buzzer_pin);
+            noNewTone(buzzer_pin);
             setRgbledColor(0,0,0);
            
           }
@@ -597,9 +583,8 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
           }      
         break;    
      case 136: //读取sn    
-          char snbuf[20]={0};
-          strcpy(snbuf,uKitId.read_String(0).c_str());
-          root["sn"]=snbuf;
+          strcpy(deciveSN,uKitId.read_String(0).c_str());
+          root["sn"]=deciveSN;
           break;      
                
       }
