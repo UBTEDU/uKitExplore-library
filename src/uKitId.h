@@ -67,6 +67,9 @@ public:
     void setDeciveIdRu();
     void getDeciveId();
     void getDeciveIdJs(const String uuid);
+    void getServoIdJs(const String uuid);
+    void getMotorIdJs(const String uuid);
+    void getEyeLightIdJs(const String uuid);
     void getDeciveIdJs1M(const String uuid);
    
     void getDeciveIdEn();

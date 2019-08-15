@@ -2459,6 +2459,112 @@ void uKitId::getDeciveIdRu(){
   serializeMsgPack(root,Serial);
   
 } 
+ void uKitId::getServoIdJs(const String uuid){//获取IDucode
+  
+  
+  unsigned char idbuf[120]={0};
+  unsigned char decivenum[12]={0};
+  unsigned char deciveid[120]={0};
+  const size_t capacity = JSON_ARRAY_SIZE(34) + JSON_OBJECT_SIZE(3);
+  DynamicJsonDocument root(capacity);
+  JsonArray drivers = root.createNestedArray("drivers");  
+  root["uuid"]=uuid;
+ 
+  for(int i=1;i<=18;i++){
+    idbuf[i]=getServoId(i);   
+    if(idbuf[i]!=0){
+      ++decivenum[0];
+      deciveid[decivenum[0]]=idbuf[i];
+    }   
+  }
+  if(decivenum[0]!=0){    
+    JsonArray servo = root.createNestedArray("servo");    
+    drivers.add(1);//舵机
+    for(int i=1;i<=decivenum[0];i++){
+      servo.add(deciveid[i]);//舵机
+    }
+  }
+  uint16_t bufferLength=measureMsgPack(root);
+  byte Buffer[2]={0};
+  Buffer[0]=(bufferLength>>8)&0xff;
+  Buffer[1]=(bufferLength)&0xff;
+  Serial.write(Buffer,2); 
+  serializeMsgPack(root,Serial);
+  
+} 
+
+ void uKitId::getMotorIdJs(const String uuid){//获取IDucode
+  
+  
+  unsigned char idbuf[20]={0};
+  unsigned char decivenum[12]={0};
+  unsigned char deciveid[20]={0};
+  const size_t capacity = JSON_ARRAY_SIZE(34) + JSON_OBJECT_SIZE(3);
+  DynamicJsonDocument root(capacity);
+  JsonArray drivers = root.createNestedArray("drivers");  
+  root["uuid"]=uuid;
+ 
+  for(int i=1;i<=18;i++){
+    idbuf[i]=getMotorId(i);   
+    if(idbuf[i]!=0){
+      ++decivenum[0];
+      deciveid[decivenum[0]]=idbuf[i];
+    }   
+  }
+
+  if(decivenum[0]!=0){     
+    JsonArray motor = root.createNestedArray("motor"); 
+    drivers.add(2);//电机
+    for(int i=1;i<=decivenum[0];i++){
+      motor.add(deciveid[i]);
+      
+    }
+  }
+
+  uint16_t bufferLength=measureMsgPack(root);
+  byte Buffer[2]={0};
+  Buffer[0]=(bufferLength>>8)&0xff;
+  Buffer[1]=(bufferLength)&0xff;
+  Serial.write(Buffer,2); 
+  serializeMsgPack(root,Serial);
+  
+} 
+
+ void uKitId::getEyeLightIdJs(const String uuid){//获取IDucode
+  
+  
+  unsigned char idbuf[20]={0};
+  unsigned char decivenum[12]={0};
+  unsigned char deciveid[20]={0};
+  const size_t capacity = JSON_ARRAY_SIZE(34) + JSON_OBJECT_SIZE(3);
+  DynamicJsonDocument root(capacity);
+  JsonArray drivers = root.createNestedArray("drivers");  
+  root["uuid"]=uuid;
+ 
+  for(int i=1;i<=10;i++){
+    idbuf[i]=getLedId(i);   
+    if(idbuf[i]!=0){
+      ++decivenum[0];
+      deciveid[decivenum[0]]=idbuf[i];
+    }   
+  }
+
+  if(decivenum[0]!=0){      
+    JsonArray eyelamp = root.createNestedArray("eyelamp");
+    drivers.add(5);//led眼灯
+    for(int i=1;i<=decivenum[0];i++){
+      eyelamp.add(deciveid[i]);
+    }
+  }
+
+  uint16_t bufferLength=measureMsgPack(root);
+  byte Buffer[2]={0};
+  Buffer[0]=(bufferLength>>8)&0xff;
+  Buffer[1]=(bufferLength)&0xff;
+  Serial.write(Buffer,2); 
+  serializeMsgPack(root,Serial);
+  
+} 
  void uKitId::getDeciveIdJs1M(const String uuid){
   
   

@@ -15,11 +15,10 @@
 #include "ClickButton.h"
 #include"uKitId.h"
 #include"Gyroscope.h"
-const char* versionNumber="v1.1.9";
+const char* versionNumber="v1.2.0";
 
-unsigned char g=0,lengthBuf[]={0};
-uint16_t dataLength=0;
-uint16_t times=0;
+unsigned char lengthBuf[]={0};
+
 boolean butonTimer=true;
 uint8_t incomingByte = 0;          // 接收到的 data byte
 String inputString = "";         // 用来储存接收到的内容
@@ -218,11 +217,17 @@ void flexiTimer2_func() {
   setUltrasonicRgbledOff(0x00);
   Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
   delay(2); 
+  Serial.write("AT+URATE=1000000");
+  Serial.write(0x0D);
+  Serial.write(0x0A);
+  delay(2);
   if(EEPROM.read(0)!=48){
     for(int i=0;i<21;i++){
       EEPROM.write(i,0);
     }
   }
+  Serial.begin(1000000);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
+  delay(2);
   const size_t capacity = JSON_ARRAY_SIZE(3) + JSON_OBJECT_SIZE(1);
   DynamicJsonDocument doc(capacity);
   JsonArray data = doc.createNestedArray("data");
@@ -258,7 +263,7 @@ void noTone2(int pin)
 
 
 
-void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int* buf,const char* uuid,unsigned char* bin64){
+void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int* buf,const char* uuid,unsigned char* bin64,unsigned char *ids,int* par1,int* par2,int* par3,int* par4,int* par5){
   const size_t capacity = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(8)+100;
   unsigned char* rgbValue=NULL;
   DynamicJsonDocument root(capacity);
@@ -293,7 +298,15 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
         case 130: //停止舵机       
            setServoStop(id);
            root["code"]=0;
-           break;                                      
+           break;     
+        case 131://多舵机轮模式
+          uKitServo.setServoTurns(ids,par1,par2);
+          root["code"]=0;
+          break;
+        case 132://多舵机角度模式
+          uKitServo.setServoAngles(ids,par1,par2);
+          root["code"]=0;
+          break;                                             
       }
       break;
     case 2:    //电机 
@@ -315,7 +328,15 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
         case 130: //停止电机   
            setMotorStop(id);
            root["code"]=0;
-           break;                                      
+           break; 
+        case 131: //多电机恒速模式   
+           uKitMotor.setMotorTurnAdjs(ids,par1);
+           root["code"]=0;
+           break;  
+        case 132: //多电机pwm模式   
+           uKitMotor.setMotorTurns(ids,par1);
+           root["code"]=0;
+           break;                                                  
       }
       break;
     case 3:    //眼灯 
@@ -350,7 +371,40 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            setEyelightSceneUntil(id,buf[0],buf[1]);             
            root["code"]=0;
            break;             
-                                                         
+        case 134: //多亮起眼灯
+           for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+            setEyelightAllPetals(ids[i],par1[i],par2[i],par3[i]);   
+           } 
+           root["code"]=0;   
+           break; 
+        case 135: //多眼灯表情 
+           for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){    
+            setEyelightLook(ids[i],par1[i],par2[i],par3[i],par4[i],par5[i]);
+           }
+           root["code"]=0;
+           break; 
+        case 136://多情景灯
+          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){ 
+           setEyelightScene(ids[i],par1[i],par2[i]);
+          }
+           root["code"]=0;   
+           break;
+        case 137: //多自定义眼灯          
+           //setEyelightPetalu(id,8,buf);//todo
+           root["code"]=0; 
+           break;          
+        case 138: //多眼灯表情阻塞
+          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){          
+           setEyelightLookUntil(ids[i],par1[i],par2[i],par3[i],par4[i],par5[i]);
+          }
+           root["code"]=0;
+           break;  
+        case 139: //多情景灯阻塞     
+          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){     
+           setEyelightSceneUntil(ids[i],par1[i],par2[i]);    
+          }         
+           root["code"]=0;
+           break;                                                                            
       }
       break;        
     case 4:    //传感器      
@@ -528,7 +582,20 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            }
            break;
         case 128: //获取ID   
-           uKitId.getDeciveIdJs(uuid);
+          switch(buf[0]){
+            case 0:
+              uKitId.getDeciveIdJs(uuid);
+              break;
+            case 1:
+              uKitId.getServoIdJs(uuid);
+              break;
+            case 2:
+              uKitId.getMotorIdJs(uuid);
+              break;              
+            case 5:
+              uKitId.getEyeLightIdJs(uuid);
+              break;              
+          }
            root["code"]=0;         
            break;    
       case 129: //检测固件  
@@ -613,7 +680,9 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
 void serialEvent(){
 
   static int readFlag=0;
-
+  static unsigned char g=0;
+  static uint16_t dataLength=0;
+  static uint16_t times=0;
   
   if (Serial.available() && readFlag==0) { 
      
@@ -624,24 +693,19 @@ void serialEvent(){
       
     } 
   }
-  if (Serial.available()){
-    
-    
+  while(Serial.available()){   
     times++;
-    
     incomingByte=Serial.read(); 
-    
     inputString += (char) incomingByte;     // 全双工串口可以不用在下面加延时，半双工则要加的//  
-   
     if (dataLength==times) {    
       newLineReceived = true;
       readFlag=0;
       g=0;
       times=0;
       dataLength=0;
-      
 
     }
+    
   }
  
    
@@ -652,32 +716,84 @@ void protocol(){
     const size_t capacity =JSON_ARRAY_SIZE(3) + JSON_ARRAY_SIZE(64) + JSON_OBJECT_SIZE(6) + 230; 
     DynamicJsonDocument root(capacity);  
     deserializeMsgPack(root,inputString);     
-    int buf[9]={0}; 
-    unsigned char bin64[64]={0};
+    int buf[9]={0},par1[18]={0},par2[18]={0},par3[18]={0},par4[18]={0},par5[18]={0}; 
+    unsigned char bin64[64]={0},ids[18]={0};
     unsigned char device = root["device"];
     unsigned char mode = root["mode"];
     unsigned char id = root["id"];  
-    for(int i=0;i<9;i++){
+    const char* dataLen = root["data"];
+    for(int i=0;i<sizeof(dataLen)/sizeof(dataLen[0]);i++){
        buf[i]  = root["data"][i];  
     }
     const char* uuid = root["uuid"];
-    if(device==10){
-      butonTimer=true; 
-    }
-    if(device==11){
-      if(mode==135){
-        snCode = root["sn"];
-      }
-      if(mode==133){
-        for(int i=0;i<64;i++){
-          
-          bin64[i] = root["bin64"][i];
+    
+    switch(device){
+      const char* idsLen = root["ids"];
+      case 1:    
+          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+            par1[i]  = root["ids"][i];  
+          }
+          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+            par1[i]  = root["par1"][i];  
+          }
+          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+            par2[i]  = root["par2"][i];  
+          }      
+        break;
+      case 2:
+          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+            par1[i]  = root["ids"][i];  
+          }
+          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+            par1[i]  = root["par1"][i];  
+          }
+        break;      
+      case 3:   
+        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+          par1[i]  = root["ids"][i];  
         }
+        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+          par1[i]  = root["par1"][i];  
+        }
+        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+          par2[i]  = root["par2"][i];  
+        }
+        if(mode==134){
+        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+          par3[i]  = root["par3"][i];  
+        } 
+        }
+        if(mode==135 ||mode==138){
+        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+          par3[i]  = root["par3"][i];  
+        } 
+        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+          par4[i]  = root["par4"][i]; 
+        }
+        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+          par5[i]  = root["par5"][i]; 
+        }
+        }
+        break;         
+      case 10:
+        butonTimer=true; 
+        break;
+      case 11:
+        if(mode==135){
+          snCode = root["sn"];
+        }
+        if(mode==133){
+          for(int i=0;i<64;i++){
+            bin64[i] = root["bin64"][i];
+          }
         
-      }
-      
-    }  
-    ProtocolParser(device,mode,id,buf,uuid,bin64);
+        }
+        break;
+        
+        
+    }
+
+    ProtocolParser(device,mode,id,buf,uuid,bin64,ids,par1,par2,par3,par4,par5);
     inputString = "";   // clear the string       
     newLineReceived = false;
     timeFlag=1; 

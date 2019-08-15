@@ -15,10 +15,11 @@ public:
     void setAllSensorOff();
     //ukit led传感器。id为led的id号，face为表情种类（0眨眼，1伤心，2热泪盈眶，3泪光闪动，4哭泣，5晕，6开心，7惊讶，8呼吸，9闪烁，10风扇，11雨刮）,times是次数 ,rgb
     void setEyelightLook(char id,char face,int times,int red,int green,int blue);
+    
     void setEyelightLookUntil(char id,char face,int times,int red,int green,int blue);
     void setEyelightScene(char id,char scene,int times);//情景模式 id是id号，scene是情景灯，times是次数
     void setEyelightSceneUntil(char id,char scene,int times);//情景模式 id是id号，scene是情景灯，times是次数
-    
+        
     void setEyelightAllPetals(char id,int red,int green, int blue);//全亮模式， id是id号， RGB
     void setEyelightPetal(char id,unsigned char petalsnum,unsigned char petals[8][4],unsigned char time);
     void setEyelightPetals(char id,unsigned char petalsnum,String petals);

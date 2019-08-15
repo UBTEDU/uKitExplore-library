@@ -1,4 +1,4 @@
-# uKit Explore Library v1.1.8
+# uKit Explore Library v1.2.0
 
 ```
 git clone git@github.com:UBTEDU/uKit-Explore-library.git
@@ -22,6 +22,20 @@ git clone git@github.com:UBTEDU/uKit-Explore-library.git
 - [Instructions](http://10.10.1.245/uKit-explore/Course/blob/master/uKit_Explore_Course_CN.pdf)  
 
 ### Update
+
+#### V1.2.0更新说明：
+1. 蓝牙和USB串口通讯速率修改为1M
+2. 新增单独获取舵机外设ID指令
+3. 新增获取眼灯外设ID指令
+4. 新增获取电机外设ID指令
+5. 新增电机恒速群发指令
+6. 新增电机pwm群发指令
+7. 新增舵机角度模式群发指令
+8. 新增舵机轮模式群发指令
+9. 新增亮起眼灯群发指令
+10. 新增眼灯表情群发指令
+11. 新增情景灯群发指令
+12. 新增自定义灯瓣群发指令
 
 #### V1.1.8更新说明：
 1. 自定义眼灯时间改回100-9999ms

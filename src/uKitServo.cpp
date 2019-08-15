@@ -27,6 +27,12 @@ void uKitServo::setServoTurn(unsigned char id,int dir, int speed){
   
 }
 
+void uKitServo::setServoTurns(unsigned char *id,int *dir, int *speed){
+  for(int i=0;i<sizeof(id)/sizeof(id[0]);i++){
+    setServoTurn(id[i],dir[i],speed[i]);
+  }
+  
+}
 
 
 //id表示舵机号，angle表示角度（角度范围-118°~118°），time表示旋转所需时间（时间范围：300~5000）
@@ -39,6 +45,12 @@ void uKitServo::setServoAngle(unsigned char id,int angle,int times){
 
   ubtServoProtocol(0xFA,id,0x01,buf);
   
+}
+void uKitServo::setServoAngles(unsigned char *id,int *angle,int times){
+    for(int i=0;i<sizeof(id)/sizeof(id[0]);i++){
+      setServoAngle(id[i],angle[i],times); 
+    }
+    delay(times);      
 }
 
 

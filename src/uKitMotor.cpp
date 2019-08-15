@@ -46,6 +46,21 @@ unsigned char uKitMotor::setMotorTurnAdj(uint8_t id, uint16_t speed, uint16_t ti
   tRet=ubtMotorProtocol(0x10,0x06,buf);
   return tRet;
 }
+
+
+unsigned char uKitMotor::setMotorTurns(unsigned char* id, int* pwmDuty){
+
+  for(int i=0;i<sizeof(id)/sizeof(id[0]);i++){
+    setMotorTurn(id[i],pwmDuty[i]);
+  }
+  
+}
+unsigned char uKitMotor::setMotorTurnAdjs(unsigned char* id, int* speed, uint16_t time=0xffff){
+    for(int i=0;i<sizeof(id)/sizeof(id[0]);i++){
+    setMotorTurnAdj(id[i],speed[i]);
+  }
+}
+
 /**@brief Read motor speed.
  *
  * @param[in] id EN:Motor module id/EN:电机ID号.
