@@ -24,6 +24,7 @@ public:
     void setEyelightPetal(char id,unsigned char petalsnum,unsigned char petals[8][4],unsigned char time);
     void setEyelightPetals(char id,unsigned char petalsnum,String petals);
     void setEyelightPetalu(char id,unsigned char petalsnum,int* petals);
+    void setEyelightPetalus(char id,int petal1,int petal2,int petal3,int petal4,int petal5,int petal6,int petal7,int petal8,int times);
     void _delay(float seconds);
     
 

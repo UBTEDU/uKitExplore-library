@@ -520,6 +520,418 @@ void uKitSensor::setEyelightPetalu(char id,unsigned char petalsnum,int* petals){
   
   
 }
+void uKitSensor::setEyelightPetalus(char id,int petal1,int petal2,int petal3,int petal4,int petal5,int petal6,int petal7,int petal8,int times){
+
+  signed char tData2[1];
+  unsigned char tData[35],g=0;
+  
+  unsigned char tRet=0;
+  tData2[0]=id;
+  static unsigned char eyelightState=1;
+  
+  if(eyelightState==1){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
+    eyelightState=0;   
+  } 
+  
+  tData[g++]=id;  //ID
+  tData[g++]=times/100;//持续时间
+  tData[g++]=8;//色块数量
+  switch(petal1){
+    tData[g++]=1;
+    case 1:
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=0;
+      break;
+    case 2:
+      tData[g++]=255;
+      tData[g++]=128;
+      tData[g++]=0;
+      break;
+    case 3:
+      tData[g++]=255;
+      tData[g++]=240;
+      tData[g++]=0;
+      break;
+    case 4:
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=0;
+      break;
+    case 5:
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=255;
+      break;
+    case 6:
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=255;
+      break;   
+    case 7:
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=255;
+      break;  
+    case 8:
+      tData[g++]=255;
+      tData[g++]=255;
+      tData[g++]=255;
+      break;
+    case 9:
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=0;
+      break;                                           
+  }
+  switch(petal2){
+    tData[g++]=2;
+    case 1:
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=0;
+      break;
+    case 2:
+      tData[g++]=255;
+      tData[g++]=128;
+      tData[g++]=0;
+      break;
+    case 3:
+      tData[g++]=255;
+      tData[g++]=240;
+      tData[g++]=0;
+      break;
+    case 4:
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=0;
+      break;
+    case 5:
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=255;
+      break;
+    case 6:
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=255;
+      break;   
+    case 7:
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=255;
+      break;  
+    case 8:
+      tData[g++]=255;
+      tData[g++]=255;
+      tData[g++]=255;
+      break;
+    case 9:
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=0;
+      break;                                           
+  }  
+  switch(petal3){
+    tData[g++]=4;
+    case 1:
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=0;
+      break;
+    case 2:
+      tData[g++]=255;
+      tData[g++]=128;
+      tData[g++]=0;
+      break;
+    case 3:
+      tData[g++]=255;
+      tData[g++]=240;
+      tData[g++]=0;
+      break;
+    case 4:
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=0;
+      break;
+    case 5:
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=255;
+      break;
+    case 6:
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=255;
+      break;   
+    case 7:
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=255;
+      break;  
+    case 8:
+      tData[g++]=255;
+      tData[g++]=255;
+      tData[g++]=255;
+      break;
+    case 9:
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=0;
+      break;                                           
+  }
+  switch(petal4){
+    tData[g++]=8;
+    case 1:
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=0;
+      break;
+    case 2:
+      tData[g++]=255;
+      tData[g++]=128;
+      tData[g++]=0;
+      break;
+    case 3:
+      tData[g++]=255;
+      tData[g++]=240;
+      tData[g++]=0;
+      break;
+    case 4:
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=0;
+      break;
+    case 5:
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=255;
+      break;
+    case 6:
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=255;
+      break;   
+    case 7:
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=255;
+      break;  
+    case 8:
+      tData[g++]=255;
+      tData[g++]=255;
+      tData[g++]=255;
+      break;
+    case 9:
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=0;
+      break;                                           
+  }
+  switch(petal5){
+    tData[g++]=16;
+    case 1:
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=0;
+      break;
+    case 2:
+      tData[g++]=255;
+      tData[g++]=128;
+      tData[g++]=0;
+      break;
+    case 3:
+      tData[g++]=255;
+      tData[g++]=240;
+      tData[g++]=0;
+      break;
+    case 4:
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=0;
+      break;
+    case 5:
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=255;
+      break;
+    case 6:
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=255;
+      break;   
+    case 7:
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=255;
+      break;  
+    case 8:
+      tData[g++]=255;
+      tData[g++]=255;
+      tData[g++]=255;
+      break;
+    case 9:
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=0;
+      break;                                           
+  }
+  switch(petal6){
+    tData[g++]=32;
+    case 1:
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=0;
+      break;
+    case 2:
+      tData[g++]=255;
+      tData[g++]=128;
+      tData[g++]=0;
+      break;
+    case 3:
+      tData[g++]=255;
+      tData[g++]=240;
+      tData[g++]=0;
+      break;
+    case 4:
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=0;
+      break;
+    case 5:
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=255;
+      break;
+    case 6:
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=255;
+      break;   
+    case 7:
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=255;
+      break;  
+    case 8:
+      tData[g++]=255;
+      tData[g++]=255;
+      tData[g++]=255;
+      break;
+    case 9:
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=0;
+      break;                                           
+  }
+  switch(petal7){
+    tData[g++]=64;
+    case 1:
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=0;
+      break;
+    case 2:
+      tData[g++]=255;
+      tData[g++]=128;
+      tData[g++]=0;
+      break;
+    case 3:
+      tData[g++]=255;
+      tData[g++]=240;
+      tData[g++]=0;
+      break;
+    case 4:
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=0;
+      break;
+    case 5:
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=255;
+      break;
+    case 6:
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=255;
+      break;   
+    case 7:
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=255;
+      break;  
+    case 8:
+      tData[g++]=255;
+      tData[g++]=255;
+      tData[g++]=255;
+      break;
+    case 9:
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=0;
+      break;                                           
+  }
+  switch(petal8){
+    tData[g++]=128;
+    case 1:
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=0;
+      break;
+    case 2:
+      tData[g++]=255;
+      tData[g++]=128;
+      tData[g++]=0;
+      break;
+    case 3:
+      tData[g++]=255;
+      tData[g++]=240;
+      tData[g++]=0;
+      break;
+    case 4:
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=0;
+      break;
+    case 5:
+      tData[g++]=0;
+      tData[g++]=255;
+      tData[g++]=255;
+      break;
+    case 6:
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=255;
+      break;   
+    case 7:
+      tData[g++]=255;
+      tData[g++]=0;
+      tData[g++]=255;
+      break;  
+    case 8:
+      tData[g++]=255;
+      tData[g++]=255;
+      tData[g++]=255;
+      break;
+    case 9:
+      tData[g++]=0;
+      tData[g++]=0;
+      tData[g++]=0;
+      break;                                           
+  }          
+    tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
+  if(tRet==id+0xec){
+    ubtEyelightProtocol(0xf4,0x06,0x02,tData2); 
+    tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
+ }
+
+ 
+  
+  
+  
+}
 void uKitSensor::setEyelightOff(char id){
   signed char tData[1];
   volatile int State=0;

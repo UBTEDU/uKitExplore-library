@@ -263,7 +263,7 @@ void noTone2(int pin)
 
 
 
-void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int* buf,const char* uuid,unsigned char* bin64,unsigned char *ids,int* par1,int* par2,int* par3,int* par4,int* par5){
+void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int* buf,const char* uuid,unsigned char* bin64,unsigned char *ids,int* par1,int* par2,int* par3,int* par4,int* par5,int* par6,int* par7,int* par8,int eyeTime){
   const size_t capacity = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(8)+100;
   unsigned char* rgbValue=NULL;
   DynamicJsonDocument root(capacity);
@@ -304,7 +304,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
           root["code"]=0;
           break;
         case 132://多舵机角度模式
-          uKitServo.setServoAngles(ids,par1,par2);
+          uKitServo.setServoAngles(ids,par1,par2[0]);
           root["code"]=0;
           break;                                             
       }
@@ -389,8 +389,10 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
           }
            root["code"]=0;   
            break;
-        case 137: //多自定义眼灯          
-           //setEyelightPetalu(id,8,buf);//todo
+        case 137: //多自定义眼灯    
+          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){       
+           uKitSensor.setEyelightPetalus(ids[i],par1[i],par2[i],par3[i],par4[i],par5[i],par6[i],par7[i],par8[i],eyeTime);
+          }
            root["code"]=0; 
            break;          
         case 138: //多眼灯表情阻塞
@@ -716,7 +718,7 @@ void protocol(){
     const size_t capacity =JSON_ARRAY_SIZE(3) + JSON_ARRAY_SIZE(64) + JSON_OBJECT_SIZE(6) + 230; 
     DynamicJsonDocument root(capacity);  
     deserializeMsgPack(root,inputString);     
-    int buf[9]={0},par1[18]={0},par2[18]={0},par3[18]={0},par4[18]={0},par5[18]={0}; 
+    int eyeTime=0,buf[9]={0},par1[18]={0},par2[18]={0},par3[10]={0},par4[10]={0},par5[10]={0},par6[10]={0},par7[10]={0},par8[10]={0}; 
     unsigned char bin64[64]={0},ids[18]={0};
     unsigned char device = root["device"];
     unsigned char mode = root["mode"];
@@ -758,15 +760,12 @@ void protocol(){
         for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
           par2[i]  = root["par2"][i];  
         }
-        if(mode==134){
+        if(mode==134|| mode==135 ||mode==138 || mode==137){
         for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
           par3[i]  = root["par3"][i];  
         } 
         }
-        if(mode==135 ||mode==138){
-        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
-          par3[i]  = root["par3"][i];  
-        } 
+        if(mode==135 ||mode==138 || mode==137){
         for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
           par4[i]  = root["par4"][i]; 
         }
@@ -774,6 +773,18 @@ void protocol(){
           par5[i]  = root["par5"][i]; 
         }
         }
+        if( mode==137){
+        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+          par6[i]  = root["par6"][i];  
+        } 
+        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+          par7[i]  = root["par7"][i]; 
+        }
+        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+          par8[i]  = root["par8"][i]; 
+        }
+        eyeTime=root["time"];
+        }        
         break;         
       case 10:
         butonTimer=true; 
@@ -793,7 +804,7 @@ void protocol(){
         
     }
 
-    ProtocolParser(device,mode,id,buf,uuid,bin64,ids,par1,par2,par3,par4,par5);
+    ProtocolParser(device,mode,id,buf,uuid,bin64,ids,par1,par2,par3,par4,par5,par6,par7,par8,eyeTime);
     inputString = "";   // clear the string       
     newLineReceived = false;
     timeFlag=1; 
