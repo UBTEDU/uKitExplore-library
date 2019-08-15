@@ -728,62 +728,68 @@ void protocol(){
        buf[i]  = root["data"][i];  
     }
     const char* uuid = root["uuid"];
+    const char* idsLen = root["ids"];
     
-    switch(device){
-      const char* idsLen = root["ids"];
-      case 1:    
-          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
-            par1[i]  = root["ids"][i];  
-          }
-          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
-            par1[i]  = root["par1"][i];  
-          }
-          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
-            par2[i]  = root["par2"][i];  
-          }      
+    switch(device){   
+      case 1:  
+          if(mode==131 ||mode==132){  
+            for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+              par1[i]  = root["ids"][i];  
+            }
+            for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+              par1[i]  = root["par1"][i];  
+            }
+            for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+              par2[i]  = root["par2"][i];  
+            }   
+          }   
         break;
       case 2:
-          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
-            par1[i]  = root["ids"][i];  
-          }
-          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
-            par1[i]  = root["par1"][i];  
+          if(mode==131 ||mode==132){
+            for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+              par1[i]  = root["ids"][i];  
+            }
+            for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+              par1[i]  = root["par1"][i];  
+            }
           }
         break;      
-      case 3:   
-        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
-          par1[i]  = root["ids"][i];  
-        }
-        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
-          par1[i]  = root["par1"][i];  
-        }
-        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
-          par2[i]  = root["par2"][i];  
-        }
-        if(mode==134|| mode==135 ||mode==138 || mode==137){
-        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
-          par3[i]  = root["par3"][i];  
-        } 
-        }
-        if(mode==135 ||mode==138 || mode==137){
-        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
-          par4[i]  = root["par4"][i]; 
-        }
-        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
-          par5[i]  = root["par5"][i]; 
-        }
-        }
-        if( mode==137){
-        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
-          par6[i]  = root["par6"][i];  
-        } 
-        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
-          par7[i]  = root["par7"][i]; 
-        }
-        for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
-          par8[i]  = root["par8"][i]; 
-        }
-        eyeTime=root["time"];
+      case 3: 
+        if(mode>=132 &&mode<=139){  
+          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+            par1[i]  = root["ids"][i];  
+          }
+          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+            par1[i]  = root["par1"][i];  
+          }
+          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+            par2[i]  = root["par2"][i];  
+          }
+          if(mode==134|| mode==135 ||mode==138 || mode==137){
+          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+            par3[i]  = root["par3"][i];  
+          } 
+          }
+          if(mode==135 ||mode==138 || mode==137){
+          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+            par4[i]  = root["par4"][i]; 
+          }
+          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+            par5[i]  = root["par5"][i]; 
+          }
+          }
+          if( mode==137){
+          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+            par6[i]  = root["par6"][i];  
+          } 
+          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+            par7[i]  = root["par7"][i]; 
+          }
+          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+            par8[i]  = root["par8"][i]; 
+          }
+          eyeTime=root["time"];
+          }
         }        
         break;         
       case 10:
