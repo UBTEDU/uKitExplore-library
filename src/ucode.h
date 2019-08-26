@@ -555,7 +555,6 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
         data.add(IMU::getRawGyroX()); 
         data.add(IMU::getRawGyroY());
         data.add(IMU::getRawGyroZ()); 
-        
         root["code"]=0;           
       }                            
       break;
