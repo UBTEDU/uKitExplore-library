@@ -14,7 +14,7 @@
 #include"uKitServo.h"
 #include "ClickButton.h"
 #include"uKitId.h"
-#include"Gyroscope.h"
+#include "KalmanMPU6050.h"
 const char* versionNumber="v1.2.0";
 
 unsigned char lengthBuf[]={0};
@@ -37,11 +37,7 @@ uKitMotor uKitMotor;
 uKitServo uKitServo;
 uKitSensor uKitSensor;
 uKitId uKitId;
-Gyroscope gyro;
 
-
-//Gyroscope_API
-#define getMpu6050Data() gyro.getMpu6050Data()
 
 
 
@@ -210,7 +206,8 @@ void flexiTimer2_func() {
   pinMode(buzzer_pin,OUTPUT);
   
   delay(5);  //开机延时
-  Wire.begin();
+  IMU::init();
+  IMU::read();
   setAllSensorOff();
   setMotorStop(0xff);
   StopServo();
@@ -548,15 +545,18 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
      case 9: //陀螺仪  
       butonTimer=false;     
       buttonFlag=0;   
-      if(mode==127){   
-        float* gyronum=getMpu6050Data();        
-        data.add(gyronum[0]);   
-        data.add(gyronum[1]);   
-        data.add(gyronum[2]);  
-        root["code"]=0;  
+      if(mode==127){  
+        IMU::read();     
+        data.add(IMU::getRoll());   
+        data.add(IMU::getPitch());   
+        data.add(IMU::getRawAccelX());
+        data.add(IMU::getRawAccelY());
+        data.add(IMU::getRawAccelZ());
+        data.add(IMU::getRawGyroX()); 
+        data.add(IMU::getRawGyroY());
+        data.add(IMU::getRawGyroZ()); 
         
-        
-                
+        root["code"]=0;           
       }                            
       break;
      case 10: //板载按键    

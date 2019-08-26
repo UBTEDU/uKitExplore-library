@@ -3,7 +3,7 @@
 
 
 unsigned char uKitMotor::setMotorTurn(uint8_t id, uint16_t pwmDuty){
-  clearMotorInf(id);
+  //clearMotorInf(id);
   unsigned char tRet = 0;
   unsigned char buf[7]={0};
   uint16_t speeds=0;
@@ -17,7 +17,7 @@ unsigned char uKitMotor::setMotorTurn(uint8_t id, uint16_t pwmDuty){
   buf[5] = (speeds & 0xFF00) >> 8;
   buf[6] = speeds & 0x00FF;
 
-  tRet=ubtMotorProtocol(0x0C,0x06,buf);
+  tRet=ubtMotorActionProtocol(0x0C,0x06,buf);
   return tRet;
 }
 /**@brief EN:Motor run at a target speed for a target time/CN:电机以目标速度为目标时间运行.
@@ -29,7 +29,7 @@ unsigned char uKitMotor::setMotorTurn(uint8_t id, uint16_t pwmDuty){
  * @returns ret EN:0 means motor module acks correct, <0 means no ack or ack error/CN:返回0表示功能正常.
  */
 unsigned char uKitMotor::setMotorTurnAdj(uint8_t id, uint16_t speed, uint16_t time){
-  clearMotorInf(id);
+  //clearMotorInf(id);
   unsigned char tRet = 0;
   unsigned char buf[11]={0};  
   buf[0] = id;
@@ -43,7 +43,7 @@ unsigned char uKitMotor::setMotorTurnAdj(uint8_t id, uint16_t speed, uint16_t ti
   buf[8] = time & 0x00FF;
   buf[9] = 0x00;
   buf[10] = 0x01;
-  tRet=ubtMotorProtocol(0x10,0x06,buf);
+  tRet=ubtMotorActionProtocol(0x10,0x06,buf);
   return tRet;
 }
 
@@ -112,7 +112,7 @@ void uKitMotor::clearMotorInf(unsigned char id){
   buf[4] = 0x01;
   buf[5] = 0x00;
   buf[6] = 0x80;
-  ubtMotorProtocol(0x0C,0x06,buf);
+  ubtMotorActionProtocol(0x0C,0x06,buf);
  
 }
 /**@brief EN:Set motor module ID/CN:设置电机ID号.

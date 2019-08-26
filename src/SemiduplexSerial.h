@@ -28,7 +28,8 @@ public:
      unsigned char ubtUltrasonicIdProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
     
     unsigned short ubtServoProtocol(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data);
-     unsigned char ubtServoIdProtocol(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data);
+    unsigned char ubtServoIdProtocol(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data);
+    unsigned char ubtServoActionProtocol(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data);
      unsigned short ubtServoProtocol1M(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data);
 
     unsigned short ubtSoundProtocol(unsigned char len,unsigned char CMD,unsigned char * Data);
@@ -43,6 +44,8 @@ public:
 
     short ubtMotorProtocol(unsigned char len,unsigned char CMD,unsigned char * Data);
     unsigned char ubtMotorIdProtocol(unsigned char len,unsigned char CMD,unsigned char * Data);
+   
+    unsigned char ubtMotorActionProtocol(unsigned char len,unsigned char CMD,unsigned char * Data);
   
     unsigned char Cheak_Sum(unsigned char len, unsigned char *buf);
     unsigned long TXD(unsigned char Head,unsigned char ServoNO,unsigned char len,unsigned char CMD,unsigned char RGB,unsigned char * Data);
@@ -67,6 +70,7 @@ public:
     
  
 private:
+  #define tems(val) (val*87*110/100/400)
   #define POLY    (0x1070U << 3)
   #define SERVO_NUMER_MAX    16  //支持的最多舵机
   //置位变量的某位

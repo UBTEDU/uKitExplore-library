@@ -1100,7 +1100,7 @@ void uKitSensor::setAllSensorOff(){
 
 
 unsigned char uKitSensor::readButtonValue(char id){
-  unsigned char buf[1] ;
+  unsigned char buf[1]={0} ;
   unsigned short tRet=0;
   static unsigned char ButtonState=1;
   buf[0]=id;

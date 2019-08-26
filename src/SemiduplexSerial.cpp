@@ -1664,6 +1664,28 @@ Retry_Servo:
   return tRet;
 }
 
+unsigned char SemiduplexSerial::ubtMotorActionProtocol(unsigned char len,unsigned char CMD,unsigned char * Data){
+  unsigned char tRet=0;
+  unsigned char buf[16]={0};
+  buf[0] = 0xFB;//帧头
+  buf[1] = 0x03;//设备类型
+  buf[2] = len-4;//长度
+  buf[3] = CMD;//命令号
+  memcpy((void *)&buf[4],(void *)Data,len-4);
+  buf[len-1] = crc8_itu(&buf[1], buf[2]+2); 
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(buf,len);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  
+  if(Usart3_Rx_Buf[len]==0x00){
+    Serial2.begin(114200);  //设置波特率
+    Serial2.write(buf,len);  //发送消息
+    Serial2.end();  //关闭串口2,否则会影响接收消息
+  } 
+  
+  return tRet;
+}
+
 unsigned short SemiduplexSerial::ubtServoProtocol(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data){
   unsigned short tRet = 0;
   unsigned char tCnt = 0;
@@ -1803,6 +1825,28 @@ unsigned char SemiduplexSerial::ubtServoIdProtocol(unsigned char Head,unsigned c
    
 
   
+  return tRet;
+}
+unsigned char SemiduplexSerial::ubtServoActionProtocol(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data){
+  unsigned char tRet = 0;
+  unsigned char buf[10]={0};
+  const unsigned char len = 9; //9+1
+  const unsigned char Usart3_Rx_Ack_Len=1; 
+  unsigned char Rx_Buf[11]={0};
+  buf[0] = Head;  //填充协议头
+  buf[1] = swab8(Head);
+  buf[2] = ServoNO; //舵机好
+  buf[3] = CMD;
+  memcpy((void *)&buf[4],(void *)Data,4);
+  buf[len - 1] = Cheak_Sum( (len - 3),(u8*)&buf[2]);
+  buf[len] = 0xED;
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(tems((long)Usart3_Rx_Ack_Len+1));  //设置超时ms
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(buf,len + 1);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息
+  tRet = Serial3.readBytes(Rx_Buf, Usart3_Rx_Ack_Len+len+1); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息 
   return tRet;
 }
 unsigned short SemiduplexSerial::ubtServoProtocol1M(unsigned char Head,unsigned char ServoNO,unsigned char CMD,unsigned char * Data){

@@ -12,7 +12,7 @@
 #include"uKitServo.h"
 #include "ClickButton.h"
 #include"uKitId.h"
-#include"Gyroscope.h"
+#include"KalmanMPU6050.h"
 
 Sensor2 Sensor2;
 TransforRobot TransforRobot;
@@ -24,7 +24,7 @@ Gyroscope gyro;
 
 
 //Gyroscope_API
-#define getMpu6050Data() gyro.getMpu6050Data()
+
 
 
 

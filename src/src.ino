@@ -1,17 +1,25 @@
 #include "ucode.h"
 
 void setup() {
-    Initialization();
-    if (protocolRunState == false) {
+  Initialization();
+  if (protocolRunState == false){ 
+    
 
-      
-    }
+
+  }
 }
 
 void loop() {
     protocol();
-    if (protocolRunState == false) {
+    if (protocolRunState == false){
+  IMU::read(); 
+ 
+  
+   
       
 
+
+ 
+      
     }
 }

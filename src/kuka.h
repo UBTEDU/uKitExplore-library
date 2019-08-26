@@ -13,7 +13,7 @@
 #include"uKitServo.h"
 #include "ClickButton.h"
 #include"uKitId.h"
-#include"Gyroscope.h"
+#include"KalmanMPU6050.h"
 String versionNumber="v1.0.9";
 
 uint64_t incomingByte = 0;          // 接收到的 data byte
@@ -36,7 +36,7 @@ Gyroscope gyro;
 
 
 //Gyroscope_API
-#define getMpu6050Data() gyro.getMpu6050Data()
+
 
 
 

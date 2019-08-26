@@ -22,7 +22,7 @@ void uKitServo::setServoTurn(unsigned char id,int dir, int speed){
         buf[3] = speeds & 0x00FF;             
     }
         
-  ubtServoProtocol(0xFA,id,0x01,buf);
+  ubtServoActionProtocol(0xFA,id,0x01,buf);
   //TXD(0xFA,id,4,0x01,buf); 
   
 }
@@ -43,7 +43,7 @@ void uKitServo::setServoAngle(unsigned char id,int angle,int times){
   buf[2]=((times/20) & 0xFF00) >> 8;
   buf[3]=(times/20) & 0x00FF;
 
-  ubtServoProtocol(0xFA,id,0x01,buf);
+  ubtServoActionProtocol(0xFA,id,0x01,buf);
   
 }
 void uKitServo::setServoAngles(unsigned char *id,int *angle,int times){
