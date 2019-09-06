@@ -15,10 +15,10 @@ unsigned short  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
     ubtInfraredProtocol(0xf8,0x06,0x02,buf);
     tRet=ubtInfraredProtocols(0xf8,0x06,0x04,buf);
   }
- 
+    float voltage=(analogRead(A14)*5.0/1024.0)*151.0/51.0;
+       if(voltage>=6.2){ 
         float realValue = tRet - 850;
         int level;
-        
         if (realValue < 0 || tRet==0 ) {
             level = 0;
         } else if (realValue < 70) {
@@ -37,9 +37,39 @@ unsigned short  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
         if(level > 20){
             level = 20;
         }
-        
         delay(2);
         return constrain(level,0,20);
+        
+       }
+       else{
+              if(tRet<=850)
+        tRet=0;
+      else if(tRet>850 &tRet<=879)
+        tRet=1;
+      else if(tRet>879 &tRet<=905)
+        tRet=2;
+       else if(tRet>905 &tRet<=918)
+        tRet=3;
+       else if(tRet>918 &tRet<=931)
+        tRet=4;
+       else if(tRet>918 &tRet<=944)
+        tRet=5;
+       else if(tRet>944 &tRet<=970)
+        tRet=6;   
+        else if(tRet>970 &tRet<=986)
+        tRet=7;      
+      else
+         tRet=tRet*20/2173;
+    
+       if(tRet>20){
+         tRet=20;
+       }
+        delay(2);
+        return constrain(tRet,0,20);
+        
+       }
+        
+
 
 
      
@@ -1116,6 +1146,26 @@ unsigned char uKitSensor::readButtonValue(char id){
     tRet=ubtButtonProtocol(0xf7,0x06,0x04,buf);
 } 
     delay(2);
+
+    return tRet;   
+}
+unsigned char uKitSensor::readButtonState(char id){
+  unsigned char buf[1]={0} ;
+  unsigned short tRet=0;
+  static unsigned char ButtonState=1;
+  buf[0]=id;
+  if(ButtonState==1){
+    ubtButtonStateProtocol(0xf7,0x06,0x02,buf);
+    ButtonState=0;
+    
+  }  
+  
+  tRet=ubtButtonStateProtocol(0xf7,0x06,0x04,buf);
+  if(tRet==id+0xec){
+    ubtButtonStateProtocol(0xf7,0x06,0x02,buf);
+    tRet=ubtButtonStateProtocol(0xf7,0x06,0x04,buf);
+} 
+    //delay(2);
 
     return tRet;   
 }

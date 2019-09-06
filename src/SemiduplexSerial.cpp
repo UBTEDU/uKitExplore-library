@@ -320,6 +320,54 @@ Retry_Servo:
   }
   return tRet;
 }
+
+unsigned char SemiduplexSerial::ubtButtonStateProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
+  unsigned char tRet=0;
+  unsigned char buf[8]={0},Rx_Buf[8]={0};
+  unsigned char Usart3_Rx_Ack_Len=8;
+
+  buf[0] = Head;  //协议头
+  buf[1] = swab8(Head);
+  buf[2] = len;
+  buf[3] = CMD;
+  memcpy((void *)&buf[4],(void *)Data,len-5);
+  buf[len - 1] = Cheak_Sum( (len - 3),(u8*)&buf[2]);
+  buf[len] = 0xED;
+  Serial2.begin(115200);  //设置波特率
+  Serial2.write(buf,len + 1);  //发送消息
+  Serial2.end();  //关闭串口2,否则会影响接收消息 
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(2);
+  Serial3.readBytes(Rx_Buf, Usart3_Rx_Ack_Len); //接收应
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+    if(Rx_Buf[0]==0xF7 && Rx_Buf[1]==0x7F && Rx_Buf[4]-0xAA==Data[0]){
+      switch(CMD){      
+        case 0x02://开启传感器传输功能
+          tRet=0xAA;  //成功信息             
+          break;     
+        case 0x03://关闭传感器传输功能
+          tRet=0xAA;  //成功信息         
+          break;    
+        case 0x04://读取传感器数据
+          tRet=Rx_Buf[5];  //成功信息   
+          break;       
+                                            
+      }
+      
+    }
+
+
+
+    else{
+      tRet=0;  
+      
+    }
+  
+   
+  
+  
+  return tRet;
+}
 unsigned char SemiduplexSerial::ubtButtonIdProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
   unsigned char tRet=0;
   unsigned char tCnt = 0;

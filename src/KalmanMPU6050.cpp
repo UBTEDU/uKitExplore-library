@@ -248,7 +248,10 @@ double IMU::getRawAccelX()
 {
   return accelX/32768.00*2*9.7913;
 }
-
+double IMU::getAccelX()
+{
+  return (double)accelX/16384*2*9.8;
+}
 double IMU::getRawAccelY()
 {
   return accelY/32768.00*2*9.7913;
@@ -258,7 +261,10 @@ double IMU::getRawAccelZ()
 {
   return accelZ/32768.00*2*9.7913;
 }
-
+double IMU::getAccelZ()
+{
+  return (double)accelZ/16384*2*9.8;
+}
 double IMU::getRawGyroX()
 {
   return gyroX/32768.00*250;
@@ -272,6 +278,16 @@ double IMU::getRawGyroY()
 double IMU::getRawGyroZ()
 {
   return gyroZ/32768.00*250;
+}
+
+double IMU::getGyroY()
+{
+  return (double)gyroY*0.007629394;
+}
+
+double IMU::getGyroZ()
+{
+  return(double) gyroZ*0.007629394;
 }
 
 double IMU::getRoll()

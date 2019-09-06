@@ -22,7 +22,7 @@ uKitMotor uKitMotor;
 uKitServo uKitServo;
 uKitSensor uKitSensor;
 uKitId uKitId;
-Gyroscope gyro;
+//Gyroscope gyro;
 
 
 //Gyroscope_API

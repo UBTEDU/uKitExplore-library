@@ -17,10 +17,10 @@
 #include "KalmanMPU6050.h"
 const char* versionNumber="v1.2.0";
 
-unsigned char lengthBuf[]={0};
 
+bool flexiTimerFlag=true;
 boolean butonTimer=true;
-uint8_t incomingByte = 0;          // 接收到的 data byte
+
 String inputString = "";         // 用来储存接收到的内容
 const char* snCode="";
 boolean newLineReceived = false; // 前一次数据结束标志
@@ -186,7 +186,7 @@ void flexiTimer2_func() {
   
 }
  void Initialization(){
- 
+  protocolRunState=true;
   Sensor.checkVersion();
   delay(5);
   button1.ClickButtons(Button_pin, HIGH, CLICKBTN_PULLUP);
@@ -213,7 +213,7 @@ void flexiTimer2_func() {
   StopServo();
   setUltrasonicRgbledOff(0x00);
   Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
-  delay(2); 
+  delay(2);  
   Serial.write("AT+URATE=1000000");
   Serial.write(0x0D);
   Serial.write(0x0A);
@@ -225,6 +225,7 @@ void flexiTimer2_func() {
   }
   Serial.begin(1000000);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
   delay(2);
+  flexiTimerFlag=true;
   const size_t capacity = JSON_ARRAY_SIZE(3) + JSON_OBJECT_SIZE(1);
   DynamicJsonDocument doc(capacity);
   JsonArray data = doc.createNestedArray("data");
@@ -237,7 +238,9 @@ void flexiTimer2_func() {
   Serial.write(Buffer,2); 
   serializeMsgPack(doc, Serial);
   FlexiTimer2::set(20,flexiTimer2_func);
+  
   FlexiTimer2::start();
+  
   //getDeciveId();
   for(int i=0;i<600;i++){
   serialEvent();
@@ -419,7 +422,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            root["code"]=0; 
            break;    
         case 129://按压
-           data.add(readButtonValue(id));
+           data.add(uKitSensor.readButtonState(id));
            root["code"]=0; 
            break;
         case 130: //亮度  
@@ -681,10 +684,10 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
 void serialEvent(){
 
   static int readFlag=0;
-  static unsigned char g=0;
   static uint16_t dataLength=0;
   static uint16_t times=0;
-  
+  static unsigned char lengthBuf[2]={0};
+  if(protocolRunState){
   if (Serial.available() && readFlag==0) { 
      
     if(readFlag==0){
@@ -696,17 +699,18 @@ void serialEvent(){
   }
   while(Serial.available()){   
     times++;
-    incomingByte=Serial.read(); 
-    inputString += (char) incomingByte;     // 全双工串口可以不用在下面加延时，半双工则要加的//  
+    char incomingByte=(char)Serial.read(); 
+    inputString += incomingByte;     // 全双工串口可以不用在下面加延时，半双工则要加的//  
     if (dataLength==times) {    
       newLineReceived = true;
       readFlag=0;
-      g=0;
       times=0;
       dataLength=0;
+      break;
 
     }
     
+  }
   }
  
    
@@ -714,6 +718,11 @@ void serialEvent(){
 void protocol(){  
   
     if (newLineReceived) { 
+    if(flexiTimerFlag==false){
+      FlexiTimer2::start();
+      flexiTimerFlag=true;
+    }
+    
     const size_t capacity =JSON_ARRAY_SIZE(3) + JSON_ARRAY_SIZE(64) + JSON_OBJECT_SIZE(6) + 230; 
     DynamicJsonDocument root(capacity);  
     deserializeMsgPack(root,inputString);     
@@ -820,7 +829,11 @@ void protocol(){
     protocolRunState=true;   
     
   }
-  if(timeTimes>=5){
+  else if(protocolRunState==false){
+    FlexiTimer2::stop();
+    flexiTimerFlag=false;
+  }
+  if(timeTimes>=200){
     protocolRunState=false;
     //FlexiTimer2::stop();
     timeFlag=1;

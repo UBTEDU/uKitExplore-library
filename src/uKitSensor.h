@@ -36,6 +36,7 @@ public:
     void setColorOff(char id);
     signed char readHumitureValue(char id, char choice);
     unsigned char readButtonValue(char id);//返回0无操作，返回1是单击，返回2是双击
+    unsigned char readButtonState(char id);//返回0无操作，返回1是单击，返回2是双击
     unsigned long getButtonVersion(char id);
     unsigned long getSensorVersion(char id,unsigned char sensor);
     unsigned char setButtonUpdate(char id);

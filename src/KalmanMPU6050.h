@@ -51,6 +51,7 @@ public:
    * @returns The accelerometer raw X reading
    */
   static double getRawAccelX();
+  static double getAccelX();
 
   /**
    * Gets the accelerometer raw Y reading, as per last read() call.
@@ -58,6 +59,7 @@ public:
    * @returns The accelerometer raw Y reading
    */
   static double getRawAccelY();
+  static double getAccelY();
 
   /**
    * Gets the accelerometer raw Z reading, as per last read() call.
@@ -65,6 +67,7 @@ public:
    * @returns The accelerometer raw Z reading
    */
   static double getRawAccelZ();
+  static double getAccelZ();
 
   /**
    * Gets the gyroscope raw X reading, as per last read() call.
@@ -72,6 +75,8 @@ public:
    * @returns The gyroscope raw X reading.
    */
   static double getRawGyroX();
+  static double getGyroX();
+  
 
   /**
    * Gets the gyroscope raw Y reading, as per last read() call.
@@ -79,13 +84,14 @@ public:
    * @returns The gyroscope raw Y reading.
    */
   static double getRawGyroY();
-
+  static double getGyroY();
   /**
    * Gets the gyroscope raw Z reading, as per last read() call.
    * 
    * @returns The gyroscope raw Z reading.
    */
   static double getRawGyroZ();
+  static double getGyroZ();
 
   /**
    * Gets the roll (X rotation) in degress from the Kalman Filter.
