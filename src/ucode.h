@@ -15,7 +15,7 @@
 #include "ClickButton.h"
 #include"uKitId.h"
 #include "KalmanMPU6050.h"
-const char* versionNumber="v1.2.0";
+const char* versionNumber="v1.2.1";
 
 
 bool flexiTimerFlag=true;
