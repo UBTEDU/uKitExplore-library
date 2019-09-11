@@ -214,10 +214,6 @@ void flexiTimer2_func() {
   StopServo();
   setUltrasonicRgbledOff(0x00);
   Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
-  delay(2);  
-  Serial.write("AT+URATE=1000000");
-  Serial.write(0x0D);
-  Serial.write(0x0A);
   delay(2);
   if(EEPROM.read(0)!=48){
     for(int i=0;i<21;i++){
