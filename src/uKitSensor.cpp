@@ -543,11 +543,7 @@ void uKitSensor::setEyelightPetalu(char id,unsigned char petalsnum,int* petals){
   if(tRet==id+0xec){
     ubtEyelightProtocol(0xf4,0x06,0x02,tData2); 
     tRet=ubtEyelightProtocol(0xf4,0x28,0x0b,tData);
- }
-
- 
-  
-  
+ }  
   
 }
 void uKitSensor::setEyelightPetalus(char id,int petal1,int petal2,int petal3,int petal4,int petal5,int petal6,int petal7,int petal8,int times){

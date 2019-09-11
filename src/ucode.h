@@ -19,11 +19,11 @@ const char* versionNumber="v1.2.1";
 
 
 bool flexiTimerFlag=true;
-boolean butonTimer=true;
+bool butonTimer=true;
 
 String inputString = "";         // 用来储存接收到的内容
 const char* snCode="";
-boolean newLineReceived = false; // 前一次数据结束标志
+bool newLineReceived = false; // 前一次数据结束标志
 
 char deciveSN[20]={0};
 
@@ -181,6 +181,7 @@ void flexiTimer2_func() {
       buttonFlag=-1;   
     }    
     }
+    
   }
  
   
@@ -223,7 +224,7 @@ void flexiTimer2_func() {
       EEPROM.write(i,0);
     }
   }
-  Serial.begin(1000000);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
+  //Serial.begin(1000000);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
   delay(2);
   flexiTimerFlag=true;
   const size_t capacity = JSON_ARRAY_SIZE(3) + JSON_OBJECT_SIZE(1);
@@ -562,12 +563,13 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
       }                            
       break;
      case 10: //板载按键    
-        delay(30); 
-        if(mode==127){                
+        
+        if(mode==127){               
           data.add(buttonFlag); 
           buttonFlag=0; 
           root["code"]=0;                            
-        }                                 
+        } 
+                                 
         break;
      case 11:    //ID相关    
       switch(mode){
@@ -705,7 +707,7 @@ void serialEvent(){
       newLineReceived = true;
       readFlag=0;
       times=0;
-      dataLength=0;
+      dataLength=0; 
       break;
 
     }
@@ -731,71 +733,56 @@ void protocol(){
     unsigned char device = root["device"];
     unsigned char mode = root["mode"];
     unsigned char id = root["id"];  
-    const char* dataLen = root["data"];
-    for(int i=0;i<sizeof(dataLen)/sizeof(dataLen[0]);i++){
-       buf[i]  = root["data"][i];  
+    JsonArray data = root["data"];
+    for(int i=0;i<data.size();i++){
+       buf[i]  = data[i];  
     }
     const char* uuid = root["uuid"];
-    const char* idsLen = root["ids"];
+    JsonArray qualId = root["ids"];
+    
     
     switch(device){   
       case 1:  
           if(mode==131 ||mode==132){  
-            for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
-              par1[i]  = root["ids"][i];  
+            for(int i=0;i<qualId.size();i++){
+              ids[i]  = qualId[i];  
+              par1[i]  = root["par1"][i];
+              par2[i]  = root["par2"][i]; 
             }
-            for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
-              par1[i]  = root["par1"][i];  
-            }
-            for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
-              par2[i]  = root["par2"][i];  
-            }   
           }   
         break;
       case 2:
           if(mode==131 ||mode==132){
-            for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
-              par1[i]  = root["ids"][i];  
-            }
-            for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
-              par1[i]  = root["par1"][i];  
+            for(int i=0;i<qualId.size();i++){
+              ids[i]  = qualId[i]; 
+              par1[i]  = root["par1"][i];
             }
           }
         break;      
       case 3: 
         if(mode>=132 &&mode<=139){  
-          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
-            par1[i]  = root["ids"][i];  
-          }
-          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
-            par1[i]  = root["par1"][i];  
-          }
-          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+          for(int i=0;i<qualId.size();i++){
+            ids[i]  = qualId[i];
+            par1[i]  = root["par1"][i];
             par2[i]  = root["par2"][i];  
           }
           if(mode==134|| mode==135 ||mode==138 || mode==137){
-          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+          for(int i=0;i<qualId.size();i++){
             par3[i]  = root["par3"][i];  
           } 
           }
           if(mode==135 ||mode==138 || mode==137){
-          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+          for(int i=0;i<qualId.size();i++){
             par4[i]  = root["par4"][i]; 
-          }
-          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
             par5[i]  = root["par5"][i]; 
           }
           }
           if( mode==137){
-          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
-            par6[i]  = root["par6"][i];  
-          } 
-          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
+          for(int i=0;i<qualId.size();i++){
+            par6[i]  = root["par6"][i]; 
             par7[i]  = root["par7"][i]; 
-          }
-          for(int i=0;i<sizeof(idsLen)/sizeof(idsLen[0]);i++){
-            par8[i]  = root["par8"][i]; 
-          }
+            par8[i]  = root["par8"][i];  
+          } 
           eyeTime=root["time"];
           }
         }        
@@ -832,6 +819,7 @@ void protocol(){
   else if(protocolRunState==false){
     FlexiTimer2::stop();
     flexiTimerFlag=false;
+    
   }
   if(timeTimes>=200){
     protocolRunState=false;
