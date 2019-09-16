@@ -205,7 +205,7 @@ void flexiTimer2_func() {
   pinMode(GrayscaleNum5, INPUT);  //右1的循迹传感器
   pinMode(IR_S,OUTPUT);
   pinMode(buzzer_pin,OUTPUT);
-  
+ 
   delay(5);  //开机延时
   IMU::init();
   IMU::read();
@@ -235,11 +235,9 @@ void flexiTimer2_func() {
   Serial.write(Buffer,2); 
   serializeMsgPack(doc, Serial);
   FlexiTimer2::set(20,flexiTimer2_func);
-  
-  FlexiTimer2::start();
-  
-  //getDeciveId();
-  for(int i=0;i<600;i++){
+  FlexiTimer2::start(); 
+ //getDeciveId();
+  for(int i=0;i<1000;i++){
   serialEvent();
   protocol();
   delayMicroseconds(300);
@@ -817,7 +815,7 @@ void protocol(){
     flexiTimerFlag=false;
     
   }
-  if(timeTimes>=200){
+  if(timeTimes>=5){
     protocolRunState=false;
     //FlexiTimer2::stop();
     timeFlag=1;

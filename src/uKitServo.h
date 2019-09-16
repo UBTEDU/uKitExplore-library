@@ -9,8 +9,8 @@ class uKitServo : public uKitId
 {
 public:
 
-  void setServoTurn(unsigned char id,int dir, int speed);//舵机轮模式控制，id是舵机号，dir是方向（1顺时针，0逆时针），speed是速度（0-5）
-  void setServoTurns(unsigned char *id,int *dir, int *speed);//舵机轮模式控制，id是舵机号，dir是方向（1顺时针，0逆时针），speed是速度（0-5）
+  void setServoTurn(unsigned char id,int dir, int speed);//舵机轮模式控制，id是舵机号，dir是方向（0顺时针，1逆时针），speed是速度（0-255）
+  void setServoTurns(unsigned char *id,int *dir, int *speed);//舵机轮模式控制，id是舵机号，dir是方向（0顺时针，1逆时针），speed是速度（0-255）
   void setServoStiffness(unsigned char id,unsigned char stiffness);
   void setServoAngle(unsigned char id,int angle, int times);//舵机舵机模式，id是舵机号，angle是角度（-118°~118°），times是运行时间（300-5000）
   void setServoAngles(unsigned char *id, int *angle,int times);
