@@ -3,7 +3,8 @@
 
 
 unsigned char uKitMotor::setMotorTurn(uint8_t id, uint16_t pwmDuty){
-  //clearMotorInf(id);
+  clearMotorInf(id);
+  delay(2);
   unsigned char tRet = 0;
   unsigned char buf[7]={0};
   uint16_t speeds=0;

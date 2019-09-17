@@ -178,7 +178,18 @@ unsigned char uKitId::setMotorId(uint8_t id_old, uint8_t id_new){
   delay(2);
   return tRet;
 }
-
+void uKitId::motorclear(unsigned char id){
+  unsigned char buf[7]={0};  
+  buf[0] = id;
+  buf[1] = 0x00;
+  buf[2] = 0x0F;
+  buf[3] = 0x00;
+  buf[4] = 0x01;
+  buf[5] = 0x00;
+  buf[6] = 0x80;
+  ubtMotorActionProtocol(0x0C,0x06,buf);
+ 
+}
 unsigned char uKitId::getMotorId(){
   unsigned char tRet = 0;
   unsigned char buf[5];
@@ -189,8 +200,10 @@ unsigned char uKitId::getMotorId(){
     buf[2] = 0x09;
     buf[3] = 0x00;
     buf[4] = 0x05; 
+    motorclear(testid);
+    delay(2);
     tRet=ubtMotorIdProtocol(0x0A,0x05,buf);
-    delay(5);
+    delay(2);
     if(tRet==testid){
       return tRet;
     }
@@ -207,8 +220,10 @@ unsigned char uKitId::getMotorId(char id){
   buf[2] = 0x09;
   buf[3] = 0x00;
   buf[4] = 0x05; 
+  motorclear(id);
+  delay(2);
   tRet=ubtMotorIdProtocol(0x0A,0x05,buf);
-  delay(3);
+  delay(2);
   return tRet;
 }
 unsigned char uKitId::setInfraredId(char oldid,char newid){

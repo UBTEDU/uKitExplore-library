@@ -12,7 +12,7 @@ public:
     unsigned char setLightId(char oldid,char newid);
     unsigned char getLightId();
     unsigned char getLightId(char id);
-    
+    void motorclear(unsigned char id);
     unsigned char setSoundId(char oldid,char newid);
     unsigned char getSoundId();
     unsigned char getSoundId(char id);

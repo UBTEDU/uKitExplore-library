@@ -1654,10 +1654,7 @@ unsigned char SemiduplexSerial::ubtMotorIdProtocol(unsigned char len,unsigned ch
   buf[3] = CMD;//命令号
   memcpy((void *)&buf[4],(void *)Data,len-4);
   buf[len-1] = crc8_itu(&buf[1], buf[2]+2);
-  
-    
-Retry_Servo:
-  
+   
   temp = (Usart3_Rx_Ack_Len+5) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
   Serial3.begin(115200);  //uart3
   Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
@@ -1676,7 +1673,7 @@ Retry_Servo:
     tRet =Serial3.readBytes(Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
     Serial3.end();  //关闭串口3,否则会影响接收消息
   } 
-//   for(int i=0;i<Usart3_Rx_Ack_Len+len;i++){
+//   for(int i=len;i<Usart3_Rx_Ack_Len+len;i++){
 //    Serial.print(Usart3_Rx_Buf[i],HEX);
 //    Serial.print(",");
 //   }
@@ -1685,15 +1682,16 @@ Retry_Servo:
 //   Serial.println(Usart3_Rx_Buf[len+16],HEX);
 
    
-   if(Usart3_Rx_Buf[len]==0xAC  && Usart3_Rx_Buf[len+1]==0x03 && Usart3_Rx_Buf[len+2]==0x0D && Usart3_Rx_Buf[len+3]==0x05 && Usart3_Rx_Buf[len+5]==0 && Usart3_Rx_Buf[len+16]==crc8_itu(&Usart3_Rx_Buf[len+1], Usart3_Rx_Buf[len+2]+2)){
+   if(Usart3_Rx_Buf[len]==0xAC  && Usart3_Rx_Buf[len+1]==0x03 && Usart3_Rx_Buf[len+2]==0x0b && Usart3_Rx_Buf[len+3]==0x05 && (Usart3_Rx_Buf[len+5]==0 || Usart3_Rx_Buf[len+5]==0x80) && Usart3_Rx_Buf[len+16]==crc8_itu(&Usart3_Rx_Buf[len+1], Usart3_Rx_Buf[len+2]+2)){
     tRet=Usart3_Rx_Buf[len+4];    
     } 
-   else if(Usart3_Rx_Buf[len]==0xAC && Usart3_Rx_Buf[len+2]==0x0b && Usart3_Rx_Buf[len+1]==0x03 && Usart3_Rx_Buf[len+3]==0x05 && Usart3_Rx_Buf[len+5]==0  ){
+   else if(Usart3_Rx_Buf[len]==0xAC && Usart3_Rx_Buf[len+1]==0x03&&  Usart3_Rx_Buf[len+2]==0x0b  && Usart3_Rx_Buf[len+3]==0x05 && (Usart3_Rx_Buf[len+5]==0 || Usart3_Rx_Buf[len+5]==0x80) ){
     tRet=Usart3_Rx_Buf[len+4];    
     }     
 
-   else if((Usart3_Rx_Buf[len]!=0xAC && Usart3_Rx_Buf[len]!=0) ||(Usart3_Rx_Buf[len+1]!=3 && Usart3_Rx_Buf[len+1]!=0)|| Usart3_Rx_Buf[len+5]!=0 || ( Usart3_Rx_Buf[len+16]!=crc8_itu(&Usart3_Rx_Buf[len+1], Usart3_Rx_Buf[len+2]+2) &&Usart3_Rx_Buf[len+16]!=0 )){//重复ID
+   else if((Usart3_Rx_Buf[len]!=0xAC && Usart3_Rx_Buf[len]!=0) ||(Usart3_Rx_Buf[len+1]!=0x03 && Usart3_Rx_Buf[len+1]!=0) ||(Usart3_Rx_Buf[len+2]!=0x0b && Usart3_Rx_Buf[len+2]!=0) || (Usart3_Rx_Buf[len+5]!=0 &&Usart3_Rx_Buf[len+5]!=0x80)){//重复ID
       tRet=Data[0]+0xec;
+     
     
     }
    else if(Usart3_Rx_Buf[len]==0  && Usart3_Rx_Buf[len+1]==0 && Usart3_Rx_Buf[len+2]==0 && Usart3_Rx_Buf[len+3]==0 && Usart3_Rx_Buf[len+4]==0 && Usart3_Rx_Buf[len+16]==0){
@@ -1702,6 +1700,8 @@ Retry_Servo:
    }
    else{
     tRet=Data[0]+0xec;
+    
+    
    }
     
     

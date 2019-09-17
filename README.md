@@ -1,4 +1,4 @@
-# uKit Explore Library v1.2.0
+# uKit Explore Library v1.2.2
 
 ```
 git clone git@github.com:UBTEDU/uKit-Explore-library.git
