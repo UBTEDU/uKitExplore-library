@@ -19,12 +19,14 @@ git clone git@github.com:UBTEDU/uKit-Explore-library.git
 ### Links
 - [Arduino IDE](https://www.arduino.cc/en/Main/Software)
 - [Drive](http://www.wch.cn/downfile/65)
-- [Instructions](http://10.10.1.245/uKit-explore/Course/blob/master/uKit_Explore_Course_CN.pdf)  
+- [Instructions](https://easydoc.xyz/?#/s/44498285)  
 
 ### Update
 
 #### V1.2.2更新说明：
 1. 修复离线模式初始化程序不执行问题
+2. 修复ucode库离线模式中断不能用BUG
+3. 修复电机pwm堵转导致ID获取重复BUG
 
 #### V1.2.1更新说明：
 1. 修复离线模式读取乱码丢码问题
