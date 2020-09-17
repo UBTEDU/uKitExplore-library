@@ -14,10 +14,11 @@ git clone git@github.com:UBTEDU/uKit-Explore-library.git
 ### How to use:
 
 1. Download the source from the github 
-![download zip](https://github.com/UBTEDU/uKitExplore-library/tree/master/img/add_library.png)
+![image](https://github.com/UBTEDU/uKitExplore-library/blob/master/img/add_library.png)
 
 2. Importing a .zip Library. In the Arduino IDE, navigate to Sketch > Include Library > Add .ZIP Library. At the top of the drop down list, select the option to "Add .ZIP Library''.
-![Add zip](https://github.com/UBTEDU/uKitExplore-library/tree/master/img/downloadzip.png)
+![image](https://github.com/UBTEDU/uKitExplore-library/blob/master/img/downloadzip.png)
+
 3. Open the Arduino Application. (If it's already open, you will need to restart it to see changes.)
 
 4. Click "File-> Examples". Here are some test programs in "uKit Explore->"
