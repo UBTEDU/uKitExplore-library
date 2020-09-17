@@ -1,5 +1,5 @@
-#ifndef UKTEXPLORE_h
-#define UKTEXPLORE_h
+#ifndef UCODE_H
+#define UCODE_H
 
 #include <Arduino.h>
 
@@ -15,13 +15,17 @@
 #include "ClickButton.h"
 #include"uKitId.h"
 #include "KalmanMPU6050.h"
-const char* versionNumber="v1.2.1";
-
+#include "VisionDiscrim.h"
+const char* versionNumber="v1.2.11";
 
 bool flexiTimerFlag=true;
 bool butonTimer=true;
 
 String inputString = "";         // 用来储存接收到的内容
+String strLoopCmd = "";          /*Loop data*/
+bool blLoopFlag = false;         /*Judge whether to implement Loop data*/
+uint8_t uiOnlineCheck = 0;
+int iWIfiListSize = -1;
 const char* snCode="";
 bool newLineReceived = false; // 前一次数据结束标志
 
@@ -30,17 +34,18 @@ char deciveSN[20]={0};
 
 
 bool protocolRunState=true;
+bool bWifiRun=false;
 int timeTimes=0,timeFlag=0,buttonFlag=0;
 OnBoardHW Sensor;
-TransforRobot TransforRobot;
+TransforRobot transfor_robot;
 uKitMotor uKitMotor;
 uKitServo uKitServo;
 uKitSensor uKitSensor;
 uKitId uKitId;
+VisionDiscrim mVisionDiscrim;
 
 
-
-
+#define SERIAL_READ_TIMEOUT 10  /*time out ms*/
 //uKitServo_API
 
 #define setServoTurn(id,dir,speed) uKitServo.setServoTurn(id,dir,speed)//舵机轮模式控制，id是舵机号，dir是方向（1顺时针，0逆时针），speed是速度（0-5）
@@ -93,33 +98,34 @@ uKitId uKitId;
 #define setDeciveId() uKitId.setDeciveId()
 #define getDeciveId() uKitId.getDeciveId()
 #define getCpuUUID() uKitId.getCpuUUID()
-//TransforRobot_API
-#define forward(a) TransforRobot.forward(a)//小车前进函数，速度0-5
-#define turnL(speed) TransforRobot.turnL(speed)//小车左转，速度0-5
-#define turnR(speed) TransforRobot.turnR(speed)//小车右转，速度0-5
-#define back(speed) TransforRobot.back(speed)//小车后退函数，速度0-5
-#define stops() TransforRobot.stops()//小车停止函数
-#define turn_L(speed) TransforRobot.turn_L(speed)
-#define turn_R(speed) TransforRobot.turn_R(speed)
-#define turn_U(speed) TransforRobot.turn_U(speed)
-#define one_step(speed,time) TransforRobot.one_step(speed,time)
-#define motion_case(cases,times) TransforRobot.motion_case(cases,times)
-#define motion_forward(times) TransforRobot.motion_forward(times)//人形模式前进
-#define motion_car(times) TransforRobot.motion_car(times)//保持车形态
-#define motion_getup(times) TransforRobot.motion_getup(times)//车变人
-#define motion_sitdown(times) TransforRobot.motion_sitdown(times)//人变车
-#define motion_back(times) TransforRobot.motion_back(times)//人形模式后退
-#define motion_left_shift(times) TransforRobot.motion_left_shift(times)//人形模式左移
-#define motion_right_shift(times) TransforRobot.motion_right_shift(times)//人形模式右移
-#define motion_turn_left(times) TransforRobot.motion_turn_left(times)//人形模式左拐
-#define motion_turn_right(times) TransforRobot.motion_turn_right(times)//人形模式右拐
-#define motion_omotion(times) TransforRobot.motion_omotion(times)//保持人形态
-#define motion_button(times) TransforRobot.motion_button(times)//人形按键
-#define motion_lift(times) TransforRobot.motion_lift(times)//让机器人举起右手. times表示执行动作的次数。一次为一步动作。
-#define motion_lift_hand(times) TransforRobot.motion_lift_hand(times)//让机器人举起双手. times表示执行动作的次数。一次为一步动作。
-#define motion_head(times) TransforRobot.motion_head(times)//拆引爆雷
-#define motion_zero(times) TransforRobot.motion_zero(times)//零状态
-    
+//#define getVisionId() uKitId.getVisionId()
+//TransformerRobot_API
+#define Transformer_Car_Forward(a) transfor_robot.forward(a)     //小车前进函数，速度0-5
+#define Transformer_Car_TurnLeft(speed) transfor_robot.turnL(speed) //小车左转，速度0-5
+#define Transformer_Car_TurnRight(speed) transfor_robot.turnR(speed) //小车右转，速度0-5
+#define Transformer_Car_Back(speed) transfor_robot.back(speed)   //小车后退函数，速度0-5
+#define Transformer_Car_Stop() transfor_robot.stops()           //小车停止函数
+#define Transformer_Car_LineTracking_TurnLeft(speed) transfor_robot.turn_L(speed)
+#define Transformer_Car_LineTracking_TurnRight(speed) transfor_robot.turn_R(speed)
+#define Transformer_Car_LineTracking_TurnAround(speed) transfor_robot.turn_U(speed)
+#define Transformer_Car_ForwardWithTime(speed, time) transfor_robot.one_step(speed, time)
+#define motion_case(cases, times) transfor_robot.motion_case(cases, times)
+#define motion_forward(times) transfor_robot.motion_forward(times)         //人形模式前进
+#define motion_car(times) transfor_robot.motion_car(times)                 //保持车形态
+#define motion_getup(times) transfor_robot.motion_getup(times)             //车变人
+#define motion_sitdown(times) transfor_robot.motion_sitdown(times)         //人变车
+#define motion_back(times) transfor_robot.motion_back(times)               //人形模式后退
+#define motion_left_shift(times) transfor_robot.motion_left_shift(times)   //人形模式左移
+#define motion_right_shift(times) transfor_robot.motion_right_shift(times) //人形模式右移
+#define motion_turn_left(times) transfor_robot.motion_turn_left(times)     //人形模式左拐
+#define motion_turn_right(times) transfor_robot.motion_turn_right(times)   //人形模式右拐
+#define motion_omotion(times) transfor_robot.motion_omotion(times)         //保持人形态
+#define motion_button(times) transfor_robot.motion_button(times)           //人形按键
+#define motion_lift(times) transfor_robot.motion_lift(times)               //让机器人举起右手. times表示执行动作的次数。一次为一步动作。
+#define motion_lift_hand(times) transfor_robot.motion_lift_hand(times)     //让机器人举起双手. times表示执行动作的次数。一次为一步动作。
+#define motion_head(times) transfor_robot.motion_head(times)               //拆引爆雷
+#define motion_zero(times) transfor_robot.motion_zero(times)               //零状态
+
 //Sensor2_API
 #define num1 Sensor.num1
 #define num2 Sensor.num2
@@ -144,10 +150,15 @@ uKitId uKitId;
 #define IR_S Sensor.IR_S
 #define buzzer_pin Sensor.buzzer_pin
 
+/*vision module*/
+#define VisionIdentity(iId, iType, iTimeOut) mVisionDiscrim.VisionIdentity(iId, iType, iTimeOut)
+#define VisionEnable(iVal,iType) mVisionDiscrim.VisionEnable(iVal,iType)
+#define VisionOffset(iId) mVisionDiscrim.VisionOffset(iId)
+
 void protocol();
 void serialEvent();
-
-
+void protocolTest();
+void BuildReqBacket(uint8_t uDev, uint8_t uMode, uint8_t uId, const char * ptrUuid, String & strData);
 //ClickButton_API
 ClickButton button1(Button_pin, HIGH, CLICKBTN_PULLUP);//设置按键
 
@@ -184,7 +195,6 @@ void flexiTimer2_func() {
     
   }
  
-  
 }
  void Initialization(){
   protocolRunState=true;
@@ -205,7 +215,7 @@ void flexiTimer2_func() {
   pinMode(GrayscaleNum5, INPUT);  //右1的循迹传感器
   pinMode(IR_S,OUTPUT);
   pinMode(buzzer_pin,OUTPUT);
- 
+
   delay(5);  //开机延时
   IMU::init();
   IMU::read();
@@ -214,8 +224,9 @@ void flexiTimer2_func() {
   StopServo();
   setUltrasonicRgbledOff(0x00);
   Serial.begin(115200);//EN:Initialize the serial port (baud rate 115200)/CN:初始化串口（波特率115200）
+  //Serial.begin(9600);
   delay(2);
-  if(EEPROM.read(0)!=48){
+  if(EEPROM.read(3)!=77){
     for(int i=0;i<21;i++){
       EEPROM.write(i,0);
     }
@@ -232,19 +243,21 @@ void flexiTimer2_func() {
   byte Buffer[2]={0};
   Buffer[0]=(bufferLength>>8)&0xff;
   Buffer[1]=(bufferLength)&0xff;
-  Serial.write(Buffer,2); 
+  Serial.write(Buffer,2);
   serializeMsgPack(doc, Serial);
   FlexiTimer2::set(20,flexiTimer2_func);
   FlexiTimer2::start(); 
  //getDeciveId();
-  for(int i=0;i<1000;i++){
+  for(int i=0;i<7000;i++){
   serialEvent();
   protocol();
   delayMicroseconds(300);
   }
- 
   
   
+  
+
+
 }
 
 void tone2(uint16_t frequency, unsigned long duration = 0)
@@ -259,8 +272,18 @@ void noTone2(int pin)
 
 
 void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int* buf,const char* uuid,unsigned char* bin64,unsigned char *ids,int* par1,int* par2,int* par3,int* par4,int* par5,int* par6,int* par7,int* par8,int eyeTime){
-  const size_t capacity = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(8)+100;
+  size_t capacity = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(8)+100;
   unsigned char* rgbValue=NULL;
+  int ret;
+  VisionWifiStatus mVisionWifiStatus = {0};
+  VisionIpInfo mVisionIpInfo = {0};
+  VisionWifiList mVisionWifiList = {0};
+  VisionWifiInfo mVisionWifiInfo = {0};
+  DisplayQuality strDisplayQuality = {0};
+  VisionHWInfo strVisionHWInfo = {0};
+  VisionSWInfo strVisionSWInfo = {0};
+  JsonObject JsDataItem;
+  uint8_t uiBuf[20];
   DynamicJsonDocument root(capacity);
   root["device"]=device;
   root["mode"]=mode;
@@ -268,6 +291,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
   root["code"]=1;
   JsonArray data = root.createNestedArray("data");
   root["uuid"]=uuid;
+ 
   switch(device){
     case 1: //舵机
       butonTimer=false;
@@ -288,7 +312,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            }
            else{
             data.add(readServoAngleNPD(id));
-           }  
+           }
            break;
         case 130: //停止舵机       
            setServoStop(id);
@@ -417,7 +441,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            root["code"]=0; 
            break;    
         case 129://按压
-           data.add(uKitSensor.readButtonState(id));
+           data.add(readButtonValue(id));
            root["code"]=0; 
            break;
         case 130: //亮度  
@@ -540,7 +564,7 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
         root["code"]=0;                
       }                                  
       break;  
-     case 9: //陀螺仪  
+    case 9: //陀螺仪  
       butonTimer=false;     
       buttonFlag=0;   
       if(mode==127){  
@@ -556,31 +580,32 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
         root["code"]=0;           
       }                            
       break;
-     case 10: //板载按键    
-        
-        if(mode==127){               
-          data.add(buttonFlag); 
-          buttonFlag=0; 
-          root["code"]=0;                            
-        } 
-                                 
-        break;
-     case 11:    //ID相关    
+    case 10: //板载按键    
+      
+      if(mode==127){               
+        data.add(buttonFlag); 
+        buttonFlag=0; 
+        root["code"]=0;                            
+      } 
+                                
+      break;
+    case 11:    //ID相关    
       switch(mode){
-      case 130: //停止设备
-           root["code"]=0; 
-           stopDecives();
-           break;          
+        case 130: //停止设备
+          root["code"]=0; 
+          stopDecives();
+          break;          
         case 127: //修改ID               
-           uKitId.setAllDeciveId(buf[0],buf[1],buf[2]);
-           delay(220);                
-           if(buf[2]==uKitId.getAllDeciveId(buf[0],buf[2])){
+          uKitId.setAllDeciveId(buf[0],buf[1],buf[2]);
+          delay(220);                
+          if(buf[2]==uKitId.getAllDeciveId(buf[0],buf[2])){
             root["code"]=0;
-           }
-           else{
+          }
+          else{
             root["code"]=1;
-           }
-           break;
+          }
+          break;
+        #if 0
         case 128: //获取ID   
           switch(buf[0]){
             case 0:
@@ -596,133 +621,313 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
               uKitId.getEyeLightIdJs(uuid);
               break;              
           }
-           root["code"]=0;         
-           break;    
-      case 129: //检测固件  
-           root["code"]=0;  
-           strcpy(deciveSN,uKitId.read_String(0).c_str());
-           data.add(0);   
-           data.add(versionNumber);
-           data.add(Sensor.Version);       
-           data.add(deciveSN);
-          
+          root["code"]=0;         
+          break;
+        #endif   
+        case 129: //检测固件  
+          root["code"]=0;  
+          strcpy(deciveSN,uKitId.read_String(0).c_str());
+          data.add(0);   
+          data.add(versionNumber);
+          data.add(Sensor.Version);       
+          data.add(deciveSN);
           break;   
-      case 131: //获取版本号
-        if(uKitSensor.getSensorVersion(id,buf[0])==170){
-          root["code"]=0; 
-        }            
-        break;           
-     case 132: //进入升级
-        if(uKitSensor.setSensorUpdate(id,buf[0])==170){
-          root["code"]=0; 
-         
-        }    
-        break;    
-     case 133: //正在升级
-        if(uKitSensor.setSensorUpdating(id,buf[1],buf[2],bin64,buf[0])==170){
-           setRgbledColor(255,0,0);
-           delay(10);
-           setRgbledColor(0,0,0);
-           root["code"]=0; 
-        }  
-        
-       
-        break;        
-     case 134: //结束升级
-        if(uKitSensor.setSensorUpdated(id,buf[1],buf[0])==170){
-          root["code"]=0; 
-        }
-        break;     
-     case 135: //烧录SN  
+        case 131: //获取版本号
+          if(uKitSensor.getSensorVersion(id,buf[0])==170){
+            root["code"]=0; 
+          }            
+          break;           
+        case 132: //进入升级
+          if(uKitSensor.setSensorUpdate(id,buf[0])==170){
+            root["code"]=0; 
+          }    
+          break;    
+        case 133: //正在升级
+          if(uKitSensor.setSensorUpdating(id,buf[1],buf[2],bin64,buf[0])==170){
+            setRgbledColor(255,0,0);
+            delay(10);
+            setRgbledColor(0,0,0);
+            root["code"]=0; 
+          }  
+          break;        
+        case 134: //结束升级
+          if(uKitSensor.setSensorUpdated(id,buf[1],buf[0])==170){
+            root["code"]=0; 
+          }
+          break;     
+        case 135: //烧录SN  
           uKitId.writeString(0, snCode);  
           delay(5);
           //strcpy(deciveSN,uKitId.read_String(0).c_str());
-          if(uKitId.read_String(0).c_str()!=0x00){
+          if(uKitId.read_String(0)==snCode){
             root["code"]=0;     
             setRgbledColor(255,0,0);
-            tone2(800,100);
+            tone2(800,200);
+            delay(200);
             noNewTone(buzzer_pin);
             setRgbledColor(0,0,0);
-           
           }
           else{
             root["code"]=1; 
           }      
-        break;    
-     case 136: //读取sn    
+          break;    
+        case 136: //烧录SN   
+          strcpy(deciveSN,uKitId.read_String(0).c_str());
+          root["sn"]=deciveSN;
+          break;          
+        case 137: //读取sn 
+          tone2(800,200);  
+          delay(200); 
           strcpy(deciveSN,uKitId.read_String(0).c_str());
           root["sn"]=deciveSN;
           break;      
-               
+                
       }
-      break;                             
+      break;
+    /*vision wifi*/
+    case 12:
+      JsDataItem = data.createNestedObject();
+      switch (mode)
+      {
+        /*wifi connect*/
+        case 127:
+            ret = mVisionDiscrim.WifiSsidSet(id, (const char *)par1, (const char *)par2, &mVisionWifiStatus);
+            if(0 == ret)
+            {
+              JsDataItem["state"] = mVisionWifiStatus.mStatus;
+              JsDataItem["disreason"] = mVisionWifiStatus.mDisReason;
+              JsDataItem["ssid"] = mVisionWifiStatus.mSsid;
+              JsDataItem["rssi"] = mVisionWifiStatus.mRssi;
+              JsDataItem["authmode"] = mVisionWifiStatus.mAuthmode;
+            }
+          break;
+        /*get status of wifi*/
+        case 128:
+            ret = mVisionDiscrim.WifiStatusGet(id, &mVisionWifiStatus);
+            if(0 == ret)
+            {
+              JsDataItem["state"] = mVisionWifiStatus.mStatus;
+              JsDataItem["disreason"] = mVisionWifiStatus.mDisReason;
+              JsDataItem["ssid"] = mVisionWifiStatus.mSsid;
+              JsDataItem["rssi"] = mVisionWifiStatus.mRssi;
+              JsDataItem["authmode"] = mVisionWifiStatus.mAuthmode;
+            }
+          break;
+        /*get ip of wifi*/
+        case 129:
+            ret = mVisionDiscrim.WifiIpGet(id, &mVisionIpInfo);
+            if(0 == ret)
+            {
+              memset(uiBuf, 0, sizeof(uiBuf));
+              //sprintf(uiBuf, "%d.%d.%d.%d", (mVisionIpInfo.mIp)&0xff, (mVisionIpInfo.mIp>>8)&0xff, (mVisionIpInfo.mIp>>16)&0xff, (mVisionIpInfo.mIp>>24)&0xff);
+              sprintf(uiBuf + strlen(uiBuf), "%d.", (mVisionIpInfo.mIp)&0xff);
+              sprintf(uiBuf + strlen(uiBuf), "%d.", (mVisionIpInfo.mIp>>8)&0xff);
+              sprintf(uiBuf + strlen(uiBuf), "%d.", (mVisionIpInfo.mIp>>16)&0xff);
+              sprintf(uiBuf + strlen(uiBuf), "%d", (mVisionIpInfo.mIp>>24)&0xff);
+              JsDataItem["ip"] = uiBuf;
+              memset(uiBuf, 0, sizeof(uiBuf));
+              
+              //sprintf(uiBuf, "%d.%d.%d.%d", (mVisionIpInfo.mMask)&0xff, (mVisionIpInfo.mMask>>8)&0xff, (mVisionIpInfo.mMask>>16)&0xff, (mVisionIpInfo.mMask>>24)&0xff);
+              sprintf(uiBuf + strlen(uiBuf), "%d.", (mVisionIpInfo.mMask)&0xff);
+              sprintf(uiBuf + strlen(uiBuf), "%d.", (mVisionIpInfo.mMask>>8)&0xff);
+              sprintf(uiBuf + strlen(uiBuf), "%d.", (mVisionIpInfo.mMask>>16)&0xff);
+              sprintf(uiBuf + strlen(uiBuf), "%d", (mVisionIpInfo.mMask>>24)&0xff);
+              JsDataItem["mask"] = uiBuf;
+              memset(uiBuf, 0, sizeof(uiBuf));
+              
+              //sprintf(uiBuf, "%d.%d.%d.%d", (mVisionIpInfo.mGw)&0xff, (mVisionIpInfo.mGw>>8)&0xff, (mVisionIpInfo.mGw>>16)&0xff, (mVisionIpInfo.mGw>>24)&0xff);
+              sprintf(uiBuf + strlen(uiBuf), "%d.", (mVisionIpInfo.mGw)&0xff);
+              sprintf(uiBuf + strlen(uiBuf), "%d.", (mVisionIpInfo.mGw>>8)&0xff);
+              sprintf(uiBuf + strlen(uiBuf), "%d.", (mVisionIpInfo.mGw>>16)&0xff);
+              sprintf(uiBuf + strlen(uiBuf), "%d", (mVisionIpInfo.mGw>>24)&0xff);
+              JsDataItem["gw"] = uiBuf;
+            }
+          break;
+        /*wifi on-off*/
+        case 130:
+            ret = mVisionDiscrim.WifiConnectSet(id, par1[0]);
+          break;
+        /*get list of wifi*/
+        case 131:
+            if(-1 == iWIfiListSize)
+            {
+              ret = mVisionDiscrim.WifiUpdate(id, &mVisionWifiList);
+              if(0 == ret)
+              {
+                iWIfiListSize = mVisionWifiList.mNums;
+                if(iWIfiListSize > 0)
+                {
+                  bWifiRun = true;
+                  strLoopCmd = "";
+                  //BuildReqBacket(device, mode, id, uuid, strLoopCmd);
+                  
+                  DynamicJsonDocument jsWifiRoot(64);
+                  jsWifiRoot["device"] = device;
+                  jsWifiRoot["mode"] = mode;
+                  jsWifiRoot["id"] = id;
+                  jsWifiRoot["uuid"] = uuid;
+                  #ifdef DEBUG_PRINT_TAG
+                    LOG_PRINTLN("Get list wifi:");
+                    Serial2.begin(115200);
+                    serializeJson(jsWifiRoot, Serial2);
+                    Serial2.end();
+                    LOG_PRINTLN("#");
+                  #endif
+                  serializeMsgPack(jsWifiRoot, strLoopCmd);
+                }
+                return;
+              }
+            }
+            else
+            {
+              /*wifi info*/
+              ret = mVisionDiscrim.WifiItem(id, &mVisionWifiInfo);
+              if(0 == ret)
+              {
+                JsDataItem["total"] = mVisionWifiInfo.mNums;
+                JsDataItem["index"] = mVisionWifiInfo.mIndex;
+                JsDataItem["ssid"] = mVisionWifiInfo.mWifiSsid;
+                JsDataItem["rssi"] = mVisionWifiInfo.mRssi;
+                JsDataItem["authmod"] = mVisionWifiInfo.mEncryMod;
+              }
+              else
+              {
+                return;
+              }
+              
+            }
+          break;
+        /*set quality of graphic display*/
+        case 132:
+            strDisplayQuality.mQuality = par1[0]&0xffff;
+            ret = mVisionDiscrim.DisplayQualitySet(id, strDisplayQuality);
+          break;
+        /*get version of hardware */
+        case 133:
+            ret = mVisionDiscrim.HardWareVersionGet(id, &strVisionHWInfo);
+            if(0 == ret)
+            {
+              JsDataItem["version"] = strVisionHWInfo.mVer;
+            }
+          break;
+        /*get version of software*/
+        case 134:
+            ret = mVisionDiscrim.SoftWareVersionGet(id, &strVisionSWInfo);
+            if(0 == ret)
+            {
+              JsDataItem["version"] = strVisionSWInfo.mVer;
+            }
+          break;
+        default:
+          ret = -1;
+          break;
+      }
+      root["code"] = ret;
+      break;
     default:
       root["id"]=id;
       root["code"]=1;
       root["uuid"]=uuid;
       break;
   }
-  if(device!=11 || mode!=128){
-      uint16_t bufferLength=measureMsgPack(root);
-      byte Buffer[2]={0};
-      Buffer[0]=(bufferLength>>8)&0xff;
-      Buffer[1]=(bufferLength)&0xff;
-      Serial.write(Buffer,2); 
-      serializeMsgPack(root,Serial);
-      
-      uuid="";
-  }  
 
-  
-  
-}
-
-void serialEvent(){
-
-  static int readFlag=0;
-  static uint16_t dataLength=0;
-  static uint16_t times=0;
-  static unsigned char lengthBuf[2]={0};
-  if(protocolRunState){
-  if (Serial.available() && readFlag==0) { 
-     
-    if(readFlag==0){
-      Serial.readBytes(lengthBuf,2);    
-      dataLength=lengthBuf[0]<<8 |lengthBuf[1];
-      readFlag=1;
-      
-    } 
-  }
-  while(Serial.available()){   
-    times++;
-    char incomingByte=(char)Serial.read(); 
-    inputString += incomingByte;     // 全双工串口可以不用在下面加延时，半双工则要加的//  
-    if (dataLength==times) {    
-      newLineReceived = true;
-      readFlag=0;
-      times=0;
-      dataLength=0; 
-      break;
-
-    }
-    
-  }
-  }
  
-   
+  //Serial.println(); 
+  //serializeJson(root, Serial);
+  //Serial.println();
+
+  uint16_t bufferLength=measureMsgPack(root);
+  byte Buffer[2]={0};
+  Buffer[0]=(bufferLength>>8)&0xff;
+  Buffer[1]=(bufferLength)&0xff;
+  Serial.write(Buffer,2);
+  serializeMsgPack(root,Serial);
 }
-void protocol(){  
-  
-    if (newLineReceived) { 
+
+void serialEvent()
+{
+  int8_t uStatic = SERIAL_READ_TIMEOUT;
+  char uReadByte;
+
+  if(protocolRunState&&(!newLineReceived))
+  {
+    while(1)
+    {
+      while((Serial.available() <= 0)&&uStatic)
+      {
+        delay(1);
+        uStatic--;
+      }
+      if(uStatic <= 0)
+      {
+        if(inputString.length()>0)
+        {
+          bWifiRun = false;
+          newLineReceived = true;
+        }   
+        break;
+      }
+      uReadByte = Serial.read();
+      inputString += uReadByte;
+      uStatic = SERIAL_READ_TIMEOUT;
+    }
+    return;
+  }
+}
+
+void BuildReqBacket(uint8_t uDev, uint8_t uMode, uint8_t uId, const char * ptrUuid, String & strData)
+{
+  DynamicJsonDocument jsRoot(64);
+  jsRoot["device"] = uDev;
+  jsRoot["mode"] = uMode;
+  jsRoot["id"] = uId;
+  jsRoot["uuid"] = ptrUuid;
+  serializeMsgPack(jsRoot, strData);
+}
+
+void protocol(){
+    if ((newLineReceived||(bWifiRun))) { 
     if(flexiTimerFlag==false){
       FlexiTimer2::start();
       flexiTimerFlag=true;
     }
     
-    const size_t capacity =JSON_ARRAY_SIZE(3) + JSON_ARRAY_SIZE(64) + JSON_OBJECT_SIZE(6) + 230; 
-    DynamicJsonDocument root(capacity);  
-    deserializeMsgPack(root,inputString);     
-    int eyeTime=0,buf[9]={0},par1[18]={0},par2[18]={0},par3[10]={0},par4[10]={0},par5[10]={0},par6[10]={0},par7[10]={0},par8[10]={0}; 
+    const size_t capacity =JSON_ARRAY_SIZE(3) + JSON_ARRAY_SIZE(64) + JSON_OBJECT_SIZE(6) + 230;
+    DynamicJsonDocument root(capacity);
+    if(newLineReceived)
+    {
+      uint8_t uLen;
+      uLen = inputString.charAt(1);
+
+      String tmpMy;
+      for(int i = 0; i < uLen; i++)
+      {
+        tmpMy += inputString[i+2];
+      }
+      inputString = "";
+      if(uLen != tmpMy.length())
+      {
+        inputString = "";
+        newLineReceived = false;
+        return;
+      }
+
+      deserializeMsgPack(root, tmpMy);
+      iWIfiListSize = -1;
+    }
+    else
+    {
+      iWIfiListSize--;
+      if(iWIfiListSize < 0)
+      {
+        bWifiRun = false;
+        iWIfiListSize = -1;
+        return;
+      }
+      deserializeMsgPack(root, strLoopCmd);
+    }
+
+    int eyeTime=0,buf[9]={0},par1[18]={0},par2[18]={0},par3[10]={0},par4[10]={0},par5[10]={0},par6[10]={0},par7[10]={0},par8[10]={0};
     unsigned char bin64[64]={0},ids[18]={0};
     unsigned char device = root["device"];
     unsigned char mode = root["mode"];
@@ -733,7 +938,6 @@ void protocol(){
     }
     const char* uuid = root["uuid"];
     JsonArray qualId = root["ids"];
-    
     
     switch(device){   
       case 1:  
@@ -788,18 +992,80 @@ void protocol(){
         if(mode==135){
           snCode = root["sn"];
         }
-        if(mode==133){
+        else if(mode==133){
           for(int i=0;i<64;i++){
             bin64[i] = root["bin64"][i];
           }
         
         }
+        else if(128 == mode)
+        {
+          switch(buf[0])
+          {
+              case 0:
+                uKitId.getDeciveIdJs(uuid);
+                break;
+              case 1:
+                uKitId.getServoIdJs(uuid);
+                break;
+              case 2:
+                uKitId.getMotorIdJs(uuid);
+                break;              
+              case 5:
+                uKitId.getEyeLightIdJs(uuid);
+                break;              
+          }
+        }
         break;
-        
-        
+      /*vision wifi*/
+      case 12:
+        switch(mode)
+        {
+          /*set wifi*/
+          case 127:
+            /*get wifi id and passwd*/
+            if((root["data"].size()>=1)&&(root["data"][0].is<char *>()))
+            {
+              char * ptrId = root["data"][0];
+              if(ptrId&&(strlen(ptrId)<=70))
+              {
+                memcpy(par1, ptrId, strlen(ptrId));
+              }
+              if((root["data"].size()>=2)&&(root["data"][1].is<char *>()))
+              {
+                char * ptrPasswd = root["data"][1];
+                if(ptrPasswd&&(strlen(ptrPasswd)<=70))
+                {
+                  memcpy(par2, ptrPasswd, strlen(ptrPasswd));
+                }
+              }
+            }
+            break;
+          /*wifi on-off*/
+          case 130:
+            if((root["data"].size() >= 1)&&root["data"][0].is<int>())
+            {
+              int iType = root["data"][0];
+              if(iType >= 0)
+              {
+                par1[0] = iType;
+              }
+            }
+            break;
+          /*set quality of graphic display*/
+          case 132:
+            if((root["data"].size() >= 1)&&root["data"][0].is<int>())
+            {
+                par1[0] = root["data"][0];
+            }
+        }
+        break;
+      
     }
-
-    ProtocolParser(device,mode,id,buf,uuid,bin64,ids,par1,par2,par3,par4,par5,par6,par7,par8,eyeTime);
+    if(device!=11 || mode!=128)
+    {
+      ProtocolParser(device,mode,id,buf,uuid,bin64,ids,par1,par2,par3,par4,par5,par6,par7,par8,eyeTime);
+    }
     inputString = "";   // clear the string       
     newLineReceived = false;
     timeFlag=1; 
@@ -813,14 +1079,12 @@ void protocol(){
   else if(protocolRunState==false){
     FlexiTimer2::stop();
     flexiTimerFlag=false;
-    
   }
-  if(timeTimes>=5){
+  if(timeTimes>=100){
     protocolRunState=false;
     //FlexiTimer2::stop();
     timeFlag=1;
     timeTimes=0;
-
   }
 
 }
@@ -961,10 +1225,4 @@ void consoleLog(unsigned char level,const double msg){
 
 }
 
-
-
-
-
-
-
-#endif
+#endif /* UCODE_H */

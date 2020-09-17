@@ -32,7 +32,7 @@ unsigned char uKitMotor::setMotorTurn(uint8_t id, uint16_t pwmDuty){
 unsigned char uKitMotor::setMotorTurnAdj(uint8_t id, uint16_t speed, uint16_t time){
   //clearMotorInf(id);
   unsigned char tRet = 0;
-  unsigned char buf[11]={0};  
+  unsigned char buf[11]={0};
   buf[0] = id;
   buf[1] = 0x00;
   buf[2] = 0x04;

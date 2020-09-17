@@ -1,5 +1,6 @@
-#ifndef UKTEXPLORE_h
-#define UKTEXPLORE_h
+#ifndef UKITEXPLORE2TH_H
+#define UKITEXPLORE2TH_H
+
 
 #include <Arduino.h>
 
@@ -172,4 +173,4 @@ ClickButton button1(Button_pin, HIGH, CLICKBTN_PULLUP);//设置按键
 }
 
 
-#endif
+#endif /* UKITEXPLORE2TH_H */

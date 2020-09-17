@@ -1,10 +1,15 @@
-# uKit Explore Library v1.2.2
+# uKit Explore Library v1.2.10
 
 ```
 git clone git@github.com:UBTEDU/uKit-Explore-library.git
 ```
 
 ## Arduino Library for uKit Explore Modules
+
+### Library Dependencies:
+- [ArduinoJson](https://github.com/bblanchon/ArduinoJson)
+- [Arduino-IRremote](https://github.com/z3t0/Arduino-IRremote/)
+
 
 ### How to use:
 
@@ -22,6 +27,50 @@ git clone git@github.com:UBTEDU/uKit-Explore-library.git
 - [Instructions](https://easydoc.xyz/?#/s/44498285)  
 
 ### Update
+
+#### V1.2.11更新说明:
+
+1.修改红外传感器接口，修复恒定距离数值不定问题
+
+#### V1.2.10更新说明：
+
+1.修改软件串口函数名，原函数名与ucode 串口积木块重名
+
+#### V1.2.9更新说明
+
+1.修改蓝线距离
+
+#### V1.2.8更新说明：
+1. 修改超声波传感器值范围
+
+#### 2020-02-11 更新说明：
+
+1. 新增了 打 tag 自动推送到 npm 仓库
+2. 原来的默认目录移动到  lib 下面
+3. 所有逻辑是在 Jenkins 下完成的
+
+#### V1.2.7更新说明：
+1. 修复一直扫描不到wifi
+2. 修复获取不到设备id
+
+#### V1.2.6.200107更新说明：
+1. 修复扫描不到视觉模块id
+2. 修复超时时间不准
+3. 增加视觉模块wifi接口
+
+#### V1.2.6更新说明：
+1. 增加视觉模块
+2. 增加偏移量接口
+
+#### V1.2.4更新说明：
+1. 修复SN烧录返回code无法正确指示问题
+2. 修复偶尔读取不到SN问题
+
+
+#### V1.2.3更新说明：
+1. 修复蓝牙连接不上的问题
+2. 修复按压传感器拔插后无法读取问题
+
 
 #### V1.2.2更新说明：
 1. 修复离线模式初始化程序不执行问题
@@ -183,6 +232,6 @@ git clone git@github.com:UBTEDU/uKit-Explore-library.git
 7. 修复舵机速度不变化问题
 
 
-   
+
 
 ### Learn more from UBTECH official website: www.ubtrobot.com

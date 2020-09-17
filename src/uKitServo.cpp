@@ -6,9 +6,10 @@
 void uKitServo::setServoTurn(unsigned char id,int dir, int speed){
   unsigned char buf[4];
   int speeds=0;
-  speeds=map(speed,0,255,0,1000);
- 
-     
+  if(speed > 0)
+  {
+    speeds=map(speed,1,255,50,1000);
+  }
     if(dir==0){
         buf[0]=0xFD;
         buf[1]=0x00;
@@ -21,7 +22,7 @@ void uKitServo::setServoTurn(unsigned char id,int dir, int speed){
         buf[2]=(speeds &0xFF00) >> 8;
         buf[3] = speeds & 0x00FF;             
     }
-        
+   
   ubtServoActionProtocol(0xFA,id,0x01,buf);
   //TXD(0xFA,id,4,0x01,buf); 
   

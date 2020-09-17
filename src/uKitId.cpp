@@ -1,6 +1,6 @@
 #include"uKitId.h" 
-#include "ArduinoJson.h"
 #include "avr/boot.h"
+#include "VisionDiscrim.h"
 String tohex(int n) {
   if (n == 0) {
     return "00"; //n为0
@@ -2314,11 +2314,61 @@ void uKitId::getDeciveIdRu(){
   unsigned char idbuf[120]={0};
   unsigned char decivenum[12]={0};
   unsigned char deciveid[120]={0};
-  const size_t capacity = JSON_ARRAY_SIZE(34) + JSON_OBJECT_SIZE(12);
+  size_t capacity = JSON_ARRAY_SIZE(34) + JSON_OBJECT_SIZE(12);
   DynamicJsonDocument root(capacity);
-  JsonArray drivers = root.createNestedArray("drivers");  
+  //DynamicJsonDocument root(100);
+  #ifdef DEBUG_PRINT_TAG
+    LOG_PRINTLN("DynamicJsonDocument Root:");
+    Serial2.begin(115200);
+    serializeJson(root, Serial2);
+    Serial2.end();
+    LOG_PRINTLN("#");
+  #endif
   root["uuid"]=uuid;
- 
+  #ifdef DEBUG_PRINT_TAG
+    LOG_PRINTLN("uuid Root:");
+    Serial2.begin(115200);
+    serializeJson(root, Serial2);
+    Serial2.end();
+    LOG_PRINTLN("#");
+  #endif
+  JsonArray drivers = root.createNestedArray("drivers");  
+  #ifdef DEBUG_PRINT_TAG
+    LOG_PRINTLN("createNestedArray Root:");
+    Serial2.begin(115200);
+    serializeJson(root, Serial2);
+    Serial2.end();
+    LOG_PRINTLN("#");
+  #endif
+  /*get id of vision module */
+  int iVisionId = getVisionId();
+  if(iVisionId > 0)
+  {
+    #ifdef DEBUG_PRINT_TAG
+      LOG_PRINTLN("iVisionId Root:");
+      Serial2.begin(115200);
+      serializeJson(root, Serial2);
+      Serial2.end();
+      LOG_PRINTLN("#");
+    #endif
+    JsonArray vision = root.createNestedArray("vision");
+    drivers.add(11);//vision
+    vision.add(iVisionId);
+  }
+  #ifdef DEBUG_PRINT_TAG
+    LOG_PRINTLN("getDeciveIdJs Root:");
+    Serial2.begin(115200);
+    serializeJson(root, Serial2);
+    Serial2.end();
+    LOG_PRINTLN("#");
+  #endif
+  #ifdef DEBUG_PRINT_TAG
+    LOG_PRINT("getVisionId:");
+    LOG_PRINTLN(iVisionId);
+    LOG_PRINT("capacity:");
+    LOG_PRINTLN(capacity);
+  #endif
+
   for(int i=1;i<=18;i++){
     if(i<=10){
       idbuf[i]=getServoId(i);
@@ -2394,7 +2444,7 @@ void uKitId::getDeciveIdRu(){
       servo.add(deciveid[i]);//舵机
     }
   }
-  if(decivenum[1]!=0){     
+  if(decivenum[1]!=0){
     JsonArray motor = root.createNestedArray("motor"); 
     drivers.add(2);//电机
     for(int i=1;i<=decivenum[1];i++){
@@ -2402,29 +2452,29 @@ void uKitId::getDeciveIdRu(){
       
     }
   }
-  if(decivenum[2]!=0){      
+  if(decivenum[2]!=0){
     JsonArray ir = root.createNestedArray("ir");
     drivers.add(3);//红外
     for(int i=1;i<=decivenum[2];i++){
-      ir.add(deciveid[i+36]); 
+      ir.add(deciveid[i+36]);
     }
   }
-  if(decivenum[3]!=0){    
+  if(decivenum[3]!=0){
      JsonArray ultrasonic = root.createNestedArray("ultrasonic");
-    drivers.add(4);//超声波 
+    drivers.add(4);//超声波
     for(int i=1;i<=decivenum[3];i++){
-      ultrasonic.add(deciveid[i+46]); 
+      ultrasonic.add(deciveid[i+46]);
 
     }
   }
-  if(decivenum[4]!=0){      
+  if(decivenum[4]!=0){
     JsonArray eyelamp = root.createNestedArray("eyelamp");
     drivers.add(5);//led眼灯
     for(int i=1;i<=decivenum[4];i++){
       eyelamp.add(deciveid[i+56]);
     }
   }
-  if(decivenum[5]!=0){      
+  if(decivenum[5]!=0){   
     JsonArray touch = root.createNestedArray("touch");
     drivers.add(6);//触碰传感器
     for(int i=1;i<=decivenum[5];i++){
@@ -2432,7 +2482,7 @@ void uKitId::getDeciveIdRu(){
     }
 
   }
-  if(decivenum[6]!=0){      
+  if(decivenum[6]!=0){
     JsonArray light = root.createNestedArray("light");
     drivers.add(7);//亮度
     for(int i=1;i<=decivenum[6];i++){
@@ -2440,7 +2490,7 @@ void uKitId::getDeciveIdRu(){
 
     }
   }
-  if(decivenum[7]!=0){      
+  if(decivenum[7]!=0){
     JsonArray sound = root.createNestedArray("sound");
     drivers.add(8);//声音
     for(int i=1;i<=decivenum[7];i++){
@@ -2449,7 +2499,7 @@ void uKitId::getDeciveIdRu(){
     }
 
   }
-  if(decivenum[8]!=0){      
+  if(decivenum[8]!=0){
     JsonArray tah = root.createNestedArray("tah");
     drivers.add(9);//温湿度传感器
     for(int i=1;i<=decivenum[8];i++){
@@ -2457,7 +2507,7 @@ void uKitId::getDeciveIdRu(){
       
     }
   }
-  if(decivenum[9]!=0){      
+  if(decivenum[9]!=0){
     JsonArray colors = root.createNestedArray("colors");
     drivers.add(10);//颜色传感器
     for(int i=1;i<=decivenum[9];i++){
@@ -2465,14 +2515,27 @@ void uKitId::getDeciveIdRu(){
   
     }
   } 
- 
+
+  /*test*/
+  #ifdef DEBUG_PRINT_TAG
+    Serial2.begin(115200);
+    Serial2.println("Send to ucode:");
+    serializeJson(root,Serial2);
+    Serial2.println("#");
+    Serial2.end();
+  #endif
+  //Serial.println();
+  //serializeJson(root,Serial);
+  //Serial.println();
+
   uint16_t bufferLength=measureMsgPack(root);
+  
+
   byte Buffer[2]={0};
   Buffer[0]=(bufferLength>>8)&0xff;
   Buffer[1]=(bufferLength)&0xff;
-  Serial.write(Buffer,2); 
+  Serial.write(Buffer,2);
   serializeMsgPack(root,Serial);
-  
 } 
  void uKitId::getServoIdJs(const String uuid){//获取IDucode
   
@@ -2482,7 +2545,7 @@ void uKitId::getDeciveIdRu(){
   unsigned char deciveid[120]={0};
   const size_t capacity = JSON_ARRAY_SIZE(34) + JSON_OBJECT_SIZE(3);
   DynamicJsonDocument root(capacity);
-  JsonArray drivers = root.createNestedArray("drivers");  
+  JsonArray drivers = root.createNestedArray("drivers");
   root["uuid"]=uuid;
  
   for(int i=1;i<=18;i++){
@@ -3441,4 +3504,88 @@ String uKitId::read_String(char add)
   }
   data[len]='\0';
   return String(data);
+}
+
+/**************************************************
+ * @name        getVisionId
+ * @brief       get vision id
+ * @param       void
+ * @return      int
+ * @author      chenglong.xiong
+ * @date        2019/12/18
+ * @version     1.2.6
+**************************************************/
+int uKitId::getVisionId()
+{
+  randomSeed(analogRead(0));
+  uint16_t uiRandNum = random(50000);
+  int uiRet = 0;
+  unsigned char ucBuf[VISION_SERIAL_BUFSIZE] = {0};
+  stVisionHead strHead;
+  /*build packet, big endian*/
+  strHead.mId = 0xff;
+  strHead.mDev = VISION_DEVTYPE_SYSTEM;
+  strHead.mSeq = swab16(uiRandNum);
+  //strHead.mSeq = swab16(mSeq);
+  strHead.mCmd = swab16(VISION_SYSTEM_GETID);
+  /*serial begin*/
+  uiRet = UbtSerialBegin(VISION_SERIAL_ID, VISION_SERIAL_BITRATE);
+  if(uiRet < 0)
+  {
+      return uiRet;
+  }
+  do
+  {
+      int DataLen;
+      uint8_t DataCrc;
+      stVisionHead strHeadRd = {0};
+      //delay(1000);
+      /*send*/
+      uiRet = UbtExploreSend(VISION_PACKET_FLAG, &strHead, 0, NULL);
+      if(uiRet <= 0)
+      {
+          uiRet = -1;
+          break;
+      }
+      /*read*/
+      memset(ucBuf, 0, VISION_SERIAL_BUFSIZE);
+      uiRet = UbtExploreRead(ucBuf, VISION_SERIAL_BUFSIZE - 1, 400, 100);//100
+      if(uiRet <= 0)
+      {
+          uiRet = -1;
+          break;
+      }
+      memcpy(&strHeadRd, ucBuf + 2, sizeof(stVisionHead));
+      DataLen = uiRet;
+      DataCrc = crc8_itu(ucBuf, DataLen-1);
+      strHeadRd.mCmd = strHeadRd.mCmd&0xFF7F;
+      if((strHead.mSeq != strHeadRd.mSeq)||(strHead.mCmd != strHeadRd.mCmd)||(DataCrc != ucBuf[DataLen-1]))
+      {
+          uiRet = -1;
+          break;
+      }
+      /*Get module id*/
+      if((ucBuf[2 + ucBuf[1]])&&(0 == ucBuf[3 + ucBuf[1]]))
+      {
+          memcpy(&uiRet, ucBuf + 4 + ucBuf[1], 1);
+      }
+  } while (0);
+  
+  /*serial end*/
+  UbtSerialEnd(VISION_SERIAL_ID);
+  return uiRet;
+}
+
+/**************************************************
+ * @name        uKitId
+ * @brief       constructed function
+ * @param       void
+ * @return      void
+ * @author      chenglong.xiong
+ * @date        2019/12/18
+ * @version     1.2.6
+**************************************************/
+uKitId::uKitId()
+{
+  mSeq = 0;
 }

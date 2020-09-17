@@ -1,7 +1,7 @@
 
-#include"SemiduplexSerial.h"  
+#include"SemiduplexSerial.h"
 
-
+SoftwareSerial mySoftSerial1(VISION_SOFTSERIAL_RXPIN,VISION_SOFTSERIAL_TXPIN);
 
 /**@brief EN:JIMU Servo checksum/CN:JIMU舵机校验
  *
@@ -357,6 +357,14 @@ unsigned char SemiduplexSerial::ubtButtonStateProtocol(unsigned char Head,unsign
     }
 
 
+    else if(Usart3_Rx_Buf[len+1]==0xF7 && Usart3_Rx_Buf[len+2]==0x7F || Usart3_Rx_Buf[len+5]-0xEE==Data[0]){
+      tRet=Data[0]+0xec;
+  
+    }
+       else if((Usart3_Rx_Buf[len+1]!=0xF7 && Usart3_Rx_Buf[len+1]!=0) || (Usart3_Rx_Buf[len+2]!=0x7F && Usart3_Rx_Buf[len+2]!=0 ) ||(Usart3_Rx_Buf[len+5]-Data[0]!=0xAA && Usart3_Rx_Buf[len+5]!=0) ){
+      tRet=Data[0]+0xec;
+  
+    }
 
     else{
       tRet=0;  
@@ -747,6 +755,8 @@ uint16_t SemiduplexSerial::ubtInfraredProtocols(unsigned char Head,unsigned char
   unsigned long temp = 2; //2ms 发完
   unsigned char buf[8]={0};
   unsigned char Usart3_Rx_Ack_Len=0;
+  unsigned char tCnt = 0, tCnt1 = 0;
+  static uint16_t tLastData = 0;
   
   memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
   memset((void *)buf,0,sizeof(buf));
@@ -768,9 +778,14 @@ Retry_Servo:
   Serial2.write(buf,len+1);  //发送消息
   Serial2.end();  //关闭串口2,否则会影响接收消息
 
-  Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len+1); //接收应答
+  tRet = Serial3.readBytes( Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len+1); //接收应答
   Serial3.end();  //关闭串口3,否则会影响接收消息
   
+  if((tRet != 16)&&(tCnt < 3))
+  {
+    tCnt++;
+    goto Retry_Servo;
+  }
 
     if(Usart3_Rx_Buf[len+1]==0xF8 && Usart3_Rx_Buf[len+2]==0x8F && Usart3_Rx_Buf[len+5]-0xAA==Data[0]){
       switch(CMD){      
@@ -811,10 +826,12 @@ Retry_Servo:
       
     }
 
-
- 
-  
-  
+  if((abs(tRet - tLastData) > 300)&&(tCnt1 < 3))
+  {
+    tCnt1++;
+    goto Retry_Servo;
+  }
+  tLastData = tRet;
   return tRet;
 }
 unsigned char SemiduplexSerial::ubtEyelightProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data){
@@ -1591,7 +1608,6 @@ Retry_Servo:
     }
   }
   else{ //接收到消息
-    
     if(Usart3_Rx_Buf[len]==0xAC  && Usart3_Rx_Buf[len+5]==0){
       switch(CMD){      
         case 0x05:
@@ -1631,7 +1647,6 @@ Retry_Servo:
    
   
   }
-
   return tRet;
 }
 
@@ -1641,7 +1656,7 @@ unsigned char SemiduplexSerial::ubtMotorIdProtocol(unsigned char len,unsigned ch
   unsigned long temp = 0; //2ms 发完
   unsigned char buf[16]={0};
   unsigned char Usart3_Rx_Ack_Len=0;
-
+  unsigned char err=0;
   
   memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
   memset((void *)buf,0,sizeof(buf));
@@ -1665,6 +1680,7 @@ unsigned char SemiduplexSerial::ubtMotorIdProtocol(unsigned char len,unsigned ch
   Serial3.end();  //关闭串口3,否则会影响接收消息
  
   if(Usart3_Rx_Buf[len]==0x00){
+    //tone(300,100);
     Serial3.begin(114200);  //uart3
     Serial3.setTimeout(temp*87*110/100/400);  //设置超时ms
     Serial2.begin(114200);  //设置波特率
@@ -1673,36 +1689,50 @@ unsigned char SemiduplexSerial::ubtMotorIdProtocol(unsigned char len,unsigned ch
     tRet =Serial3.readBytes(Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
     Serial3.end();  //关闭串口3,否则会影响接收消息
   } 
+  
 //   for(int i=len;i<Usart3_Rx_Ack_Len+len;i++){
+//    Serial.print(i-len);
+//    Serial.print(":");
 //    Serial.print(Usart3_Rx_Buf[i],HEX);
-//    Serial.print(",");
+//    Serial.println( );
 //   }
-//   Serial.println();
-//   Serial.println(crc8_itu(&Usart3_Rx_Buf[len+1], Usart3_Rx_Buf[len+2]+2),HEX);
-//   Serial.println(Usart3_Rx_Buf[len+16],HEX);
+//  Serial.println((0xFFFF & ((Usart3_Rx_Buf[len+6] << 8) + Usart3_Rx_Buf[len+7] + (Usart3_Rx_Buf[len+8] << 8) + Usart3_Rx_Buf[len+9] + (Usart3_Rx_Buf[len+10] << 8) + \
+//                                Usart3_Rx_Buf[len+11] + (Usart3_Rx_Buf[len+12] << 8) + Usart3_Rx_Buf[len+13])));
+//  Serial.println(((Usart3_Rx_Buf[len+14] << 8) + Usart3_Rx_Buf[len+15]));
+//  
+  
+if((0xFFFF & ((Usart3_Rx_Buf[len+6] << 8) + Usart3_Rx_Buf[len+7] + (Usart3_Rx_Buf[len+8] << 8) + Usart3_Rx_Buf[len+9] + (Usart3_Rx_Buf[len+10] << 8) + \
+                                Usart3_Rx_Buf[len+11] + (Usart3_Rx_Buf[len+12] << 8) + Usart3_Rx_Buf[len+13])) == ((Usart3_Rx_Buf[len+14] << 8) + Usart3_Rx_Buf[len+15])){
 
-   
-   if(Usart3_Rx_Buf[len]==0xAC  && Usart3_Rx_Buf[len+1]==0x03 && Usart3_Rx_Buf[len+2]==0x0b && Usart3_Rx_Buf[len+3]==0x05 && (Usart3_Rx_Buf[len+5]==0 || Usart3_Rx_Buf[len+5]==0x80) && Usart3_Rx_Buf[len+16]==crc8_itu(&Usart3_Rx_Buf[len+1], Usart3_Rx_Buf[len+2]+2)){
+  
+   if(Usart3_Rx_Buf[len]==0xAC  && Usart3_Rx_Buf[len+1]==0x03 && Usart3_Rx_Buf[len+2]==0x0b && Usart3_Rx_Buf[len+3]==0x05 && Usart3_Rx_Buf[len+5]==0  && Usart3_Rx_Buf[len+16]==crc8_itu(&Usart3_Rx_Buf[len+1], Usart3_Rx_Buf[len+2]+2)){
     tRet=Usart3_Rx_Buf[len+4];    
     } 
-   else if(Usart3_Rx_Buf[len]==0xAC && Usart3_Rx_Buf[len+1]==0x03&&  Usart3_Rx_Buf[len+2]==0x0b  && Usart3_Rx_Buf[len+3]==0x05 && (Usart3_Rx_Buf[len+5]==0 || Usart3_Rx_Buf[len+5]==0x80) ){
+   else if(Usart3_Rx_Buf[len]==0xAC && Usart3_Rx_Buf[len+1]==0x03&&  Usart3_Rx_Buf[len+2]==0x0b  && Usart3_Rx_Buf[len+3]==0x05 && (Usart3_Rx_Buf[len+5]==0 || Usart3_Rx_Buf[len+5]==0x80)){
     tRet=Usart3_Rx_Buf[len+4];    
     }     
-
-   else if((Usart3_Rx_Buf[len]!=0xAC && Usart3_Rx_Buf[len]!=0) ||(Usart3_Rx_Buf[len+1]!=0x03 && Usart3_Rx_Buf[len+1]!=0) ||(Usart3_Rx_Buf[len+2]!=0x0b && Usart3_Rx_Buf[len+2]!=0) || (Usart3_Rx_Buf[len+5]!=0 &&Usart3_Rx_Buf[len+5]!=0x80)){//重复ID
-      tRet=Data[0]+0xec;
-     
-    
+   else if(Usart3_Rx_Buf[len]==0xAC  && Usart3_Rx_Buf[len+1]==0x03 && Usart3_Rx_Buf[len+2]==0x0D && Usart3_Rx_Buf[len+3]==0x05 && (Usart3_Rx_Buf[len+5]==0 || Usart3_Rx_Buf[len+5]==0x80) && Usart3_Rx_Buf[len+16]==crc8_itu(&Usart3_Rx_Buf[len+1], Usart3_Rx_Buf[len+2]+2)){
+    tRet=Usart3_Rx_Buf[len+4];    
+    } 
+   else if(Usart3_Rx_Buf[len]==0xAC && Usart3_Rx_Buf[len+1]==0x03&&  Usart3_Rx_Buf[len+2]==0x0D  && Usart3_Rx_Buf[len+3]==0x05 && (Usart3_Rx_Buf[len+5]==0 || Usart3_Rx_Buf[len+5]==0x80) ){
+    tRet=Usart3_Rx_Buf[len+4];    
+    }   
+    else{
+      tRet=0;
     }
+}
    else if(Usart3_Rx_Buf[len]==0  && Usart3_Rx_Buf[len+1]==0 && Usart3_Rx_Buf[len+2]==0 && Usart3_Rx_Buf[len+3]==0 && Usart3_Rx_Buf[len+4]==0 && Usart3_Rx_Buf[len+16]==0){
     tRet=0;  
        
    }
+
    else{
     tRet=Data[0]+0xec;
     
     
    }
+
+
     
     
   
@@ -1715,21 +1745,40 @@ unsigned char SemiduplexSerial::ubtMotorIdProtocol(unsigned char len,unsigned ch
 
 unsigned char SemiduplexSerial::ubtMotorActionProtocol(unsigned char len,unsigned char CMD,unsigned char * Data){
   unsigned char tRet=0;
+  unsigned char tCnt = 0;
+  unsigned long temp = 0; //2ms 发完
   unsigned char buf[16]={0};
+  unsigned char Usart3_Rx_Ack_Len=0;  
+  memset((void *)Usart3_Rx_Buf,0,sizeof(Usart3_Rx_Buf));
+  memset((void *)buf,0,sizeof(buf));
+  Usart3_Rx_Ack_Len = 7; //应答消息长度 
+
+  
   buf[0] = 0xFB;//帧头
   buf[1] = 0x03;//设备类型
   buf[2] = len-4;//长度
   buf[3] = CMD;//命令号
   memcpy((void *)&buf[4],(void *)Data,len-4);
-  buf[len-1] = crc8_itu(&buf[1], buf[2]+2); 
+  buf[len-1] = crc8_itu(&buf[1], buf[2]+2);
+   
+  temp = (Usart3_Rx_Ack_Len+5) ;  //接收消息长度,用于计算接收时间,1个字节 0.087ms,预留5个空闲,10%误差
+  Serial3.begin(115200);  //uart3
+  Serial3.setTimeout(temp*87*110/100 / 400);  //设置超时ms
   Serial2.begin(115200);  //设置波特率
   Serial2.write(buf,len);  //发送消息
   Serial2.end();  //关闭串口2,否则会影响接收消息
-  
+  tRet = Serial3.readBytes(Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
+  Serial3.end();  //关闭串口3,否则会影响接收消息
+ 
   if(Usart3_Rx_Buf[len]==0x00){
+    //tone(300,100);
+    Serial3.begin(114200);  //uart3
+    Serial3.setTimeout(temp*87*110/100/400);  //设置超时ms
     Serial2.begin(114200);  //设置波特率
     Serial2.write(buf,len);  //发送消息
     Serial2.end();  //关闭串口2,否则会影响接收消息
+    tRet =Serial3.readBytes(Usart3_Rx_Buf, Usart3_Rx_Ack_Len+len); //接收应答
+    Serial3.end();  //关闭串口3,否则会影响接收消息
   } 
   
   return tRet;
@@ -2837,4 +2886,242 @@ uint32_t SemiduplexSerial::crc8_itu(const uint8_t *pBuf, uint32_t len){
   crc ^= 0x55;
   
   return crc;
+}
+
+/**************************************************
+ * @name        UbtExploreSendTo
+ * @brief       explore send out data
+ * @param[in]   ucFlag   flag
+ * @param[in]   stHead head of protolcol
+ * @param[in]   ucDataLen data len
+ * @param[in]   ptrData data
+ * @return      int Length of data sent,-1 error
+ * @author      chenglong.xiong
+ * @date        2019/12/18
+ * @version     1.2.6
+**************************************************/
+int SemiduplexSerial::UbtExploreSend(unsigned char ucFlag, stVisionHead * stHead, unsigned char ucDataLen, unsigned char * ptrData)
+{
+  unsigned char strSendBuf[VISION_SERIAL_BUFSIZE] = {0};
+  uint32_t           iLen = 0, uiRet = 0;
+
+  /*build packet*/
+  strSendBuf[0] = ucFlag;
+  strSendBuf[1] = sizeof(stVisionHead);
+  memcpy(strSendBuf + 2, stHead, sizeof(stVisionHead));
+  iLen = 2 + sizeof(stVisionHead);
+  strSendBuf[iLen] = ucDataLen;
+  iLen += 1;
+  if(ucDataLen)
+  {
+    memcpy(strSendBuf + iLen, ptrData, ucDataLen);
+    iLen += ucDataLen;
+  }
+  
+  strSendBuf[iLen] = crc8_itu(strSendBuf, iLen);
+  iLen += 1;
+
+  /*send data  #vision use serial1 communicate with explore*/
+  //Serial1.begin(115200);
+  uiRet = mySoftSerial1.write(strSendBuf, iLen);
+  #ifdef DEBUG_PRINT_TAG
+    int i = 0;
+    LOG_PRINT("send========================ret:");
+    LOG_PRINTLN(uiRet);
+    Serial2.begin(115200);
+    for(; i < (iLen - 1); i++)
+    {
+      Serial2.print(strSendBuf[i], HEX);
+      Serial2.print("#");
+    }
+    Serial2.println(strSendBuf[i], HEX);
+    Serial2.end();
+  #endif
+  #if 0
+  /*charley test*/
+  int i = 0;
+  Serial.print("send========================ret:");
+  Serial.println(uiRet);
+  for(; i < (iLen - 1); i++)
+  {
+    Serial.print(strSendBuf[i],HEX);
+    Serial.print("#");
+  }
+  Serial.println(strSendBuf[i],HEX);
+  #endif
+  return uiRet;
+}
+
+/**************************************************
+ * @name        UbtExploreRead
+ * @brief       explore read data from vision
+ * @param[out]  ptrBuf return data from serial
+ * @param[in]   iBufLen data len
+ * @param[in]   iTimeOut time out
+ * @return      int Length of data read,-1 error
+ * @author      chenglong.xiong
+ * @date        2019/12/20
+ * @version     1.2.6
+**************************************************/
+int SemiduplexSerial::UbtExploreRead(unsigned char * ptrBuf, int iBufLen, int iTimeOutData, int iWaitTime)
+{
+  uint8_t iData = 0;
+  int iLen = 0;
+  int iTime = iTimeOutData;
+  //int iTimeOut = VISION_READ_TIMEOUT;
+  
+  /*time out*/
+  #if 1
+  while(iTime--)
+  {
+    if(mySoftSerial1.available() > 0)
+    {
+      break;
+    }
+    delay(1);
+  }
+  #endif
+
+  #ifdef DEBUG_PRINT_TAG
+    LOG_PRINT("read========================iTime:");
+    LOG_PRINTLN(iTime);
+  #endif
+
+  //Serial.print("read========================iTime:");
+  //Serial.println(iTime);
+  /*read from serial until buf empty*/
+  //while((iData = mySoftSerial1.read()) != -1)
+  iTime = iWaitTime;
+  //while(mySoftSerial1.available() > 0)
+  //iTime = iTimeOut;
+  while(1)
+  {
+    #if 1
+    /*time out*/
+    while(mySoftSerial1.available() <= 0)
+    {
+      if((iTime--) <= 0)
+      {
+        break;
+      }
+      delay(1);
+    }
+    
+    if(iTime <= 0)
+    {
+      break;
+    }
+    #endif
+    iData = mySoftSerial1.read();
+    if(iLen >= iBufLen)
+    {
+      return -1;
+    }
+    ptrBuf[iLen++] = iData;
+    
+    iTime = iWaitTime;
+  }
+  
+  #ifdef DEBUG_PRINT_TAG
+    int i = 0;
+    LOG_PRINT("read========================:");
+    LOG_PRINTLN(iLen);
+    Serial2.begin(115200);
+    for(; i < (iLen - 1); i++)
+    {
+      Serial2.print(ptrBuf[i], HEX);
+      Serial2.print("#");
+    }
+    Serial2.println(ptrBuf[i], HEX);
+    Serial2.end();
+  #endif
+
+  #if 0
+  /*charley test*/
+  int i = 0;
+  Serial.print("read========================:");
+  Serial.println(iLen);
+  for(; i < (iLen - 1); i++)
+  {
+    Serial.print(ptrBuf[i],HEX);
+    Serial.print("#");
+  }
+  Serial.println(ptrBuf[i],HEX);
+  #endif
+  return iLen;
+}
+
+/**************************************************
+ * @name        UbtSerialBegin
+ * @brief       Serial Begin
+ * @param[in]   iId serial id
+ * @param[in]   uBitRate serial bitrate
+ * @return      0 sucess,-1 error
+ * @author      chenglong.xiong
+ * @date        2019/12/20
+ * @version     1.2.6
+**************************************************/
+int SemiduplexSerial::UbtSerialBegin(int iId, uint32_t uBitRate)
+{
+  int ret = 0;
+  /*multi serial*/
+  switch(iId)
+  {
+    case 0:
+        Serial.begin(uBitRate);
+      break;
+    case 1:
+        Serial1.begin(uBitRate);
+      break;
+    case 2:
+        Serial2.begin(uBitRate);
+      break;
+    case 3:
+        Serial3.begin(uBitRate);
+      break;
+    case 6463:
+        mySoftSerial1.begin(uBitRate);
+      break;
+    default:
+        ret = -1;
+      break;
+  }
+  return ret;
+}
+
+/**************************************************
+ * @name        UbtSerialEnd
+ * @brief       Serial end
+ * @param[in]   iId serial id
+ * @return      0 sucess,-1 error
+ * @author      chenglong.xiong
+ * @date        2019/12/20
+ * @version     1.2.6
+**************************************************/
+int SemiduplexSerial::UbtSerialEnd(int iId)
+{
+  int ret = 0;
+  /*multi serial*/
+  switch(iId)
+  {
+    case 0:
+        Serial.end();
+      break;
+    case 1:
+        Serial1.end();
+      break;
+    case 2:
+        Serial2.end();
+      break;
+    case 3:
+        Serial3.end();
+      break;
+    case 6463:
+        mySoftSerial1.end();
+      break;
+    default:
+        ret = -1;
+      break;
+  }
+  return ret;
 }

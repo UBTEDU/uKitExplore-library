@@ -1,19 +1,19 @@
-#ifndef UKTEXPLORE_h
-#define UKTEXPLORE_h
-
+#ifndef __KUKA_H__
+#define __KUKA_H__
 #include <Arduino.h>
 
 // Supported Modules drive needs to be iddded here
 #include "FlexiTimer2.h"
-#include "ArduinoJson/ArduinoJson.h"
+#include "ArduinoJson.h"
 #include"onBoardHW.h"
+#include "NewTone.h"
 #include"TransforRobot.h"
 #include"uKitMotor.h"
 #include"uKitSensor.h"
 #include"uKitServo.h"
 #include "ClickButton.h"
 #include"uKitId.h"
-#include"KalmanMPU6050.h"
+#include "KalmanMPU6050.h"
 String versionNumber="v1.0.9";
 
 uint64_t incomingByte = 0;          // 接收到的 data byte
@@ -720,4 +720,4 @@ void tone2(uint16_t frequency, long duration)
     }
 }
 
-#endif
+#endif // !__KUKA_H__

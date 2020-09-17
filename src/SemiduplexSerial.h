@@ -4,6 +4,45 @@
 #define SEMIDUPLEXSERIAL_h
 
 #include <Arduino.h>
+#include <SoftwareSerial.h>
+#define VISION_SERIAL_BUFSIZE     256
+#define VISION_SOFTSERIAL_RXPIN   64
+#define VISION_SOFTSERIAL_TXPIN   63
+
+
+#pragma pack(1)
+typedef struct VisionHead{
+    unsigned char     mDev;
+    unsigned char     mId;
+    uint16_t          mSeq;
+    uint16_t          mCmd;
+}stVisionHead;
+#pragma pack()
+
+//#define DEBUG_PRINT_TAG
+#define LOG_PRINTLN(data) {\
+  Serial2.begin(115200);\
+  Serial2.println(data);\
+  Serial2.end();\
+}
+
+#define LOG_PRINT(data) {\
+  Serial2.begin(115200);\
+  Serial2.print(data);\
+  Serial2.end();\
+}
+
+#define LOG_PRINT_T(data,type) {\
+  Serial2.begin(115200);\
+  Serial2.print(data,type);\
+  Serial2.end();\
+}
+
+#define LOG_PRINT_TLN(data,type) {\
+  Serial2.begin(115200);\
+  Serial2.println(data,type);\
+  Serial2.end();\
+}
 
 class SemiduplexSerial
 {  
@@ -69,7 +108,10 @@ public:
     static uint8_t _crc8(unsigned short data);
     unsigned char redvalue,greenvalue,bluevalue=0;
     
- 
+    int UbtExploreSend(unsigned char ucFlag, stVisionHead * stHead, unsigned char ucDataLen, unsigned char * ptrData);
+    int UbtExploreRead(unsigned char * ptrBuf, int iBufLen, int iTimeOutData, int iWaitTime = 5);
+    int UbtSerialBegin(int iId, uint32_t uBitRate);
+    int UbtSerialEnd(int iId);
 private:
   #define tems(val) (val*87*110/100/400)
   #define POLY    (0x1070U << 3)
@@ -93,6 +135,11 @@ private:
   #ifndef swab8
   #define swab8(x) ((x&0x0f) << 4 | (x&0xf0) >> 4)
   #endif
+
+  #ifndef swab32
+  #define swab32(x) (((x << 8)&0x00ff0000)|((x >> 8)&0x0000ff00)|((x << 24)&0xff000000) | ((x >> 24)&0x000000ff))
+  #endif
+
   typedef struct _ACTION_PACK_Struct_ //结构顺序不可调
   {
     unsigned  char Angle[SERVO_NUMER_MAX];  //

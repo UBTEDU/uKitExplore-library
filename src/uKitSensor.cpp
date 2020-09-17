@@ -304,7 +304,7 @@ void uKitSensor::setEyelightAllPetals(char id,int red,int green,int blue){
    tData2[0]=id;
   if(eyelightState==1){
     ubtEyelightProtocol(0xf4,0x06,0x02,tData2);
-    eyelightState=0;   
+    eyelightState=0;
   }  
   tData[0]=id;  //ID
   tData[1]=0xff;
@@ -1137,12 +1137,12 @@ unsigned char uKitSensor::readButtonValue(char id){
   }  
   
   tRet=ubtButtonProtocol(0xf7,0x06,0x04,buf);
+  //delay(2);
   if(tRet==id+0xec){
     ubtButtonProtocol(0xf7,0x06,0x02,buf);
     tRet=ubtButtonProtocol(0xf7,0x06,0x04,buf);
 } 
-    delay(2);
-
+    
     return tRet;   
 }
 unsigned char uKitSensor::readButtonState(char id){
@@ -1402,6 +1402,11 @@ unsigned short uKitSensor::readUltrasonicDistance(char id){//超声波传感器
    
     tRet/=10;
     delay(30);
+
+    if(tRet > 400)
+    {
+      tRet = 400;
+    }
 
     return tRet; 
     

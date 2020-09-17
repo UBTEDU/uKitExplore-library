@@ -3,11 +3,13 @@
 #include"SemiduplexSerial.h" 
 #include"EEPROM.h"
 #include <Arduino.h>
+#include "ArduinoJson.h"
 #define EEPROM_START_ADDRESS    0     // Start Address in EEPROM
 #define EEPROM_SIZE             1024  // EEPROM size
 class uKitId : public SemiduplexSerial
 {
 public:
+    uKitId();
 	  String getCpuUUID();
     unsigned char setLightId(char oldid,char newid);
     unsigned char getLightId();
@@ -55,6 +57,8 @@ public:
     unsigned char getServoId1M();   
     unsigned char getServoId1M(char id);  
     
+    int getVisionId();
+    
     void setDeciveId();
     void setAllDeciveId(unsigned char decive,unsigned char oldid,unsigned char newid);
     unsigned char getAllDeciveId(unsigned char decive,unsigned char newid);
@@ -79,7 +83,8 @@ public:
     void writeString(char add,String data);
     String read_String(char add);
 
-
+private:
+    uint16_t mSeq;
 
       
 

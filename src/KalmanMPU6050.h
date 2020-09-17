@@ -38,6 +38,7 @@ public:
    */
   static void read();
 
+
   /**
    * Get the last time data was fetched from the IMU (in microseconds, equivallent to a micros() call)
    * 

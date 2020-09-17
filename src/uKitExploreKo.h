@@ -1,5 +1,6 @@
-#ifndef UKTEXPLORE_h
-#define UKTEXPLORE_h
+#ifndef UKITEXPLOREKO_H
+#define UKITEXPLOREKO_H
+
 
 #include <Arduino.h>
 
@@ -162,4 +163,6 @@ void Initialization(){
   
 }
 
-#endif
+
+
+#endif /* UKITEXPLOREKO_H */

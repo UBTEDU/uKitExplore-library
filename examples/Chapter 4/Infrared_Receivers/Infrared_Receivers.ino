@@ -6,7 +6,7 @@
  */ 
 
 #include"uKitExplore2En.h"
-#include "IRremote/IRremote.h"
+#include "IRremote.h"
 
 long ir_item;
 IRrecv irrecv_37(37);
