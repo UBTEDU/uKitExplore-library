@@ -1,4 +1,4 @@
-# uKit Explore Library v1.2.11
+# uKit Explore Library v1.2.15
 
 ```
 git clone git@github.com:UBTEDU/uKit-Explore-library.git
@@ -29,6 +29,18 @@ git clone git@github.com:UBTEDU/uKit-Explore-library.git
 - [Instructions](https://easydoc.xyz/?#/s/44498285)  
 
 ### Update
+
+#### V1.2.15更新说明
+1. 修改example代码中编译错误问题
+
+#### V1.2.14更新说明:
+1.修改imu接口，用户不再需要读取数据前调用read()
+
+#### V1.2.13更新说明:
+1.更新人车互变接口名，当前接口与STL接口重名
+
+#### V1.2.12更新说明:
+1.修正文件头的保护宏
 
 #### V1.2.11更新说明:
 
