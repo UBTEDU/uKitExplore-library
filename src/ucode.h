@@ -16,7 +16,7 @@
 #include"uKitId.h"
 #include "KalmanMPU6050.h"
 #include "VisionDiscrim.h"
-const char* versionNumber="v1.2.11";
+const char* versionNumber="v1.2.15";
 
 bool flexiTimerFlag=true;
 bool butonTimer=true;

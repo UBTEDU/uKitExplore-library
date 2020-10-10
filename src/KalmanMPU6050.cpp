@@ -247,57 +247,69 @@ uint32_t IMU::getLastReadTime()
 
 double IMU::getRawAccelX()
 {
+  IMU::read();
   return accelX/32768.00*2*9.7913;
 }
 double IMU::getAccelX()
 {
+  IMU::read();
   return (double)accelX/16384*2*9.8;
 }
 double IMU::getRawAccelY()
 {
+  IMU::read();
   return accelY/32768.00*2*9.7913;
 }
 
 double IMU::getRawAccelZ()
 {
+  IMU::read();  
   return accelZ/32768.00*2*9.7913;
 }
 double IMU::getAccelZ()
 {
+  IMU::read();  
   return (double)accelZ/16384*2*9.8;
 }
 double IMU::getRawGyroX()
 {
+  IMU::read();  
   return gyroX/32768.00*250;
 }
 
 double IMU::getRawGyroY()
 {
+  IMU::read();  
   return gyroY/32768.00*250;
 }
 
 double IMU::getRawGyroZ()
 {
+  IMU::read();  
   return gyroZ/32768.00*250;
 }
 
 double IMU::getGyroY()
 {
+  IMU::read();  
   return (double)gyroY*0.007629394;
 }
 
 double IMU::getGyroZ()
 {
+  IMU::read();  
   return(double) gyroZ*0.007629394;
 }
 
 double IMU::getRoll()
 {
+  IMU::read();  
   return kalXAngle;
 }
 
 double IMU::getPitch()
 {
+  IMU::read();
   return kalYAngle;
 }
 

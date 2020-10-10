@@ -852,8 +852,8 @@ void consoleLog(unsigned char level,const double msg){
   byte Buffer[2] = {0};
   Buffer[0] = (bufferLength >> 8) & 0xff;
   Buffer[1] = (bufferLength)&0xff;
-  SerialEnhenced.write(Buffer, 2);
-  serializeMsgPack(doc, SerialEnhenced);
+  Serial.write(Buffer, 2);
+  serializeMsgPack(doc, Serial);
 }
 
 #endif /* UCODEONEMODE_H */
