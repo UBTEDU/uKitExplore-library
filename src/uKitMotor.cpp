@@ -2,7 +2,7 @@
 #include"uKitMotor.h"  
 
 
-unsigned char uKitMotor::setMotorTurn(uint8_t id, uint16_t pwmDuty){
+unsigned char uKitMotor::setMotorTurn(uint8_t id, int16_t pwmDuty){
   clearMotorInf(id);
   delay(2);
   unsigned char tRet = 0;
@@ -29,7 +29,8 @@ unsigned char uKitMotor::setMotorTurn(uint8_t id, uint16_t pwmDuty){
  *
  * @returns ret EN:0 means motor module acks correct, <0 means no ack or ack error/CN:返回0表示功能正常.
  */
-unsigned char uKitMotor::setMotorTurnAdj(uint8_t id, uint16_t speed, uint16_t time){
+unsigned char uKitMotor::setMotorTurnAdj(uint8_t id, int16_t speed, uint16_t time){
+  //Serial.println(speed);
   //clearMotorInf(id);
   unsigned char tRet = 0;
   unsigned char buf[11]={0};
@@ -49,15 +50,15 @@ unsigned char uKitMotor::setMotorTurnAdj(uint8_t id, uint16_t speed, uint16_t ti
 }
 
 
-unsigned char uKitMotor::setMotorTurns(unsigned char* id, int* pwmDuty){
+unsigned char uKitMotor::setMotorTurns(unsigned char* id, int* pwmDuty, unsigned char length){
 
-  for(int i=0;i<sizeof(id)/sizeof(id[0]);i++){
+  for(int i=0;i<length;i++){
     setMotorTurn(id[i],pwmDuty[i]);
   }
   
 }
-unsigned char uKitMotor::setMotorTurnAdjs(unsigned char* id, int* speed, uint16_t time=0xffff){
-    for(int i=0;i<sizeof(id)/sizeof(id[0]);i++){
+unsigned char uKitMotor::setMotorTurnAdjs(unsigned char* id, int* speed, unsigned char length, uint16_t time=0xffff){
+    for(int i=0;i<length;i++){
     setMotorTurnAdj(id[i],speed[i]);
   }
 }
@@ -104,6 +105,14 @@ int uKitMotor::setMotorStop(uint8_t id)
   tRet=ubtMotorProtocol(0x0C,0x06,buf);
   return tRet;
 }
+
+int uKitMotor::setMotorsStop(uint8_t *ids, unsigned char length) {
+  for(int i=0;i<length;i++){
+    setMotorStop(ids[i]);
+  }
+  return 0;
+}
+
 void uKitMotor::clearMotorInf(unsigned char id){
   unsigned char buf[7]={0};  
   buf[0] = id;

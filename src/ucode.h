@@ -2,6 +2,7 @@
 #define UCODE_H
 
 #include <Arduino.h>
+#include"SemiduplexSerial.h" 
 
 // Supported Modules drive needs to be iddded here
 #include "FlexiTimer2.h"
@@ -16,7 +17,7 @@
 #include"uKitId.h"
 #include "KalmanMPU6050.h"
 #include "VisionDiscrim.h"
-const char* versionNumber="v1.2.15";
+const char* versionNumber="v1.2.28";
 
 bool flexiTimerFlag=true;
 bool butonTimer=true;
@@ -49,11 +50,16 @@ VisionDiscrim mVisionDiscrim;
 //uKitServo_API
 
 #define setServoTurn(id,dir,speed) uKitServo.setServoTurn(id,dir,speed)//舵机轮模式控制，id是舵机号，dir是方向（1顺时针，0逆时针），speed是速度（0-5）
+#define setServoAngles(ids, angles, times, length) uKitServo.setServoAngles(ids, angles, times, length) //控制多个舵机模式，ids是舵机号数组，angles是角度数组（-118°~118°），times是运行时间（300-5000）
+#define setServoAnglesWait(ids, angles, times, length, wait) uKitServo.setServoAnglesWait(ids, angles, times, length, wait) //控制多个舵机模式，ids是舵机号数组，angles是角度数组（-118°~118°），times是运行时间（300-5000）
 #define setServoAngle(id,angle,times) uKitServo.setServoAngle(id,angle,times)//舵机舵机模式，id是舵机号，angle是角度（-118°~118°），times是运行时间（300-5000）
 #define setServoStop(id) uKitServo.setServoStop(id)//单个舵机停止函数
+#define setServosStop(ids, length) uKitServo.setServosStop(ids, length) //多个舵机停止函数
 #define readServoAnglePD(id) uKitServo.readServoAnglePD(id)//单个舵机回读，返回舵机角度值(掉电回读）
+#define readServoOriginalAnglePD(id) uKitServo.readServoOriginalAnglePD(id)//单个舵机回读，返回舵机角度值(掉电回读）
 #define readServoAnglePD_M(read_id,num) uKitServo.readServoAnglePD_M(read_id,num)//单个舵机回读，返回舵机角度值(掉电回读）
 #define readServoAngleNPD(id) uKitServo.readServoAngleNPD(id)//单个舵机回读，返回舵机角度值(不掉电回读）
+#define readServoOriginalAngleNPD(id) uKitServo.readServoOriginalAngleNPD(id)//单个舵机回读，返回舵机角度值(不掉电回读）
 #define readServoAngleNPD_M(read_id,num) uKitServo.readServoAngleNPD_M(read_id,num)//单个舵机回读，返回舵机角度值(掉电回读）
 #define playMotion(id,action,times) uKitServo.playMotion(id,action,times)//播放动作
 //uKitSensor_API
@@ -91,6 +97,7 @@ VisionDiscrim mVisionDiscrim;
 #define setMotorTurnAdj(id,speed,time) uKitMotor.setMotorTurnAdj(id,speed,time)
 #define readMotorSpeed(id) uKitMotor.readMotorSpeed(id)
 #define setMotorStop(id) uKitMotor.setMotorStop(id)
+#define setMotorsStop(ids, length) uKitMotor.setMotorsStop(ids, length)
 #define MotorSetID(id_old,id_new) uKitMotor.MotorSetID(id_old,id_new)
 #define MotorCheckID(id) uKitMotor.MotorCheckID(id)
 #define StopServo() uKitMotor.StopServo()
@@ -260,6 +267,18 @@ void flexiTimer2_func() {
 
 }
 
+long ucode_random(long min, long max) {
+  unsigned long seed_mills = micros();
+  randomSeed(seed_mills);
+  // Serial.print("seed ");
+  // Serial.println(seed_mills);
+  return random(min, max);
+}
+
+long ucode_random(unsigned long max) {
+  return ucode_random(0, max);
+}
+
 void tone2(uint16_t frequency, unsigned long duration = 0)
 {
   NewTone(buzzer_pin,frequency,duration);  
@@ -271,7 +290,7 @@ void noTone2(int pin)
 
 
 
-void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int* buf,const char* uuid,unsigned char* bin64,unsigned char *ids,int* par1,int* par2,int* par3,int* par4,int* par5,int* par6,int* par7,int* par8,int eyeTime){
+void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int* buf,const char* uuid,unsigned char* bin64,unsigned char *ids,int* par1,int* par2,int* par3,int* par4,int* par5,int* par6,int* par7,int* par8,int eyeTime, unsigned char idsLength){
   size_t capacity = JSON_ARRAY_SIZE(8) + JSON_OBJECT_SIZE(8)+100;
   unsigned char* rgbValue=NULL;
   int ret;
@@ -308,10 +327,10 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
         case 129://读取角度           
            root["code"]=0; 
            if(buf[0]==0){
-            data.add(readServoAnglePD(id));  
+            data.add(readServoOriginalAnglePD(id));  
            }
            else{
-            data.add(readServoAngleNPD(id));
+            data.add(readServoOriginalAngleNPD(id));
            }
            break;
         case 130: //停止舵机       
@@ -319,11 +338,19 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            root["code"]=0;
            break;     
         case 131://多舵机轮模式
-          uKitServo.setServoTurns(ids,par1,par2);
+          uKitServo.setServoTurns(ids,par1,par2, idsLength);
           root["code"]=0;
           break;
         case 132://多舵机角度模式
-          uKitServo.setServoAngles(ids,par1,par2[0]);
+        {
+          // uKitServo.setServoAngles(ids,par1,par2[0]);
+          bool w = (par3[0] == 0 ? false : true);
+          setServoAnglesWait(ids,par1,par2,idsLength,w);
+          root["code"]=0;
+        }
+          break;
+        case 133://多舵机停止
+          setServosStop(ids, idsLength);
           root["code"]=0;
           break;                                             
       }
@@ -349,13 +376,17 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            root["code"]=0;
            break; 
         case 131: //多电机恒速模式   
-           uKitMotor.setMotorTurnAdjs(ids,par1);
+           uKitMotor.setMotorTurnAdjs(ids,par1,idsLength);
            root["code"]=0;
            break;  
         case 132: //多电机pwm模式   
-           uKitMotor.setMotorTurns(ids,par1);
+           uKitMotor.setMotorTurns(ids,par1,idsLength);
            root["code"]=0;
-           break;                                                  
+           break;
+        case 133:
+           setMotorsStop(ids, idsLength);
+           root["code"]=0;
+           break;                                               
       }
       break;
     case 3:    //眼灯 
@@ -391,41 +422,47 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
            root["code"]=0;
            break;             
         case 134: //多亮起眼灯
-           for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){
+           for(int i=0;i<idsLength;i++){
             setEyelightAllPetals(ids[i],par1[i],par2[i],par3[i]);   
            } 
            root["code"]=0;   
            break; 
         case 135: //多眼灯表情 
-           for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){    
+           for(int i=0;i<idsLength;i++){    
             setEyelightLook(ids[i],par1[i],par2[i],par3[i],par4[i],par5[i]);
            }
            root["code"]=0;
            break; 
         case 136://多情景灯
-          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){ 
+          for(int i=0;i<idsLength;i++){ 
            setEyelightScene(ids[i],par1[i],par2[i]);
           }
            root["code"]=0;   
            break;
         case 137: //多自定义眼灯    
-          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){       
+          for(int i=0;i<idsLength;i++){       
            uKitSensor.setEyelightPetalus(ids[i],par1[i],par2[i],par3[i],par4[i],par5[i],par6[i],par7[i],par8[i],eyeTime);
           }
            root["code"]=0; 
            break;          
         case 138: //多眼灯表情阻塞
-          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){          
+          for(int i=0;i<idsLength;i++){          
            setEyelightLookUntil(ids[i],par1[i],par2[i],par3[i],par4[i],par5[i]);
           }
            root["code"]=0;
            break;  
         case 139: //多情景灯阻塞     
-          for(int i=0;i<sizeof(ids)/sizeof(ids[0]);i++){     
+          for(int i=0;i<idsLength;i++){     
            setEyelightSceneUntil(ids[i],par1[i],par2[i]);    
           }         
            root["code"]=0;
-           break;                                                                            
+           break;
+        case 140: //关闭多眼灯     
+          for(int i=0;i<idsLength;i++){     
+           setEyelightOff(ids[i]);    
+          }         
+           root["code"]=0;
+           break;                                                                              
       }
       break;        
     case 4:    //传感器      
@@ -633,10 +670,11 @@ void ProtocolParser(unsigned char device,unsigned char mode,unsigned char id,int
           data.add(deciveSN);
           break;   
         case 131: //获取版本号
-          if(uKitSensor.getSensorVersion(id,buf[0])==170){
-            root["code"]=0; 
-          }            
-          break;           
+          data.add(uKitSensor.getSensorVersion(id, buf[0]));
+          // tone2(100, 300);
+          // data.add("9527");
+          root["code"]=0;
+          break;
         case 132: //进入升级
           if(uKitSensor.setSensorUpdate(id,buf[0])==170){
             root["code"]=0; 
@@ -869,6 +907,10 @@ void serialEvent()
       }
       uReadByte = Serial.read();
       inputString += uReadByte;
+      // Serial.print("recieved:");
+      // Serial.println(uReadByte);
+      // Serial.print("len:");
+      // Serial.print(inputString.length());
       uStatic = SERIAL_READ_TIMEOUT;
     }
     return;
@@ -938,31 +980,49 @@ void protocol(){
     }
     const char* uuid = root["uuid"];
     JsonArray qualId = root["ids"];
+    unsigned char idsLength = qualId.size();
     
     switch(device){   
       case 1:  
-          if(mode==131 ||mode==132){  
+          if(mode >= 131 && mode <= 133){  
             for(int i=0;i<qualId.size();i++){
-              ids[i]  = qualId[i];  
-              par1[i]  = root["par1"][i];
-              par2[i]  = root["par2"][i]; 
+              ids[i]  = qualId[i];
+              // Serial.print("===id:");
+              // Serial.println(ids[i]);
+              if (mode != 133) {
+                par1[i]  = root["par1"][i];
+                par2[i]  = root["par2"][i]; 
+                // Serial.print("===par1:");
+                // Serial.println(par1[i]);
+                // Serial.print("===par2:");
+                // Serial.println(par2[i]);
+              }  
+            }
+            if (mode == 132) {
+              par3[0]  = root["par3"][0];
             }
           }   
         break;
       case 2:
-          if(mode==131 ||mode==132){
+          if(mode >= 131 && mode <= 133){
             for(int i=0;i<qualId.size();i++){
               ids[i]  = qualId[i]; 
-              par1[i]  = root["par1"][i];
+              if (mode != 133) {
+                par1[i]  = root["par1"][i];
+              }
             }
           }
         break;      
       case 3: 
-        if(mode>=132 &&mode<=139){  
+        if(mode >= 132 && mode <= 140){ 
           for(int i=0;i<qualId.size();i++){
-            ids[i]  = qualId[i];
-            par1[i]  = root["par1"][i];
-            par2[i]  = root["par2"][i];  
+            ids[i]  = qualId[i];  
+          }
+          if (mode != 140) {
+              for(int i=0;i<qualId.size();i++){
+              par1[i]  = root["par1"][i];
+              par2[i]  = root["par2"][i];  
+            }
           }
           if(mode==134|| mode==135 ||mode==138 || mode==137){
           for(int i=0;i<qualId.size();i++){
@@ -1064,7 +1124,7 @@ void protocol(){
     }
     if(device!=11 || mode!=128)
     {
-      ProtocolParser(device,mode,id,buf,uuid,bin64,ids,par1,par2,par3,par4,par5,par6,par7,par8,eyeTime);
+      ProtocolParser(device,mode,id,buf,uuid,bin64,ids,par1,par2,par3,par4,par5,par6,par7,par8,eyeTime, idsLength);
     }
     inputString = "";   // clear the string       
     newLineReceived = false;

@@ -47,7 +47,30 @@ typedef struct VisionHead{
 class SemiduplexSerial
 {  
 public:
-   
+    const unsigned char* ubtSensorProtocolCommom(
+      unsigned char head, 
+      unsigned char len, 
+      unsigned char cmd, 
+      const unsigned char * const data, 
+      unsigned char &back_length,
+      unsigned char ack_len = 50);
+
+    const unsigned char* ubtServoProtocolCommon(
+      unsigned char head,
+      unsigned char id,
+      unsigned char cmd, 
+      unsigned char *data,
+      unsigned char &back_length,
+      unsigned char wait_len = 50);
+
+    const unsigned char* ubtSensor2ProtocolCommon(
+      unsigned char id,
+      unsigned char deviceType,
+      unsigned char len,
+      unsigned char cmd,
+      unsigned char * data,
+      unsigned char &rxLength,
+      unsigned char waitLength = 50);
     unsigned char* ubtColorProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
     unsigned char ubtColorIdProtocol(unsigned char Head,unsigned char len,unsigned char CMD,unsigned char * Data);
     

@@ -1,83 +1,94 @@
 #include"uKitSensor.h" 
 #include<math.h>
-unsigned short  uKitSensor::readInfraredDistance(char ID){//uKit红外传感器
+unsigned short uKitSensor::readInfraredDistance(char ID)
+{ //uKit红外传感器
   unsigned char buf[1];
-  unsigned short  tRet=0;
-  static unsigned char InfraredState=1;
-  buf[0]=ID;
-  if(InfraredState==1){
-    ubtInfraredProtocol(0xf8,0x06,0x02,buf);
-    InfraredState=0;   
-  }  
-  
-  tRet=ubtInfraredProtocols(0xf8,0x06,0x04,buf);
-  if(tRet==ID+0xec){
-    ubtInfraredProtocol(0xf8,0x06,0x02,buf);
-    tRet=ubtInfraredProtocols(0xf8,0x06,0x04,buf);
+  unsigned short tRet = 0;
+  static unsigned char InfraredState = 1;
+  buf[0] = ID;
+  if (InfraredState == 1)
+  {
+    ubtInfraredProtocol(0xf8, 0x06, 0x02, buf);
+    InfraredState = 0;
   }
-    float voltage=(analogRead(A14)*5.0/1024.0)*151.0/51.0;
-       if(voltage>=6.2){ 
-        float realValue = tRet - 850;
-        int level;
-        if (realValue < 0 || tRet==0 ) {
-            level = 0;
-        } else if (realValue < 70) {
-            level = (int)((realValue - 15) / 13.5);
-        } else if (realValue < 1210) {
-            level = (int)((realValue + 1134)/ 288.0);
-        } else if (realValue < 1565) {
-            level = (int)((realValue + 206)/ 177);
-        } else if (realValue < 1821) {
-            level = (int)((realValue - 1033)/ 53.75);
-        } else if (realValue < 2200) {
-            level = (int)((realValue - 1462)/ 22.75);
-        } else {
-            level = 20;
-        }
-        if(level > 20){
-            level = 20;
-        }
-        delay(2);
-        return constrain(level,0,20);
-        
-       }
-       else{
-              if(tRet<=850)
-        tRet=0;
-      else if(tRet>850 &tRet<=879)
-        tRet=1;
-      else if(tRet>879 &tRet<=905)
-        tRet=2;
-       else if(tRet>905 &tRet<=918)
-        tRet=3;
-       else if(tRet>918 &tRet<=931)
-        tRet=4;
-       else if(tRet>918 &tRet<=944)
-        tRet=5;
-       else if(tRet>944 &tRet<=970)
-        tRet=6;   
-        else if(tRet>970 &tRet<=986)
-        tRet=7;      
-      else
-         tRet=tRet*20/2173;
-    
-       if(tRet>20){
-         tRet=20;
-       }
-        delay(2);
-        return constrain(tRet,0,20);
-        
-       }
-        
 
+  tRet = ubtInfraredProtocols(0xf8, 0x06, 0x04, buf);
+  if (tRet == ID + 0xec)
+  {
+    ubtInfraredProtocol(0xf8, 0x06, 0x02, buf);
+    tRet = ubtInfraredProtocols(0xf8, 0x06, 0x04, buf);
+  }
+  float voltage = (analogRead(A14) * 5.0 / 1024.0) * 151.0 / 51.0;
+  // Serial.println(String("voltage") + String(voltage));
+  // Serial.println(String("tRet") + String(tRet));
+  if (voltage >= 6.2)
+  {
+    float realValue = tRet - 850;
+    int level;
+    if (realValue < 0 || tRet == 0)
+    {
+      level = 0;
+    }
+    else if (realValue < 70)
+    {
+      level = (int)((realValue - 15) / 13.5);
+    }
+    else if (realValue < 1210)
+    {
+      level = (int)((realValue + 1134) / 288.0);
+    }
+    else if (realValue < 1565)
+    {
+      level = (int)((realValue + 206) / 177);
+    }
+    else if (realValue < 1821)
+    {
+      level = (int)((realValue - 1033) / 53.75);
+    }
+    else if (realValue < 2200)
+    {
+      level = (int)((realValue - 1462) / 22.75);
+    }
+    else
+    {
+      level = 20;
+    }
+    if (level > 20)
+    {
+      level = 20;
+    }
+    delay(2);
+    return constrain(level, 0, 20);
+  }
+  else
+  {
+    if (tRet <= 850)
+      tRet = 0;
+    else if (tRet > 850 & tRet <= 879)
+      tRet = 1;
+    else if (tRet > 879 & tRet <= 905)
+      tRet = 2;
+    else if (tRet > 905 & tRet <= 918)
+      tRet = 3;
+    else if (tRet > 918 & tRet <= 931)
+      tRet = 4;
+    else if (tRet > 918 & tRet <= 944)
+      tRet = 5;
+    else if (tRet > 944 & tRet <= 970)
+      tRet = 6;
+    else if (tRet > 970 & tRet <= 986)
+      tRet = 7;
+    else
+      tRet = tRet * 20 / 2173;
 
-
-     
-
-
+    if (tRet > 20)
+    {
+      tRet = 20;
+    }
+    delay(2);
+    return constrain(tRet, 0, 20);
+  }
 }
-
-
 
 unsigned short uKitSensor::readSoundValue(char id){
   unsigned short tRet = 0,tRet2=0,tRet3=0;
@@ -100,7 +111,7 @@ unsigned short uKitSensor::readSoundValue(char id){
   else if(tRet2>=1023){
     tRet2=1023;
   }
-  delay(10);
+  delay(50);
   return tRet2;
 }
 unsigned short int uKitSensor::readLightValue(char id){
@@ -1176,43 +1187,87 @@ unsigned long uKitSensor::getButtonVersion(char id){
 
 }
 
-unsigned long uKitSensor::getSensorVersion(char id,unsigned char sensor){
+unsigned long uKitSensor::getSensorVersion(char id, unsigned char sensor){
   unsigned long versions=0;
-  switch(sensor){
-    case 1://舵机
-      versions=0;
-      break;
-    case 2://电机
-      versions=0;
-      break;
+  unsigned char head = 0;
+  unsigned char rxLen = 0;
+  const unsigned char *rxbuf = 0;
+  if (sensor == 1) {  //舵机
+    head = 0xfc;
+    unsigned char data[] = {0, 0, 0, 0};
+    rxbuf = ubtServoProtocolCommon(head, id, 0x01, data, rxLen);
+    if (rxbuf[0] == 0xAA && rxLen == 5) {
+      for (unsigned char i = 0; i < 4; ++i) {
+        versions = versions * 100 + ((rxbuf[1 + i] >> 4) & 0x0f) * 10 + (rxbuf[1 + i] & 0x0f);
+      }
+    }
+    return versions;
+  }
+  switch (sensor)
+  {
     case 3://红外
-      versions=0;
+      head = 0xf8;
       break;
     case 4://超声波
-      versions=0;
+      head = 0xf5;
       break;
     case 5://眼灯
-     versions=0;
+      head = 0xf4;
       break;
     case 6://触碰
-      versions=getButtonVersion(id);
-      break;
-    case 7://亮度
-      versions=0;
-      break;
-    case 8://声音
-      versions=0;
-      break;
-    case 9://温湿度
-      versions=0;   
+      head = 0xf7;
       break;
     case 10://颜色
-      versions=0;
-      break;          
+      head = 0xe8;
+      break;
   }
-  return versions;
-    
+  if (head != 0) {
+    unsigned char buf[1] = {id};
+    rxbuf = ubtSensorProtocolCommom(head, 0x01, 0x07, buf, rxLen);
+    // Serial.println("getSensorVersion, head rxlen");
+    // Serial.println(head);
+    // Serial.println(rxLen);
+    if (rxLen > 0 && rxbuf != 0) {
+      if ((rxbuf[0] - (unsigned char)id) == 0xAA && rxLen >= 5) {
+        versions = (rxbuf[1] * 10000000) + (rxbuf[2] * 100000) + (rxbuf[3] * 1000)+(rxbuf[4] * 10);  //ID
+        versions = versions / 10;
+      }
+    }
+    return versions;
+  }
+  switch (sensor)
+  {
+  case 2: //舵机
+    head = 0x03;
+    break;
+  case 7: //亮度
+    head = 0x06;
+    break;
+  case 8: //声音
+    head = 0x10;
+    break;
+  case 9: //温湿度
+    head = 0x05;
+    break;
+  }
+  if (head != 0) {
+    unsigned char data[4] = {0x00, 0x01, 0x00, 0x05};
+    if (head == 0x03) { data[1] = 0x09; }
+    rxbuf = ubtSensor2ProtocolCommon(id, head, 4, 0x05, data, rxLen);
+    // const unsigned char *rxbuf = ubtSensor2ProtocolCommon(id, head, 0, 0x02, 0, rxLen);
+    // Serial.println("getSensorVersion, head rxlen");
+    // Serial.println(head);
+    // Serial.println(rxLen);
+    if (rxLen > 1 && rxbuf != 0 && rxbuf[0] == 0) {
+      for (unsigned char i = 0; i < rxLen - 1 && i < 4; ++i) {
+        versions = versions * 100 + rxbuf[i + 1];
+      }
+    }
+    return versions;
+  }
+  return versions;    
 }
+
 unsigned char uKitSensor::setButtonUpdate(char id){
   unsigned char tRet = 0;
   unsigned char buf[1];

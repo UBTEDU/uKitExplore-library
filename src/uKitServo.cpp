@@ -28,11 +28,16 @@ void uKitServo::setServoTurn(unsigned char id,int dir, int speed){
   
 }
 
-void uKitServo::setServoTurns(unsigned char *id,int *dir, int *speed){
-  for(int i=0;i<sizeof(id)/sizeof(id[0]);i++){
+void uKitServo::setServoTurns(unsigned char *id,int *dir, int *speed, unsigned char length){
+  for(int i=0;i<length;i++){
+    // Serial.print("setServoTurns id:");
+    // Serial.println(id[i]);
+    // Serial.print("dir:");
+    // Serial.println(dir[i]);
+    // Serial.print("speed:");
+    // Serial.println(speed[i]);
     setServoTurn(id[i],dir[i],speed[i]);
   }
-  
 }
 
 
@@ -41,23 +46,42 @@ void uKitServo::setServoAngle(unsigned char id,int angle,int times){
   unsigned char buf[4];
   buf[0]=angle+120;
   buf[1]=(times/20);
-  buf[2]=((times/20) & 0xFF00) >> 8;
-  buf[3]=(times/20) & 0x00FF;
+  buf[2]= 0; //((times/20) & 0xFF00) >> 8;
+  buf[3]= 0; //(times/20) & 0x00FF;
 
   ubtServoActionProtocol(0xFA,id,0x01,buf);
   
 }
-void uKitServo::setServoAngles(unsigned char *id,int *angle,int times){
-    for(int i=0;i<sizeof(id)/sizeof(id[0]);i++){
-      setServoAngle(id[i],angle[i],times); 
+void uKitServo::setServoAngles(unsigned char *id,int *angle,int *times, unsigned char length, bool wait){
+    int maxTime = 0;
+    for(int i=0;i<length;i++){
+      // Serial.print("angle: ");
+      // Serial.println(angle[i]);
+      setServoAngle(id[i],angle[i],times[i]); 
+      if (maxTime < times[i]) { maxTime = times[i]; }
     }
-    delay(times);      
+    // Serial.print("wait: ");
+    // Serial.println(wait);
+    if (wait) {
+      // Serial.println("wait");
+      delay(maxTime);
+    }      
+}
+
+void uKitServo::setServoAnglesWait(unsigned char *id,int *angle,int *times, unsigned char length, bool wait){
+    setServoAngles(id, angle, times, length, wait);
 }
 
 
 void uKitServo::setServoStop(unsigned char id){
   unsigned char buf[4]={0xFF,0,0,0}; 
   ubtServoProtocol(0xFA,id,0x01,buf);
+}
+
+void uKitServo::setServosStop(unsigned char *ids, unsigned char length) {
+  for(int i=0;i<length;i++){
+      setServoStop(ids[i]); 
+    }
 }
 
 void uKitServo::setServoStiffness(unsigned char id,unsigned char stiffness){
@@ -74,23 +98,18 @@ int uKitServo::readServoAnglePD(unsigned char id){//单个舵机回读(掉电回
   int tCmd=0,tRet=0;
   unsigned char aa[4]={0,0,0,0};
   tRet=ubtServoProtocol(0xFA,id,0x02,aa);
-  if(tRet==0){
-    tCmd=0;
-  }
-  else if(tRet==1){
-    tCmd=-120;
-  }
-  else{
-    tCmd=tRet-120;
-  }
+  if (tRet == 1000) { tRet = 0; }
+
+  if(tRet == 0){ tCmd = 0; }
+  else if(tRet == 1){ tCmd =- 120; }
+  else{ tCmd = tRet-120; }
   
   delay(5);
-  if(tCmd>=-120 && tCmd<=120 )
+    
+  if(tCmd >= -120 && tCmd <= 120)
     return tCmd;
   else
     return 0;
-
-
 }
 
 void uKitServo::readServoAnglePD_M(unsigned char *read_id,char num)//舵机回读
@@ -104,6 +123,7 @@ void uKitServo::readServoAnglePD_M(unsigned char *read_id,char num)//舵机回�
     for(int i=0;i<num;i++)
     {
         setServoAngle=readServoAnglePD(read_id[i]);
+        setServoAngle = setServoAngle - 120;
         delay(20);
         if(setServoAngle>=-118 && setServoAngle<=118)
         {
@@ -120,33 +140,32 @@ void uKitServo::readServoAnglePD_M(unsigned char *read_id,char num)//舵机回�
         }
     }
       Serial.print("}");
-  
-    
-  
- 
-
 }
+
+// 该接口为
+int uKitServo::readServoOriginalAnglePD(unsigned char id){//单个舵机回读(掉电回读）
+  int tCmd=0,tRet=0;
+  unsigned char aa[4]={0,0,0,0};
+  tRet=ubtServoProtocol(0xFA,id,0x02,aa);
+  return tRet;
+}
+
 int uKitServo::readServoAngleNPD(unsigned char id){//单个舵机回读(不掉电回读）
   int tCmd=0,tRet=0;
   unsigned char aa[4]={0,0,0,0};
   tRet=ubtServoProtocol(0xFA,id,0x03,aa);
-  if(tRet==0){
-    tCmd=0;
-  }
-  else if(tRet==1){
-    tCmd=-120;
-  }
-  else{
-    tCmd=tRet-120;
-  }
- 
-  delay(5);
+  if (tRet == 1000) { tRet = 0; }
+
+  if(tRet == 0){ tCmd = 0; }
+  else if(tRet == 1){ tCmd =- 120; }
+  else{ tCmd = tRet-120; }
   
-  if(tCmd>=-120 && tCmd<=120)
+  delay(5);
+    
+  if(tCmd >= -120 && tCmd <= 120)
     return tCmd;
   else
     return 0;
-
 }
 
 void uKitServo::readServoAngleNPD_M(unsigned char *read_id,char num)//舵机回读
@@ -176,12 +195,16 @@ void uKitServo::readServoAngleNPD_M(unsigned char *read_id,char num)//舵机回�
         }
     }
       Serial.print("}");
-  
-    
-  
- 
-
 }
+
+int uKitServo::readServoOriginalAngleNPD(unsigned char id){//单个舵机回读(不掉电回读）
+  int tCmd=0,tRet=0;
+  unsigned char aa[4]={0,0,0,0};
+  tRet=ubtServoProtocol(0xFA,id,0x03,aa);
+  delay(5);
+  return tRet;
+}
+
 void uKitServo::ServoRead(){
   unsigned char t=0;
   static unsigned char ServoId[18]={0},ServoIdRead[18]={0};
@@ -204,6 +227,7 @@ void uKitServo::ServoRead(){
   readServoAnglePD_M(ServoIdRead,t);
 }
 
+//sizeof(action), sizeof(id) 此处计算有问题
 void uKitServo::playMotion(unsigned char *id,signed char **action,int *times){
   for(int i=0;i<sizeof(action)/sizeof(action[0]);i++){
     for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
@@ -312,7 +336,7 @@ int uKitServo::readServoAngleNPD1M(unsigned char id){//单个舵机回读(不掉
 }
 
 
-
+//sizeof(action), sizeof(id) 此处计算有问题
 void uKitServo::playMotion1M(unsigned char *id,signed char **action,int *times){
   for(int i=0;i<sizeof(action)/sizeof(action[0]);i++){
     for(int t=0;t<sizeof(id)/sizeof(id[0]);t++){
