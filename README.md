@@ -1,4 +1,4 @@
-# uKit Explore Library v1.2.15
+# uKit Explore Library v1.2.28
 
 ```
 git clone git@github.com:UBTEDU/uKit-Explore-library.git
@@ -29,6 +29,22 @@ git clone git@github.com:UBTEDU/uKit-Explore-library.git
 - [Instructions](https://easydoc.xyz/?#/s/44498285)  
 
 ### Update
+
+#### V1.2.25更新说明:
+
+1. 修改批量设置舵机角度接口, 可以为每个舵机设置不同的时间.
+
+#### V1.2.24更新说明:
+
+1. 修改控批量停止舵机无效的问题
+
+#### V1.2.23更新说明:
+
+1. 修改控制电机接口的参数类型, 增加容错性
+
+2. 增加获取舵机角度原始数据的接口, 如果舵机不存在, 则返回 1000
+
+3. 原来获取舵机角度的接口, 恢复为返回 -120 ~ 120 之间的角度值
 
 #### V1.2.15更新说明
 1. 修改example代码中编译错误问题
