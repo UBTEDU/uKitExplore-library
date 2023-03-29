@@ -30,6 +30,11 @@ git clone git@github.com:UBTEDU/uKit-Explore-library.git
 
 ### Update
 
+#### V1.2.28-1 CHANGELOG:
+
+更新 `library.properties` 新增了 `depends` 依赖安装
+Update the `library.properties`, add a new key `depends`.
+
 #### V1.2.25更新说明:
 
 1. 修改批量设置舵机角度接口, 可以为每个舵机设置不同的时间.
